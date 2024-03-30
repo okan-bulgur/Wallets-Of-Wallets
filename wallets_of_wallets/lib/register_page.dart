@@ -186,7 +186,7 @@ class _RegisterFormState extends State<RegisterForm> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MainPage(),
+                  builder: (context) => MainPage(),
                 ),
               );
             },

@@ -1,60 +1,71 @@
-// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_super_parameters, prefer_const_literals_to_create_immutables
-
-import 'package:firstly/profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
-
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  CarouselController buttonCarouselController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Wallets of Wallets',
-          style: TextStyle(
-            fontSize: 30.0,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 54, 106, 57)
-          ),
-        ),        
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0), // Adjust the padding as needed
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
-                );
-              },
-              child: CircleAvatar(
-                radius: 20.0,
-                backgroundColor: Colors.transparent,
-                child: Icon(
-                  Icons.account_circle,
-                  size: 30,
-                  color: Colors.white,
+        title: Text('Main Page'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CarouselSlider(
+              items: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Add functionality for the wallet button
+                  },
+                  child: Text('Wallet_1'),
                 ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Add functionality for the wallet button
+                  },
+                  child: Text('Wallet_2'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Add functionality for the wallet button
+                  },
+                  child: Text('Wallet_3'),
+                ),
+              ], // Add your items here
+              carouselController: buttonCarouselController,
+              options: CarouselOptions(
+                autoPlay: false,
+                enlargeCenterPage: true,
+                viewportFraction: 0.9,
+                aspectRatio: 2.0,
+                initialPage: 2,
               ),
             ),
-          ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () => buttonCarouselController.previousPage(
+                      duration: Duration(milliseconds: 300), curve: Curves.linear),
+                  child: Text('←'),
+                ),
+                ElevatedButton(
+                  onPressed: () => buttonCarouselController.nextPage(
+                      duration: Duration(milliseconds: 300), curve: Curves.linear),
+                  child: Text('→'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -66,8 +77,8 @@ class _MainPageState extends State<MainPage> {
           Icons.add,
           size: 50, // Adjust size of the icon
           color: Color.fromARGB(255, 54, 106, 57),
-        ), // Change background color if needed
-      ),    
+        ),
+      ),
     );
   }
 }
