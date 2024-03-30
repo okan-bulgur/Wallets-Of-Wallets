@@ -1,6 +1,6 @@
 {
-    "name": "wallets_of_wallets",
-    "short_name": "wallets_of_wallets",
+    "name": "firstly",
+    "short_name": "firstly",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

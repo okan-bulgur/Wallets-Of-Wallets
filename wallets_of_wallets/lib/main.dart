@@ -1,5 +1,7 @@
-import 'package:wallets_of_wallets/login_page.dart';
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,13 +10,18 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      title: 'Flutter Login Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        fontFamily: 'Ubuntu',
+      ),
+      home: const LoginPage(),
     );
   }
 }
+
+
 

@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "wallets_of_wallets" "\0"
+            VALUE "FileDescription", "firstly" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "wallets_of_wallets" "\0"
+            VALUE "InternalName", "firstly" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "wallets_of_wallets.exe" "\0"
-            VALUE "ProductName", "wallets_of_wallets" "\0"
+            VALUE "OriginalFilename", "firstly.exe" "\0"
+            VALUE "ProductName", "firstly" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

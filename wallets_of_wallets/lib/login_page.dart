@@ -1,115 +1,126 @@
-import 'package:wallets_of_wallets/SignUpPage.dart';
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+import 'main_page.dart';
+import 'register_page.dart';
+
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  
-  late String username ;
-  late String password ;
-  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: const Text(
+          'Wallets of Wallets',
+          style: TextStyle(
+            fontSize: 30.0,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 54, 106, 57)
+          ),
+        ),
+        centerTitle: true,
+        
+      ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(top: 100.0),
-            alignment: Alignment.center,
-            child: const Text(
-              "Wallets of wallets", // Replace with your desired text
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.0),
+            child: Text(
+              'Welcome Back !',
               style: TextStyle(
-                fontSize: 26.0,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 14, 83, 17),
+                fontSize: 35.0,
+                fontWeight: FontWeight.w900,//makes LOGIN bold
+                color: Color.fromARGB(255, 54, 106, 57)
               ),
             ),
           ),
-          Expanded(
-            child: Center(
-              child: Form(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children:<Widget>[ 
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.email),
+                    filled: true,
+                    fillColor: Color.fromARGB(100, 150, 150, 150),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
+                      borderSide: BorderSide.none, // Set the border color to gray
                       
-                      const Text(
-                        "Login",
-                        style: TextStyle(
-                          fontSize: 35.0 ,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 14, 83, 17),
-                        ),
-                        ),
-                      const SizedBox(height: 15.0,),
-                      
-                      const Text(
-                        "Enter your credential to login",
-                        style: TextStyle(
-                          fontSize: 20.0 ,
-                          color: Color.fromARGB(255, 14, 83, 17),
-                        ),
-                        ),
-                      const SizedBox(height: 15.0,),
-
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.green)
-                          ),
-                          hintText: "name@email.com",
-                          border: OutlineInputBorder()
-                        ),
-                        onSaved: (value){
-                          username = value! ;
-                        },
-                      ),
-                      SizedBox(height: 10.0,),
-                      
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.green)
-                          ),
-                          hintText: "password",
-                          border: OutlineInputBorder()
-                        ),
-                        onSaved: (value){
-                          username = value! ;
-                        },
-                      ),
-                      MaterialButton(
-                        child: Text("Login") ,
-                        onPressed: () {},
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Don't have an account"),
-                          MaterialButton(
-                            child: Text("Sign Up"),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => SignUpPage()),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 20),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock),
+                    filled: true,
+                    fillColor: Color.fromARGB(100, 150, 150, 150),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
+                      borderSide: BorderSide.none, // Set the border color to gray
+                      
+                    ),
+                  ),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: () {
+                    // Perform login authentication here
+                    // For simplicity, let's just navigate to the main page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MainPage(),
+                      ),
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 50, 97, 52)), // Change background color
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0), // Adjust border radius
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 40.0),
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // Change text color
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                TextButton(
+                  onPressed: () {
+                    // Navigate to the register page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RegisterPage(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Don\'t have an account ? Sign Up',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 77, 125, 79),
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
