@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, use_super_parameters, prefer_const_literals_to_create_immutables
 
+import 'package:firstly/profile_page.dart';
 import 'package:flutter/material.dart';
-
-import 'wallets_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -13,13 +12,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-
-  // ignore: prefer_final_fields
-  static List<Widget> _widgetOptions = <Widget>[
-    Text('Main Menu'),
-    WalletsPage(),
-    Text('Settings'),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -42,24 +34,27 @@ class _MainPageState extends State<MainPage> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: [
-          GestureDetector(
-            onTap: () {
-              // Add functionality for the avatar button
-            },
-            child: CircleAvatar(
-              radius: 40.0, // Adjust radius as needed
-              backgroundColor: Colors.white, // Change background color if needed
-              child: Icon(
-                Icons.account_circle,
-                size:40,
-                color: Color.fromARGB(255, 54, 106, 57), // Change icon color if needed
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0), // Adjust the padding as needed
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+              },
+              child: CircleAvatar(
+                radius: 20.0,
+                backgroundColor: Colors.transparent,
+                child: Icon(
+                  Icons.account_circle,
+                  size: 30,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
         ],
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
