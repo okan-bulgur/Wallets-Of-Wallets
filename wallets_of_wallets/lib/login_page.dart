@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 
 import 'main_page.dart';
-import 'profile_page.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -21,29 +20,6 @@ class LoginPage extends StatelessWidget {
               color: Color.fromARGB(255, 54, 106, 57)),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.person), // Add your icon here
-            onPressed: () {
-              // Add your onPressed logic here
-              // For example, navigate to the profile page
-              // Navigate to the profile page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(),
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.account_balance_wallet), // Wallet icon
-            onPressed: () {
-              // Add your onPressed logic here
-              // For example, open the wallet page
-            },
-          ),
-        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
