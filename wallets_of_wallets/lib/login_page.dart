@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'main_page.dart';
+import 'profile_page.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -15,13 +16,34 @@ class LoginPage extends StatelessWidget {
         title: const Text(
           'Wallets of Wallets',
           style: TextStyle(
-            fontSize: 30.0,
-            fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 54, 106, 57)
-          ),
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 54, 106, 57)),
         ),
         centerTitle: true,
-        
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person), // Add your icon here
+            onPressed: () {
+              // Add your onPressed logic here
+              // For example, navigate to the profile page
+              // Navigate to the profile page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.account_balance_wallet), // Wallet icon
+            onPressed: () {
+              // Add your onPressed logic here
+              // For example, open the wallet page
+            },
+          ),
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -31,10 +53,9 @@ class LoginPage extends StatelessWidget {
             child: Text(
               'Welcome Back !',
               style: TextStyle(
-                fontSize: 35.0,
-                fontWeight: FontWeight.w900,//makes LOGIN bold
-                color: Color.fromARGB(255, 54, 106, 57)
-              ),
+                  fontSize: 35.0,
+                  fontWeight: FontWeight.w900, //makes LOGIN bold
+                  color: Color.fromARGB(255, 54, 106, 57)),
             ),
           ),
           Padding(
@@ -48,9 +69,10 @@ class LoginPage extends StatelessWidget {
                     filled: true,
                     fillColor: Color.fromARGB(100, 150, 150, 150),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
-                      borderSide: BorderSide.none, // Set the border color to gray
-                      
+                      borderRadius: BorderRadius.circular(
+                          15.0), // Adjust the radius for curved edges
+                      borderSide:
+                          BorderSide.none, // Set the border color to gray
                     ),
                   ),
                 ),
@@ -62,9 +84,10 @@ class LoginPage extends StatelessWidget {
                     filled: true,
                     fillColor: Color.fromARGB(100, 150, 150, 150),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
-                      borderSide: BorderSide.none, // Set the border color to gray
-                      
+                      borderRadius: BorderRadius.circular(
+                          15.0), // Adjust the radius for curved edges
+                      borderSide:
+                          BorderSide.none, // Set the border color to gray
                     ),
                   ),
                   obscureText: true,
@@ -82,15 +105,19 @@ class LoginPage extends StatelessWidget {
                     );
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 50, 97, 52)), // Change background color
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Color.fromARGB(
+                            255, 50, 97, 52)), // Change background color
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0), // Adjust border radius
+                        borderRadius:
+                            BorderRadius.circular(20.0), // Adjust border radius
                       ),
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 40.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 40.0),
                     child: Text(
                       'Login',
                       style: TextStyle(
