@@ -132,7 +132,10 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                 width: 120.0, // Adjust the width as needed
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add functionality to create wallet
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 54, 106, 57), // Set the button color
