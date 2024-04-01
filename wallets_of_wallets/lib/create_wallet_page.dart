@@ -2,6 +2,8 @@
 
 import 'dart:math';
 
+import 'package:firstly/Wallets/walletManager.dart';
+
 import 'package:firstly/join_wallet_page.dart';
 import 'package:firstly/main_page.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,8 @@ class CreateWalletScreen extends StatefulWidget {
 
 class _CreateWalletScreenState extends State<CreateWalletScreen> {
   late Color selectedColor; // Initialize late variable
+  String walletName = '';
+  String walletDescription = '';
 
   @override
   void initState() {
@@ -53,7 +57,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 10.0),
             GestureDetector(
@@ -112,6 +116,9 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
+              onChanged: (value) {
+                walletName = value;
+              },
             ),
             SizedBox(height: 20.0),
             TextField(
@@ -125,6 +132,9 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
+              onChanged: (value) {
+                walletDescription = value;
+              },
             ),
             SizedBox(height: 20.0),
             Center(
@@ -132,9 +142,14 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                 width: 120.0, // Adjust the width as needed
                 child: ElevatedButton(
                   onPressed: () {
+                    // Generate a wallet
+                    WalletManager.generateWallet(selectedColor, walletName, walletDescription);
+                    // Store the wallet or perform any other operations
+
+                    // Navigate to MainPage
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+                      MaterialPageRoute(builder: (context) => MainPage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(

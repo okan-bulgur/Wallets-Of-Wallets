@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
+import 'package:firstly/Wallets/walletManager.dart';
 
 import 'package:firstly/create_wallet_page.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import 'profile_page.dart';
+import 'wallet_page_admin.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -15,12 +17,6 @@ class _MainPageState extends State<MainPage> {
   CarouselController buttonCarouselController = CarouselController();
 
   int currentIndex = 0;
-  List<List<Object>> listOfWallets = [
-    ['Wallet_1', Color.fromARGB(255, 54, 106, 57)],
-    ['Wallet_2', Color.fromARGB(255, 228, 138, 35)],
-    ['Wallet_3', Color.fromARGB(255, 187, 9, 92)],
-    ['Wallet_4', Color.fromARGB(255, 12, 175, 175)]
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -60,31 +56,42 @@ class _MainPageState extends State<MainPage> {
           children: <Widget>[
             CarouselSlider(
               items: [
-                for(int wallet = 0; wallet < listOfWallets.length; wallet++)
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: listOfWallets[wallet][1] as Color?,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 3),
+                if (WalletManager.wallets.isNotEmpty)
+                  for(int wallet = 0; wallet < WalletManager.wallets.length; wallet++)
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WalletPageAdmin(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          color: WalletManager.wallets[wallet].walletColor as Color?,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Text(
-                      listOfWallets[wallet][0].toString(),
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        child: Text(
+                          WalletManager.wallets[wallet].walletName,
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
-                  )
+                    )
               ], // Add your items here
               carouselController: buttonCarouselController,
               options: CarouselOptions(
@@ -103,9 +110,10 @@ class _MainPageState extends State<MainPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  '${listOfWallets[currentIndex][0]}',
-                ),
+                if (WalletManager.wallets.isNotEmpty)
+                  Text(
+                    '${WalletManager.wallets[currentIndex].walletName}',
+                  ),
                 SizedBox(width: 10),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -115,7 +123,7 @@ class _MainPageState extends State<MainPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      for(int wallet = 0; wallet < listOfWallets.length; wallet++)
+                      for(int wallet = 0; wallet < WalletManager.wallets.length; wallet++)
                         Container(
                           width: 12.0,
                           height: 12.0,
@@ -138,9 +146,10 @@ class _MainPageState extends State<MainPage> {
                     ],
                   ),
                 ),
-                Text(
-                  'id of ${listOfWallets[currentIndex][0]}',
-                ),
+                if (WalletManager.wallets.isNotEmpty)
+                  Text(
+                    'id: ${WalletManager.wallets[currentIndex].walletId}',
+                  ),
               ],
             ),
           ],
