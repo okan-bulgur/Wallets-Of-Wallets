@@ -20,6 +20,7 @@ class LoginPage extends StatelessWidget {
               color: Color.fromARGB(255, 54, 106, 57)),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,7 @@
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
+
+import 'package:firstly/create_wallet_page.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import 'profile_page.dart';
@@ -32,6 +34,7 @@ class _MainPageState extends State<MainPage> {
               color: Color.fromARGB(255, 54, 106, 57)),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(
@@ -145,7 +148,10 @@ class _MainPageState extends State<MainPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add functionality for the plus button
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateWalletScreen()),
+            );
         },
         backgroundColor: Colors.transparent,
         elevation: 0.0,
