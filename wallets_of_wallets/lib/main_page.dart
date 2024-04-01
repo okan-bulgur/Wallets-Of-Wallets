@@ -100,26 +100,44 @@ class _MainPageState extends State<MainPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                for(int wallet = 0; wallet < listOfWallets.length; wallet++)
-                  Container(
-                    width: 12.0,
-                    height: 12.0,
-                    margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: currentIndex == wallet
-                          ? Color.fromARGB(255, 54, 106, 57)
-                          : Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 3),
+                Text(
+                  '${listOfWallets[currentIndex][0]}',
+                ),
+                SizedBox(width: 10),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 50.0,
+                    right: 50.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for(int wallet = 0; wallet < listOfWallets.length; wallet++)
+                        Container(
+                          width: 12.0,
+                          height: 12.0,
+                          margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: currentIndex == wallet
+                                ? Color.fromARGB(255, 54, 106, 57)
+                                : Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3),
+                              )
+                            ],
+                          ),
                         )
-                      ],
-                    ),
-                  )
+                    ],
+                  ),
+                ),
+                Text(
+                  'id of ${listOfWallets[currentIndex][0]}',
+                ),
               ],
             ),
           ],
