@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import 'profile_page.dart';
 
@@ -10,6 +11,14 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   CarouselController buttonCarouselController = CarouselController();
+
+  int currentIndex = 0;
+  List<List<Object>> listOfWallets = [
+    ['Wallet_1', Color.fromARGB(255, 54, 106, 57)],
+    ['Wallet_2', Color.fromARGB(255, 228, 138, 35)],
+    ['Wallet_3', Color.fromARGB(255, 187, 9, 92)],
+    ['Wallet_4', Color.fromARGB(255, 12, 175, 175)]
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -48,63 +57,31 @@ class _MainPageState extends State<MainPage> {
           children: <Widget>[
             CarouselSlider(
               items: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Add functionality for the wallet button
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // Adjust the border radius as desired
+                for(int wallet = 0; wallet < listOfWallets.length; wallet++)
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      color: listOfWallets[wallet][1] as Color?,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
                     ),
-                    backgroundColor: Color.fromARGB(255, 54, 106, 57),
-                    minimumSize: Size(double.infinity, 50),
-                  ),
-                  child: Text(
-                    'Wallet_1',
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 20, // Replace with your desired font size
+                    child: Text(
+                      listOfWallets[wallet][0].toString(),
+                      style: TextStyle(
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Add functionality for the wallet button
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // Adjust the border radius as desired
-                    ),
-                    backgroundColor: Color.fromARGB(255, 8, 8, 92),
-                    minimumSize: Size(double.infinity, 50),
-                  ),
-                  child: Text(
-                    'Wallet_2',
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 255, 255, 255), // Replace with your desired color
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Add functionality for the wallet button
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // Adjust the border radius as desired
-                    ),
-                    backgroundColor: Color.fromARGB(255, 255, 200, 82),
-                    minimumSize: Size(double.infinity, 50),
-                  ),
-                  child: Text(
-                    'Wallet_3',
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 255, 255, 255), // Replace with your desired color
-                      fontSize: 20, // Replace with your desired font size
-                    ),
-                  ),
-                ),
+                  )
               ], // Add your items here
               carouselController: buttonCarouselController,
               options: CarouselOptions(
@@ -112,9 +89,38 @@ class _MainPageState extends State<MainPage> {
                 enableInfiniteScroll: true,
                 reverse: false,
                 enlargeCenterPage: true,
-                onPageChanged: callbackFunction,
+                onPageChanged: (int index, CarouselPageChangedReason reason) {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
                 scrollDirection: Axis.horizontal,
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for(int wallet = 0; wallet < listOfWallets.length; wallet++)
+                  Container(
+                    width: 12.0,
+                    height: 12.0,
+                    margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: currentIndex == wallet
+                          ? Color.fromARGB(255, 54, 106, 57)
+                          : Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3),
+                        )
+                      ],
+                    ),
+                  )
+              ],
             ),
           ],
         ),
@@ -133,9 +139,4 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
-}
-
-void callbackFunction(int index, CarouselPageChangedReason changeReason) {
-  // Do something when page changes
-  print('Current page is $index');
 }
