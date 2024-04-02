@@ -1,12 +1,12 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:firstly/main_page.dart';
 import 'package:firstly/qr_page.dart';
+import 'package:firstly/transaction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 
+// ignore: must_be_immutable
 class WalletPageAdmin extends StatelessWidget {
-
   final Color customColor = Color(0xFF0A5440);
 
   List<List<Object>> listOfMovements = [
@@ -33,9 +33,7 @@ class WalletPageAdmin extends StatelessWidget {
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
-              fontSize: 30.0,
-              fontWeight: FontWeight.bold,
-              color: customColor),
+              fontSize: 30.0, fontWeight: FontWeight.bold, color: customColor),
         ),
         centerTitle: true,
         actions: [
@@ -57,7 +55,6 @@ class WalletPageAdmin extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -65,93 +62,82 @@ class WalletPageAdmin extends StatelessWidget {
             children: [
               SizedBox(height: 60.0),
               Text(
-                  '₺${wallet.walletBalance}',
-                  style: TextStyle(
+                '₺${wallet.walletBalance}',
+                style: TextStyle(
                     fontSize: 40.0,
                     fontWeight: FontWeight.bold,
                     color: customColor),
               ),
               SizedBox(height: 15.0),
               Padding(
-                padding: const EdgeInsets.only(left: 40.0 , right: 40.0 ),
+                padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    
                     Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-    
-                          Text(
-                            '${wallet.walletName}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: customColor),
-                          ),
-                          
-                          Text(
-                            '${wallet.walletDescription}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: customColor),
-                          ),
-
-
-                          Text(
-                            'Payment: ₺${wallet.walletPaymentAmount}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: customColor),
-                          ),
-                        ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${wallet.walletName}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: customColor),
+                        ),
+                        Text(
+                          '${wallet.walletDescription}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: customColor),
+                        ),
+                        Text(
+                          'Payment: ₺${wallet.walletPaymentAmount}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: customColor),
+                        ),
+                      ],
                     ),
-
                     Text(
-                        'ID: ${wallet.walletId}',
-                        style: TextStyle(
+                      'ID: ${wallet.walletId}',
+                      style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
                           color: customColor),
                     ),
-                    
-                    
-                   
                   ],
                 ),
               ),
               SizedBox(height: 15.0),
-              
               Padding(
-                padding: const EdgeInsets.only(left: 40.0 , right: 40.0 ),
+                padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
                   children: [
-                    
                     Text(
-                        'Account Movements',
-                          style: TextStyle(
+                      'Account Movements',
+                      style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
                           color: customColor),
                     ),
                     SizedBox(width: 5.0),
                     Icon(
-                        Icons.chevron_right,
-                        size: 15.0,
-                        color: customColor,
+                      Icons.chevron_right,
+                      size: 15.0,
+                      color: customColor,
                     ),
-                    
                   ],
                 ),
               ),
-
-             SizedBox(height: 15.0),
-              for (int movement = 0; movement < listOfMovements.length; movement++)
+              SizedBox(height: 15.0),
+              for (int movement = 0;
+                  movement < listOfMovements.length;
+                  movement++)
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                   child: Column(
@@ -161,14 +147,15 @@ class WalletPageAdmin extends StatelessWidget {
                         child: Container(
                           height: 70.0,
                           decoration: BoxDecoration(
-                            color: listOfMovements[movement][1] == 'Outcomming' ? const Color.fromARGB(255, 206, 136, 131) : const Color.fromARGB(255, 151, 222, 153),
+                            color: listOfMovements[movement][1] == 'Outcomming'
+                                ? const Color.fromARGB(255, 206, 136, 131)
+                                : const Color.fromARGB(255, 151, 222, 153),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 10.0, right: 10.0),
+                            padding:
+                                const EdgeInsets.only(left: 10.0, right: 10.0),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
@@ -211,49 +198,51 @@ class WalletPageAdmin extends StatelessWidget {
                     ],
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
-
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem> [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 30.0), // Change the size value to your desired size
+            icon: Icon(Icons.home, size: 30.0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.paid, size: 30.0), // Change the size value to your desired size
+            icon: Icon(Icons.paid, size: 30.0),
             label: 'Transactions',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.group, size: 30.0), // Change the size value to your desired size
+            icon: Icon(Icons.group, size: 30.0),
             label: 'Members',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings, size: 30.0), // Change the size value to your desired size
+            icon: Icon(Icons.settings, size: 30.0),
             label: 'Settings',
           ),
+          // Add a new BottomNavigationBarItem for Transactions
         ],
-        
-        selectedItemColor: customColor, // Set color for selected icon
-        selectedFontSize: double.parse('14.5'), // Set font size for selected label
-        
+        selectedItemColor: customColor,
+        selectedFontSize: 14.5,
         showUnselectedLabels: true,
-        unselectedItemColor: customColor, // Set color for unselected icon
-        unselectedFontSize: double.parse('14.5'), // Set font size for unselected label
-        unselectedLabelStyle: TextStyle(color: customColor), // Set color for unselected label
-        
+        unselectedItemColor: customColor,
+        unselectedFontSize: 14.5,
+        unselectedLabelStyle: TextStyle(color: customColor),
         onTap: (index) {
           switch (index) {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+                MaterialPageRoute(builder: (context) => MainPage()),
               );
               break;
             case 1:
-              // Handle transactions navigation
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TransactionPage(wallet: wallet),
+                ),
+              );
               break;
             case 2:
               // Handle members navigation

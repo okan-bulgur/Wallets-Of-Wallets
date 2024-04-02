@@ -27,9 +27,7 @@ class _MainPageState extends State<MainPage> {
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
-              fontSize: 30.0,
-              fontWeight: FontWeight.bold,
-              color: customColor),
+              fontSize: 30.0, fontWeight: FontWeight.bold, color: customColor),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -51,7 +49,6 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
-
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -59,10 +56,13 @@ class _MainPageState extends State<MainPage> {
             CarouselSlider(
               items: [
                 if (WalletManager.wallets.isNotEmpty)
-                  for(int wallet = 0; wallet < WalletManager.wallets.length; wallet++)
+                  for (int wallet = 0;
+                      wallet < WalletManager.wallets.length;
+                      wallet++)
                     GestureDetector(
                       onTap: () {
-                        WalletManager.selectedWallet = WalletManager.wallets[wallet];
+                        WalletManager.selectedWallet =
+                            WalletManager.wallets[wallet];
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -74,7 +74,8 @@ class _MainPageState extends State<MainPage> {
                         alignment: Alignment.center,
                         margin: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
-                          color: WalletManager.wallets[wallet].walletColor as Color?,
+                          color: WalletManager.wallets[wallet].walletColor
+                              as Color?,
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
@@ -111,7 +112,7 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 50.0 , right: 50.0),
+              padding: const EdgeInsets.only(left: 50.0, right: 50.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -131,16 +132,20 @@ class _MainPageState extends State<MainPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for(int wallet = 0; wallet < WalletManager.wallets.length; wallet++)
+                        for (int wallet = 0;
+                            wallet < WalletManager.wallets.length;
+                            wallet++)
                           Container(
                             width: 12.0,
                             height: 12.0,
-                            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                            margin: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 2.0),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: currentIndex == wallet
                                   ? customColor
-                                  : Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+                                  : Color.fromARGB(255, 255, 255, 255)
+                                      .withOpacity(0.5),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.5),
@@ -170,9 +175,9 @@ class _MainPageState extends State<MainPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateWalletScreen()),
-            );
+            context,
+            MaterialPageRoute(builder: (context) => CreateWalletScreen()),
+          );
         },
         backgroundColor: Colors.transparent,
         elevation: 0.0,
