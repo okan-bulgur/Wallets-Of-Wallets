@@ -18,6 +18,7 @@ String generateRandomString(int length) {
 
 class WalletManager {
   static List<Wallet> wallets = [];
+  static Wallet? selectedWallet;
 
   static generateWallet(Color selectedColor, String name, String description) {
     Wallet wallet = Wallet(

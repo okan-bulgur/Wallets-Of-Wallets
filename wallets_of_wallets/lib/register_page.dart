@@ -5,18 +5,19 @@ import 'package:flutter/material.dart';
 import 'main_page.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+
+  final Color customColor = Color(0xFF0A5440);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Wallets of Wallets',
           style: TextStyle(
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 54, 106, 57)
+            color: customColor,
           ),
         ),
         centerTitle: true,
@@ -35,7 +36,7 @@ class RegisterPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 35.0,
                     fontWeight: FontWeight.w900,
-                    color: Color.fromARGB(255, 54, 106, 57),
+                    color: customColor,
                   ),
                 ),
               ),
@@ -105,7 +106,7 @@ class RegisterPage extends StatelessWidget {
                   );
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 50, 97, 52)), // Change background color
+                  backgroundColor: MaterialStateProperty.all<Color>(customColor), // Change background color
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0), // Adjust border radius
@@ -129,10 +130,10 @@ class RegisterPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text(
+                child: Text(
                   'Already have an account? Login',
                   style: TextStyle(
-                    color: Color.fromARGB(255, 77, 125, 79),
+                    color: customColor,
                     fontSize: 16.0,
                   ),
                 ),

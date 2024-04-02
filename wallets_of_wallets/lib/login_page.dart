@@ -6,18 +6,21 @@ import 'main_page.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+
+  final Color customColor = Color(0xFF0A5440);
+
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Wallets of Wallets',
           style: TextStyle(
               fontSize: 30.0,
               fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 54, 106, 57)),
+              color: customColor),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -25,14 +28,14 @@ class LoginPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: 20.0),
             child: Text(
               'Welcome Back !',
               style: TextStyle(
                   fontSize: 35.0,
                   fontWeight: FontWeight.w900, //makes LOGIN bold
-                  color: Color.fromARGB(255, 54, 106, 57)),
+                  color: customColor),
             ),
           ),
           Padding(
@@ -82,9 +85,7 @@ class LoginPage extends StatelessWidget {
                     );
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromARGB(
-                            255, 50, 97, 52)), // Change background color
+                    backgroundColor: MaterialStateProperty.all<Color>(customColor), // Change background color
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius:
@@ -116,10 +117,10 @@ class LoginPage extends StatelessWidget {
                       ),
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     'Don\'t have an account ? Sign Up',
                     style: TextStyle(
-                      color: Color.fromARGB(255, 77, 125, 79),
+                      color: customColor,
                       fontSize: 16.0,
                     ),
                   ),

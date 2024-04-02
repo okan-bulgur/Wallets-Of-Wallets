@@ -1,26 +1,48 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+import 'package:firstly/main_page.dart';
 import 'package:firstly/qr_page.dart';
 import 'package:flutter/material.dart';
+import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/Wallets/walletManager.dart';
 
 class WalletPageAdmin extends StatelessWidget {
+
+  final Color customColor = Color(0xFF0A5440);
+
+  List<List<Object>> listOfMovements = [
+    ['Member_2', 'Incomming', 400],
+    ['Admin_2', 'Outcomming', 200],
+    ['Member_3', 'Incomming', 300],
+    ['Admin_3', 'Incomming', 100],
+    ['Member_4', 'Incomming', 500],
+    ['Admin_4', 'Incomming', 600],
+    ['Member_5', 'Incomming', 700],
+    ['Admin_5', 'Outcomming', 800],
+    ['Member_6', 'Incomming', 900],
+    ['Admin_6', 'Outcomming', 1000],
+  ];
+
+  Wallet wallet;
+
+  WalletPageAdmin() : wallet = WalletManager.selectedWallet!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Wallets of Wallets',
           style: TextStyle(
               fontSize: 30.0,
               fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 54, 106, 57)),
+              color: customColor),
         ),
         centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(
               Icons.qr_code,
-              color: Color.fromARGB(255, 54, 106, 57), // Replace with your desired color
+              color: customColor, // Replace with your desired color
               size: 40, // Replace with your desired size
             ),
             onPressed: () {
@@ -34,46 +56,20 @@ class WalletPageAdmin extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
+      body: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Wallets of Wallets',
-                    style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 54, 106, 57)),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.qr_code,
-                      color: Color.fromARGB(255, 54, 106, 57), // Replace with your desired color
-                      size: 40, // Replace with your desired size
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => QrPage(),
-                        ),
-                      );
-                    },
-                  ), 
-                ],
-              ),
               SizedBox(height: 60.0),
               Text(
-                  '₺1000,00',
+                  '₺${wallet.walletBalance}',
                   style: TextStyle(
                     fontSize: 40.0,
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 17, 17, 17)),
+                    color: customColor),
               ),
               SizedBox(height: 15.0),
               Padding(
@@ -87,32 +83,41 @@ class WalletPageAdmin extends StatelessWidget {
                         children: [
     
                           Text(
-                            'Wallet Name',
+                            '${wallet.walletName}',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 3, 3, 3)),
+                                color: customColor),
                           ),
                           
                           Text(
-                            'Wallet Description',
+                            '${wallet.walletDescription}',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 9, 9, 9)),
+                                color: customColor),
                           ),
 
+
+                          Text(
+                            'Payment: ₺${wallet.walletPaymentAmount}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                                color: customColor),
+                          ),
                         ],
                     ),
 
                     Text(
-                        'Wallet ID',
+                        '${wallet.walletId}',
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 10, 10, 10)),
+                          color: customColor),
                     ),
                     
                     
@@ -132,260 +137,131 @@ class WalletPageAdmin extends StatelessWidget {
                           style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 3, 3, 3)),
+                          color: customColor),
                     ),
                     SizedBox(width: 5.0),
                     Icon(
                         Icons.chevron_right,
                         size: 15.0,
-                        color: Color.fromARGB(255, 54, 106, 57),
+                        color: customColor,
                     ),
                     
                   ],
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0,right: 30.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        height: 70.0,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 142, 243, 235),
-                        ),
-                        
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0 , right: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Member 2",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 6, 7, 6),
-                                    ),
-            
+             SizedBox(height: 15.0),
+              for (int movement = 0; movement < listOfMovements.length; movement++)
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          height: 70.0,
+                          decoration: BoxDecoration(
+                            color: listOfMovements[movement][1] == 'Outcomming' ? const Color.fromARGB(255, 206, 136, 131) : const Color.fromARGB(255, 151, 222, 153),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10.0, right: 10.0),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${listOfMovements[movement][0]}",
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.normal,
+                                          color: Color.fromARGB(255, 6, 7, 6),
+                                        ),
+                                      ),
+                                      Text(
+                                        "${listOfMovements[movement][1]}",
+                                        style: TextStyle(
+                                          fontSize: 13.0,
+                                          fontWeight: FontWeight.normal,
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    "Incomming",
-                                    style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 54, 106, 57),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                "₺ 400,00",
-                                style: TextStyle(
+                                ),
+                                Text(
+                                  "₺ ${listOfMovements[movement][2]}",
+                                  style: TextStyle(
                                     fontSize: 25.0,
                                     fontWeight: FontWeight.normal,
                                     color: Color.fromARGB(255, 6, 6, 6),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-
-                    
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        height: 70.0,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 142, 243, 235),
-                        ),
-                        
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0 , right: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Member 2",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 6, 7, 6),
-                                    ),
-            
-                                  ),
-                                  Text(
-                                    "Incomming",
-                                    style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 54, 106, 57),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                "₺ 400,00",
-                                style: TextStyle(
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color.fromARGB(255, 6, 6, 6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-
-
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        height: 70.0,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 142, 243, 235),
-                        ),
-                        
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0 , right: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Member 2",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 6, 7, 6),
-                                    ),
-            
-                                  ),
-                                  Text(
-                                    "Incomming",
-                                    style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 54, 106, 57),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                "₺ 400,00",
-                                style: TextStyle(
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color.fromARGB(255, 6, 6, 6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-
-
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        height: 70.0,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 142, 243, 235),
-                        ),
-                        
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0 , right: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Member 2",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 6, 7, 6),
-                                    ),
-            
-                                  ),
-                                  Text(
-                                    "Incomming",
-                                    style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 54, 106, 57),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                "₺ 400,00",
-                                style: TextStyle(
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color.fromARGB(255, 6, 6, 6),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-
-
-
-
-
-
-
-
-
-                  ],
+                    ],
+                  ),
                 ),
-              )
-
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const <BottomNavigationBarItem> [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, size: 30.0), // Change the size value to your desired size
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Create Wallet',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.money),
+            icon: Icon(Icons.paid, size: 30.0), // Change the size value to your desired size
             label: 'Transactions',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group, size: 30.0), // Change the size value to your desired size
+            label: 'Members',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings, size: 30.0), // Change the size value to your desired size
+            label: 'Settings',
+          ),
         ],
-        selectedIconTheme: IconThemeData(color: Color.fromARGB(255, 54, 106, 57)), // Set color for selected icon
-        unselectedIconTheme: IconThemeData(color: Color.fromARGB(255, 54, 106, 57)), // Set color for unselected icon
+        
+        selectedItemColor: customColor, // Set color for selected icon
+        selectedFontSize: double.parse('14.5'), // Set font size for selected label
+        
+        showUnselectedLabels: true,
+        unselectedItemColor: customColor, // Set color for unselected icon
+        unselectedFontSize: double.parse('14.5'), // Set font size for unselected label
+        unselectedLabelStyle: TextStyle(color: customColor), // Set color for unselected label
+        
         onTap: (index) {
-          
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+              );
+              break;
+            case 1:
+              // Handle transactions navigation
+              break;
+            case 2:
+              // Handle members navigation
+              break;
+            case 3:
+              // Handle settings navigation
+              break;
+          }
         },
       ),
     );

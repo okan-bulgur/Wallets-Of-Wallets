@@ -14,6 +14,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final Color customColor = Color(0xFF0A5440);
+
   CarouselController buttonCarouselController = CarouselController();
 
   int currentIndex = 0;
@@ -22,12 +24,12 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Wallets of Wallets',
           style: TextStyle(
               fontSize: 30.0,
               fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 54, 106, 57)),
+              color: customColor),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -35,7 +37,7 @@ class _MainPageState extends State<MainPage> {
           IconButton(
             icon: Icon(
               Icons.person,
-              color: Color.fromARGB(255, 54, 106, 57), // Replace with your desired color
+              color: customColor, // Replace with your desired color
               size: 40, // Replace with your desired size
             ),
             onPressed: () {
@@ -60,6 +62,7 @@ class _MainPageState extends State<MainPage> {
                   for(int wallet = 0; wallet < WalletManager.wallets.length; wallet++)
                     GestureDetector(
                       onTap: () {
+                        WalletManager.selectedWallet = WalletManager.wallets[wallet];
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -115,6 +118,9 @@ class _MainPageState extends State<MainPage> {
                   if (WalletManager.wallets.isNotEmpty)
                     Text(
                       '${WalletManager.wallets[currentIndex].walletName}',
+                      style: TextStyle(
+                        color: customColor,
+                      ),
                     ),
                   SizedBox(width: 5.0),
                   Padding(
@@ -133,7 +139,7 @@ class _MainPageState extends State<MainPage> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: currentIndex == wallet
-                                  ? Color.fromARGB(255, 54, 106, 57)
+                                  ? customColor
                                   : Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
                               boxShadow: [
                                 BoxShadow(
@@ -150,7 +156,10 @@ class _MainPageState extends State<MainPage> {
                   ),
                   if (WalletManager.wallets.isNotEmpty)
                     Text(
-                      'id: ${WalletManager.wallets[currentIndex].walletId}',
+                      'ID: ${WalletManager.wallets[currentIndex].walletId}',
+                      style: TextStyle(
+                        color: customColor,
+                      ),
                     ),
                 ],
               ),
@@ -170,7 +179,7 @@ class _MainPageState extends State<MainPage> {
         child: Icon(
           Icons.add,
           size: 50, // Adjust size of the icon
-          color: Color.fromARGB(255, 54, 106, 57),
+          color: customColor,
         ),
       ),
     );

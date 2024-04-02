@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart'; // Replace this import with your actual main page import
 
 class JoinWalletScreen extends StatelessWidget {
+
+  final Color customColor = Color(0xFF0A5440);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Wallets of Wallets',
           style: TextStyle(
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 54, 106, 57),
+            color: customColor,
           ),
         ),
         centerTitle: true,
@@ -50,7 +53,7 @@ class JoinWalletScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 54, 106, 57), // Set the button color
+                    backgroundColor: customColor, // Set the button color
                     minimumSize: Size(120.0, 40.0), // Set the minimum size of the button
                   ),
                   child: Text(
@@ -78,8 +81,8 @@ class JoinWalletScreen extends StatelessWidget {
             label: 'Create Wallet',
           ),
         ],
-        selectedIconTheme: IconThemeData(color: Color.fromARGB(255, 54, 106, 57)), // Set color for selected icon
-        unselectedIconTheme: IconThemeData(color: Color.fromARGB(255, 54, 106, 57)), // Set color for unselected icon
+        selectedIconTheme: IconThemeData(color: customColor), // Set color for selected icon
+        unselectedIconTheme: IconThemeData(color: customColor), // Set color for unselected icon
         onTap: (index) {
           // Add navigation logic based on the index of tapped item
           if (index == 0) {

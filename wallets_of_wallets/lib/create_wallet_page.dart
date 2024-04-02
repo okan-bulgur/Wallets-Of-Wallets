@@ -15,6 +15,9 @@ class CreateWalletScreen extends StatefulWidget {
 }
 
 class _CreateWalletScreenState extends State<CreateWalletScreen> {
+  
+  final Color customColor = Color(0xFF0A5440);
+
   late Color selectedColor; // Initialize late variable
   String walletName = '';
   String walletDescription = '';
@@ -43,12 +46,12 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Wallets of Wallets',
           style: TextStyle(
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 54, 106, 57),
+            color: customColor,
           ),
         ),
         centerTitle: true,
@@ -83,7 +86,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                           child: Text(
                             'SET COLOR',
                             style: TextStyle(
-                              color: Color.fromARGB(255, 54, 106, 57), // Same color as title
+                              color: customColor, // Same color as title
                             ),
                           ),
                           onPressed: () {
@@ -153,7 +156,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 54, 106, 57), // Set the button color
+                    backgroundColor: customColor, // Set the button color
                     minimumSize: Size(120.0, 40.0), // Set the minimum size of the button
                   ),
                   child: Text(
@@ -174,28 +177,37 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, size: 30.0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.group),
+            icon: Icon(Icons.group, size: 30.0),
             label: 'Join Wallet',
           ),
         ],
-        selectedIconTheme: IconThemeData(color: Color.fromARGB(255, 54, 106, 57)), // Set color for selected icon
-        unselectedIconTheme: IconThemeData(color: Color.fromARGB(255, 54, 106, 57)), // Set color for unselected icon
+
+        selectedItemColor: customColor, // Set color for selected icon
+        selectedFontSize: double.parse('14.5'), // Set font size for selected label
+        
+        showUnselectedLabels: true,
+        unselectedItemColor: customColor, // Set color for unselected icon
+        unselectedFontSize: double.parse('14.5'), // Set font size for unselected label
+        unselectedLabelStyle: TextStyle(color: customColor), // Set color for unselected label
+        
         onTap: (index) {
-          // Add navigation logic based on the index of tapped item
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MainPage()), // Replace MainPage() with your main page widget
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => JoinWalletScreen()), // Replace MainPage() with your main page widget
-            );
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => JoinWalletScreen()), // Replace MainPage() with your main page widget
+              );
+              break;
           }
         },
       ),

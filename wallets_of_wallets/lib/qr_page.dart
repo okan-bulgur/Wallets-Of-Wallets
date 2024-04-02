@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 class QrPage extends StatelessWidget {
+
+  final Color customColor = Color(0xFF0A5440);
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Wallets of Wallets',
           style: TextStyle(
               fontSize: 30.0,
               fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 54, 106, 57)),
+              color: customColor),
         ),
         centerTitle: true,
       ),

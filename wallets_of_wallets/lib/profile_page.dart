@@ -1,5 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api
 
+import 'package:firstly/main_page.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart'; // Import your login page widget
 
@@ -9,25 +10,31 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final Color customColor = Color(0xFF0A5440);
+
   String selectedUser = 'John Doe'; // Default user
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Wallets of Wallets',
           style: TextStyle(
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 54, 106, 57),
+            color: customColor,
           ),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: Icon(
+              Icons.logout,
+              color: customColor, // Replace with your desired color
+              size: 40, // Replace with your desired size
+            ),
             onPressed: () {
               // Navigate to the login page
               Navigator.pushReplacement(
@@ -89,22 +96,42 @@ class _ProfilePageState extends State<ProfilePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, size: 30.0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.credit_card, size: 30.0),
+            label: 'My Cards',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.settings, size: 30.0),
             label: 'Settings',
           ),
         ],
-        selectedItemColor: Colors.blue,
-        currentIndex: 0,
+        
+        selectedItemColor: customColor, // Set color for selected icon
+        selectedFontSize: double.parse('14.5'), // Set font size for selected label
+        
+        showUnselectedLabels: true,
+        unselectedItemColor: customColor, // Set color for unselected icon
+        unselectedFontSize: double.parse('14.5'), // Set font size for unselected label
+        unselectedLabelStyle: TextStyle(color: customColor), // Set color for unselected label
+        
         onTap: (index) {
-          // Add functionality for bottom navigation
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+              );
+              break;
+            case 1:
+              // Handle transactions navigation
+              break;
+            case 2:
+              // Handle members navigation
+              break;
+          }
         },
       ),
     );
