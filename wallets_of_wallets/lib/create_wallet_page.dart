@@ -109,7 +109,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
             ),
             SizedBox(height: 40.0),
             TextField(
-              maxLength: 30,
+              maxLength: 10,
               decoration: InputDecoration(
                 labelText: 'Set Wallet Name',
                 filled: true,
@@ -125,7 +125,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
             ),
             SizedBox(height: 20.0),
             TextField(
-              maxLength: 200,
+              maxLength: 25,
               decoration: InputDecoration(
                 labelText: 'Set Description',
                 filled: true,

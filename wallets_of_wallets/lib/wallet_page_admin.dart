@@ -113,7 +113,7 @@ class WalletPageAdmin extends StatelessWidget {
                     ),
 
                     Text(
-                        '${wallet.walletId}',
+                        'ID: ${wallet.walletId}',
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
