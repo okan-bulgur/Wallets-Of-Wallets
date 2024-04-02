@@ -3,7 +3,6 @@ import 'package:firstly/wallet_page_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/qr_page.dart';
-import 'package:firstly/transaction_page.dart';
 
 class WithdrawPage extends StatelessWidget {
   final Color customColor = Color(0xFF0A5440);
