@@ -1,6 +1,7 @@
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/member_list_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
+import 'package:firstly/wallet_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/Wallets/walletManager.dart';
@@ -178,7 +179,10 @@ class DepositPageAdmin extends StatelessWidget {
               );
               break;
             case 3:
-              // Handle settings navigation
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
+              );
               break;
           }
         },

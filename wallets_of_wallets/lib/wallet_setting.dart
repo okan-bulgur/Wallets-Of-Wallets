@@ -1,18 +1,16 @@
 import 'package:firstly/Wallets/wallet.dart';
-import 'package:firstly/deposite_page_admin.dart';
 import 'package:firstly/main_page.dart';
-import 'package:firstly/member_list_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
-import 'package:firstly/wallet_setting.dart';
-import 'package:firstly/withdraw_page_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 
-class TransactionPageAdmin extends StatelessWidget {
+class WalletSetting extends StatelessWidget {
   final Color customColor = Color(0xFF0A5440);
 
   final Wallet wallet;
-  TransactionPageAdmin() : wallet = WalletManager.selectedWallet!;
+  WalletSetting({Key? key}) 
+    : wallet = WalletManager.selectedWallet!,
+      super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +27,13 @@ class TransactionPageAdmin extends StatelessWidget {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 75.0),
+              SizedBox(height: 60.0),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
@@ -84,14 +82,75 @@ class TransactionPageAdmin extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 100.0),
+              SizedBox(height: 50.0),
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(
+                      'Change Wallet\'s Name',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: customColor,
+                      ),
+                    ),
                     TextField(
-                      // Remove maxLength property to remove character limit
+                      maxLength: 10,
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        filled: true,
+                        fillColor: Color.fromARGB(100, 150, 150, 150),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                      ),
+                      onChanged: (value) {
+                      },
+                    ),
+
+                    SizedBox(height: 10.0),
+                    Text(
+                      'Change Wallet\'s Description',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: customColor,
+                      ),
+                    ),
+                    TextField(
+                      maxLength: 25,
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                        filled: true,
+                        fillColor: Color.fromARGB(100, 150, 150, 150),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                      ),
+                      onChanged: (value) {
+                      },
+                    ),
+
+                    SizedBox(height: 10.0),
+                    Text(
+                      'Determine Amount of the Payment',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: customColor,
+                      ),
+                    ),
+                    TextField(
+                      maxLength: 10,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(
                         labelText: 'Amount',
                         filled: true,
@@ -100,64 +159,36 @@ class TransactionPageAdmin extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15.0),
                           borderSide: BorderSide.none,
                         ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                       ),
+                      onChanged: (value) {
+                      },
                     ),
-                    SizedBox(height: 60.0),
-                    SizedBox(
-                      width: 250.0, // Adjust the width as needed
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                WithdrawPageAdmin(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: customColor,
-                          minimumSize: Size(120.0, 40.0),
-                        ),
-                        child: Text(
-                          'Withdraw',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  
+                    SizedBox(height: 10.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add your logic here
+                      },
+                      child: Text(
+                        'Set',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
-                    ),
-                    SizedBox(height: 10), // Add spacing between buttons
-                    SizedBox(
-                      width: 250.0, // Adjust the width as needed
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DepositPageAdmin(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: customColor,
-                          minimumSize: Size(120.0, 40.0),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: customColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
-                        child: Text(
-                          'Deposit',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0), // Increase the width here
                       ),
                     ),
                   ],
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -171,14 +202,6 @@ class TransactionPageAdmin extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.wallet, size: 30.0),
             label: 'Wallet',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group, size: 30.0),
-            label: 'Members',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings, size: 30.0),
-            label: 'Settings',
           ),
         ],
         selectedItemColor: customColor,
@@ -199,18 +222,6 @@ class TransactionPageAdmin extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => WalletPageAdmin()),
-              );
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MemberListPage()),
-              );
-              break;
-            case 3:
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
               );
               break;
           }

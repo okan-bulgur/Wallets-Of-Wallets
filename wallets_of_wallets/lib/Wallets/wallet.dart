@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class Wallet {
@@ -28,8 +30,8 @@ class Wallet {
   set walletId(String newId) => _id = newId;
 
   int get walletBalance => _balance;
-  set balance(int newBalance) => _balance = newBalance;
+  set walletBalance(int newBalance) => _balance = newBalance;
 
   int get walletPaymentAmount => _paymentAmount;
-  set paymentAmount(int newBalance) => _paymentAmount = newBalance;
+  set walletPaymentAmount(int newBalance) => _paymentAmount = newBalance;
 }

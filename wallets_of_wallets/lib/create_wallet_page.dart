@@ -170,7 +170,6 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                 ),
               ),
             ),
-
           ],
         ),
       ),

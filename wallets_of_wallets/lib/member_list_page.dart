@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:firstly/main_page.dart';
+import 'package:firstly/transaction_page_admin.dart';
 import 'package:firstly/wallet_page_admin.dart';
+import 'package:firstly/wallet_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/Wallets/walletManager.dart';
@@ -202,17 +204,24 @@ class MemberListPage extends StatelessWidget {
               );
               break;
             case 1:
-              // Handle transactions navigation
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TransactionPageAdmin(),
+                ),
+              );
               break;
             case 2:
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => WalletPageAdmin()),
               );
-              // Handle users navigation
               break;
             case 3:
-              // Handle settings navigation
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
+              );
               break;
           }
         },
