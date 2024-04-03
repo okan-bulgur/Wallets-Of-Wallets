@@ -9,7 +9,7 @@ class MemberListPage extends StatelessWidget {
 
   final Color customColor = Color(0xFF0A5440);
 
-  List<List<Object>> listOfMembers = [
+  List<List<Object>> listOfUsers = [
     ['User_1', 'Admin'],
     ['User_2', 'Admin'],
     ['User_3', 'Admin'],
@@ -33,7 +33,6 @@ class MemberListPage extends StatelessWidget {
   ];
 
   Wallet wallet;
-
   MemberListPage() : wallet = WalletManager.selectedWallet!;
 
   @override
@@ -104,15 +103,12 @@ class MemberListPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: customColor),
                     ),
-                    
-                    
-                   
                   ],
                 ),
               ),
 
              SizedBox(height: 15.0),
-              for (int member = 0; member < listOfMembers.length; member++)
+              for (int user = 0; user < listOfUsers.length; user++)
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0, right: 30.0),
                   child: Column(
@@ -125,10 +121,10 @@ class MemberListPage extends StatelessWidget {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              showSlideWindow(context, listOfMembers[member][0].toString());
+                              showSlideWindow(context, listOfUsers[user][0] as String, listOfUsers[user][1] as String);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: listOfMembers[member][1] == 'Admin' ? Color.fromARGB(255, 162, 68, 229) : Color.fromARGB(255, 35, 147, 157),
+                              backgroundColor: listOfUsers[user][1] == 'Admin' ? Color.fromARGB(255, 162, 68, 229) : Color.fromARGB(255, 35, 147, 157),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
@@ -140,7 +136,7 @@ class MemberListPage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "${listOfMembers[member][0]}",
+                                    "${listOfUsers[user][0]}",
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.normal,
@@ -148,7 +144,7 @@ class MemberListPage extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "${listOfMembers[member][1]}",
+                                    "${listOfUsers[user][1]}",
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.normal,
@@ -213,7 +209,7 @@ class MemberListPage extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) => WalletPageAdmin()),
               );
-              // Handle members navigation
+              // Handle users navigation
               break;
             case 3:
               // Handle settings navigation
@@ -223,22 +219,84 @@ class MemberListPage extends StatelessWidget {
       ),
     );
   }
-  void showSlideWindow(BuildContext context, String memberName) {
-    showBottomSheet(
+  void showSlideWindow(BuildContext context, String userName, String userRole) {
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 200,
-          color: Colors.white,
-          child: Center(
-            child: Text(
-              'This is the specific slide window for $memberName',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+          height: 350,
+          color: customColor, // Change the background color to blue
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 60),
+                  Text(
+                    '${userName}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    '${userRole}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 50), // Add spacing between buttons
+                  SizedBox(
+                    width: 250.0, // Adjust the width as needed
+                    child: ElevatedButton(
+                      onPressed: () {
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        minimumSize: Size(120.0, 50.0),
+                      ),
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        userRole == 'Admin' ? 'Dismis as Admin' : 'Make Wallet Admin',
+                        style: TextStyle(
+                          color: userRole == 'Admin' ? Colors.red : customColor,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30), // Add spacing between buttons
+                  SizedBox(
+                    width: 250.0, // Adjust the width as needed
+                    child: ElevatedButton(
+                      onPressed: () {
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        minimumSize: Size(120.0, 50.0),
+                      ),
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        'Remove User From Wallet',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
+            ],
           ),
         );
       },
