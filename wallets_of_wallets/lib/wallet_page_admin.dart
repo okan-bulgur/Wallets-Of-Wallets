@@ -1,6 +1,7 @@
 import 'package:firstly/main_page.dart';
+import 'package:firstly/member_list_page.dart';
 import 'package:firstly/qr_page.dart';
-import 'package:firstly/transaction_page.dart';
+import 'package:firstly/transaction_page_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/Wallets/walletManager.dart';
@@ -10,16 +11,16 @@ class WalletPageAdmin extends StatelessWidget {
   final Color customColor = Color(0xFF0A5440);
 
   List<List<Object>> listOfMovements = [
-    ['Member_2', 'Incomming', 400],
-    ['Admin_2', 'Outcomming', 200],
-    ['Member_3', 'Incomming', 300],
-    ['Admin_3', 'Incomming', 100],
-    ['Member_4', 'Incomming', 500],
-    ['Admin_4', 'Incomming', 600],
-    ['Member_5', 'Incomming', 700],
-    ['Admin_5', 'Outcomming', 800],
-    ['Member_6', 'Incomming', 900],
-    ['Admin_6', 'Outcomming', 1000],
+    ['User_2', 'Incomming', 400],
+    ['User_2', 'Outcomming', 200],
+    ['User_3', 'Incomming', 300],
+    ['User_3', 'Incomming', 100],
+    ['User_4', 'Incomming', 500],
+    ['User_4', 'Incomming', 600],
+    ['User_5', 'Incomming', 700],
+    ['User_5', 'Outcomming', 800],
+    ['User_6', 'Incomming', 900],
+    ['User_6', 'Outcomming', 1000],
   ];
 
   Wallet wallet;
@@ -240,11 +241,15 @@ class WalletPageAdmin extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TransactionPage(wallet: wallet),
+                  builder: (context) => TransactionPageAdmin(),
                 ),
               );
               break;
             case 2:
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MemberListPage()), // Navigate to MainPage
+              );
               // Handle members navigation
               break;
             case 3:

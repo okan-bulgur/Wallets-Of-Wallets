@@ -2,11 +2,12 @@
 import 'package:firstly/Wallets/walletManager.dart';
 
 import 'package:firstly/create_wallet_page.dart';
+import 'package:firstly/wallet_page_admin.dart';
+import 'package:firstly/wallet_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import 'profile_page.dart';
-import 'wallet_page_admin.dart';
 
 class MainPage extends StatefulWidget {
   @override

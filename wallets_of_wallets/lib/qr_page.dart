@@ -1,5 +1,6 @@
 import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/main_page.dart';
+import 'package:firstly/member_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:firstly/Wallets/wallet.dart';
@@ -157,6 +158,10 @@ class QrPage extends StatelessWidget {
               // Handle transactions navigation
               break;
             case 2:
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MemberListPage()), // Navigate to MainPage
+                );
               // Handle members navigation
               break;
             case 3:
