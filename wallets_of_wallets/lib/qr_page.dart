@@ -94,8 +94,10 @@ class QrPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
+                  
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         QrImageView(
                           data: wallet.walletId,
