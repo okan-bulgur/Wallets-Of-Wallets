@@ -8,11 +8,15 @@ class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
+const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+
+String dropdownValue = list.first;
 
 class _ProfilePageState extends State<ProfilePage> {
   final Color customColor = Color(0xFF0A5440);
 
   String selectedUser = 'John Doe'; // Default user
+  double balance = 5000.00;
 
   @override
   Widget build(BuildContext context) {
@@ -52,18 +56,34 @@ class _ProfilePageState extends State<ProfilePage> {
             radius: 80,
             backgroundImage: AssetImage('assets/emenike.png'), // Add your avatar image
           ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              _showBottomSheet(context);
-            },
-            child: Text('Select User'),
+          SizedBox(height: 40),
+          Text(
+            '\$$balance',
+            style: TextStyle(fontSize: 40),
           ),
           SizedBox(height: 20),
           Text(
             'Selected User: $selectedUser',
             style: TextStyle(fontSize: 20),
           ),
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+          DropdownButton(value: dropdownValue,
+              items: list.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+              onChanged: (String? value) {
+                // This is called when the user selects an item.
+                setState(() {
+                  dropdownValue = value!;
+                },);
+              },
+              isExpanded: true)),
           SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -80,14 +100,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   // Add functionality for button 1
                 },
-                child: Text('Button 1'),
+                child: Text('Withdraw'),
               ),
               SizedBox(height: 10), // Add spacing between the buttons
               ElevatedButton(
                 onPressed: () {
                   // Add functionality for button 2
                 },
-                child: Text('Button 2'),
+                child: Text('Deposit'),
               ),
             ],
           ),
