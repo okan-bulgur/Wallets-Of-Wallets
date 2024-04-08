@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
@@ -33,7 +35,7 @@ class WalletSetting extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 60.0),
+              SizedBox(height: 80.0),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
@@ -82,110 +84,209 @@ class WalletSetting extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 50.0),
+              SizedBox(height: 100.0),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Change Wallet\'s Name',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: customColor,
-                      ),
-                    ),
-                    TextField(
-                      maxLength: 10,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        filled: true,
-                        fillColor: Color.fromARGB(100, 150, 150, 150),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                      ),
-                      onChanged: (value) {
-                      },
-                    ),
-
-                    SizedBox(height: 10.0),
-                    Text(
-                      'Change Wallet\'s Description',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: customColor,
-                      ),
-                    ),
-                    TextField(
-                      maxLength: 25,
-                      decoration: InputDecoration(
-                        labelText: 'Description',
-                        filled: true,
-                        fillColor: Color.fromARGB(100, 150, 150, 150),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                      ),
-                      onChanged: (value) {
-                      },
-                    ),
-
-                    SizedBox(height: 10.0),
-                    Text(
-                      'Determine Amount of the Payment',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: customColor,
-                      ),
-                    ),
-                    TextField(
-                      maxLength: 10,
-                      keyboardType: TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        labelText: 'Amount',
-                        filled: true,
-                        fillColor: Color.fromARGB(100, 150, 150, 150),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                      ),
-                      onChanged: (value) {
-                      },
-                    ),
-                  
-                    SizedBox(height: 10.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add your logic here
-                      },
+                    
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        'Set',
+                        'Change Wallet\'s Name',
+                        textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: customColor,
                         ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: customColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0), // Increase the width here
                       ),
                     ),
+                    
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      Expanded(
+                        child: TextField(
+                              maxLength: 10,
+                              decoration: InputDecoration(
+                                labelText: 'Name',
+                                filled: true,
+                                fillColor: Color.fromARGB(100, 150, 150, 150),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                              ),
+                              onChanged: (value) {
+                              },
+                            ),
+                      ),
+
+                      SizedBox(width: 10.0),
+                      
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 25.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Add your logic here
+                          },
+                          child: Text(
+                            'Set',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: customColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    ],),
+
+                    SizedBox(height: 10.0,),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        'Change Wallet\'s Description',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: customColor,
+                        ),
+                      ),
+                    ),
+                    
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      Expanded(
+                        child: TextField(
+                              maxLength: 20,
+                              decoration: InputDecoration(
+                                labelText: 'Description',
+                                filled: true,
+                                fillColor: Color.fromARGB(100, 150, 150, 150),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                              ),
+                              onChanged: (value) {
+                              },
+                            ),
+                      ),
+
+                      SizedBox(width: 10.0),
+                      
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 25.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Add your logic here
+                          },
+                          child: Text(
+                            'Set',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: customColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    ],),
+
+                    SizedBox(height: 10.0,),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        'Determine Amount of the Payment',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: customColor,
+                        ),
+                      ),
+                    ),
+                    
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      Expanded(
+                        child: TextField(
+                              maxLength: 10,
+                              decoration: InputDecoration(
+                                labelText: 'Amount',
+                                filled: true,
+                                fillColor: Color.fromARGB(100, 150, 150, 150),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                              ),
+                              onChanged: (value) {
+                              },
+                            ),
+                      ),
+
+                      SizedBox(width: 10.0),
+                      
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 25.0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Add your logic here
+                          },
+                          child: Text(
+                            'Set',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: customColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    ],),
+                    
+                    
+
+                    
+
+                   
+                    
+                  
+                    
                   ],
                 ),
               )
