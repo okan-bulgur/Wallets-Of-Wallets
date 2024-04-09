@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api
 
 import 'package:firstly/main_page.dart';
+import 'package:firstly/profile_settings_page.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart'; // Import your login page widget
 
@@ -10,7 +11,7 @@ class ProfilePage extends StatefulWidget {
 }
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
-String dropdownValue = list.first;
+String dropdownValue = list.first; //change this to the last selected
 
 class _ProfilePageState extends State<ProfilePage> {
   final Color customColor = Color(0xFF0A5440);
@@ -149,7 +150,10 @@ class _ProfilePageState extends State<ProfilePage> {
               // Handle transactions navigation
               break;
             case 2:
-              // Handle members navigation
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileSettings()), // Navigate to MainPage
+              );
               break;
           }
         },
