@@ -1,5 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api
 
+import 'package:firstly/cards_page.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/profile_settings_page.dart';
 import 'package:flutter/material.dart';
@@ -147,7 +148,11 @@ class _ProfilePageState extends State<ProfilePage> {
               );
               break;
             case 1:
-              // Handle transactions navigation
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CardsList()), // Navigate to MainPage
+              );
+              break;
               break;
             case 2:
               Navigator.push(
