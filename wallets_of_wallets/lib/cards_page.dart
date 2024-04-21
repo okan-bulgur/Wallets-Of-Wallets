@@ -1,3 +1,4 @@
+import 'package:firstly/add_card_page.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/transaction_page_admin.dart';
 import 'package:firstly/wallet_page_admin.dart';
@@ -126,7 +127,7 @@ class CardsList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MainPage(),
+                  builder: (context) => AddCard()
                 ),
               );
               break;

@@ -18,7 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final Color customColor = Color(0xFF0A5440);
 
   String selectedUser = 'John Doe'; // Default user
-  double balance = 5000.00;
+  double balance = 0.00;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
             radius: 80,
             backgroundImage: AssetImage('assets/emenike.png'), // Add your avatar image
           ),
-          SizedBox(height: 40),
+          SizedBox(height: 20),
           Text(
             '\$$balance',
             style: TextStyle(fontSize: 40),
@@ -72,7 +72,18 @@ class _ProfilePageState extends State<ProfilePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child:
-          DropdownButton(value: dropdownValue,
+          DropdownButtonFormField(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(100, 150, 150, 150),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                      15.0), // Adjust the radius for curved edges
+                  borderSide:
+                  BorderSide.none, // Set the border color to gray
+                ),
+              ),
+              value: dropdownValue,
               items: list.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
@@ -91,27 +102,69 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               decoration: InputDecoration(
-                labelText: 'Enter something',
-                border: OutlineInputBorder(),
+                labelText: 'Amount',
+                filled: true,
+                fillColor: Color.fromARGB(100, 150, 150, 150),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                      15.0), // Adjust the radius for curved edges
+                  borderSide:
+                  BorderSide.none, // Set the border color to gray
+                ),
               ),
             ),
           ),
-          Column(
-            children: [
-              ElevatedButton(
+          SizedBox(height: 20),
+          Center(
+            child: SizedBox(
+              width: 120.0, // Adjust the width as needed
+              child: ElevatedButton(
                 onPressed: () {
-                  // Add functionality for button 1
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+                  );
                 },
-                child: Text('Withdraw'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: customColor, // Set the button color
+                  minimumSize: Size(120.0, 40.0), // Set the minimum size of the button
+                ),
+                child: Text(
+                  'Withdraw',
+                  style: TextStyle(
+                    color: Colors.white, // Set the text color
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              SizedBox(height: 10), // Add spacing between the buttons
-              ElevatedButton(
+            ),
+          ),
+          SizedBox(height: 20),
+          Center(
+            child: SizedBox(
+              width: 120.0, // Adjust the width as needed
+              child: ElevatedButton(
                 onPressed: () {
-                  // Add functionality for button 2
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+                  );
                 },
-                child: Text('Deposit'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: customColor, // Set the button color
+                  minimumSize: Size(120.0, 40.0), // Set the minimum size of the button
+                ),
+                child: Text(
+                  'Deposit',
+                  style: TextStyle(
+                    color: Colors.white, // Set the text color
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ],
+            ),
           ),
         ],
       ),
