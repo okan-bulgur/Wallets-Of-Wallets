@@ -1,4 +1,3 @@
-import 'package:firstly/create_wallet_page.dart';
 import 'package:firstly/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart'; // Replace this import with your actual main page import
@@ -23,10 +22,31 @@ class AddCard extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: Padding(
+
         padding: const EdgeInsets.all(40.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
+            SizedBox(height: 40.0),
+            Text(
+              'Add Card',
+              style: TextStyle(
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+                color: customColor,
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Text(
+              '! Please add a debit or credit card to complete your purchase.',
+              style: TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.normal,
+                color: customColor,
+              ),
+            ),
+            SizedBox(height: 20.0),
             TextField(
               decoration: InputDecoration(
                 labelText: 'owner name',
@@ -75,9 +95,7 @@ class AddCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 20,
-              ),
+              SizedBox(width: 20),
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
@@ -94,50 +112,57 @@ class AddCard extends StatelessWidget {
                 ),
               )
             ]),
-            SizedBox(
-              height: 20,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'card name',
-                filled: true,
-                fillColor: Color.fromARGB(100, 150, 150, 150),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                      15.0), // Adjust the radius for curved edges
-                  borderSide:
-                  BorderSide.none, // Set the border color to gray
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: SizedBox(
-                width: 120.0, // Adjust the width as needed
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: customColor, // Set the button color
-                    minimumSize: Size(120.0, 40.0), // Set the minimum size of the button
+            SizedBox( height: 20),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextField(
+                          maxLength: 10,
+                          decoration: InputDecoration(
+                            labelText: 'card name',
+                            filled: true,
+                            fillColor: Color.fromARGB(100, 150, 150, 150),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                          ),
+                          onChanged: (value) {
+                          },
+                        ),
                   ),
-                  child: Text(
-                    'Add',
-                    style: TextStyle(
-                      color: Colors.white, // Set the text color
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+
+                  SizedBox(width: 10.0),
+                  
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Add your logic here
+                      },
+                      child: Text(
+                        'Add',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: customColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+
+                ],
               ),
-            ),
+            SizedBox(height: 20),
             ]
         )
 
@@ -145,16 +170,23 @@ class AddCard extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, size: 30.0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.close),
+            icon: Icon(Icons.close, size: 30.0),
             label: 'Cancel',
           ),
         ],
-        selectedIconTheme: IconThemeData(color: customColor), // Set color for selected icon
-        unselectedIconTheme: IconThemeData(color: customColor), // Set color for unselected icon
+        
+        selectedItemColor: customColor, // Set color for selected icon
+        selectedFontSize: double.parse('14.5'), // Set font size for selected label
+
+        showUnselectedLabels: true,
+        unselectedItemColor: customColor, // Set color for unselected icon
+        unselectedFontSize: double.parse('14.5'), // Set font size for unselected label
+        unselectedLabelStyle: TextStyle(color: customColor), // Set color for unselected label
+
         onTap: (index) {
           // Add navigation logic based on the index of tapped item
           if (index == 0) {

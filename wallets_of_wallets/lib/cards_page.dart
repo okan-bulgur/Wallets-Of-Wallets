@@ -1,11 +1,6 @@
 import 'package:firstly/add_card_page.dart';
 import 'package:firstly/main_page.dart';
-import 'package:firstly/transaction_page_admin.dart';
-import 'package:firstly/wallet_page_admin.dart';
-import 'package:firstly/wallet_setting.dart';
 import 'package:flutter/material.dart';
-import 'package:firstly/Wallets/wallet.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 
 class CardsList extends StatelessWidget {
 
@@ -16,12 +11,6 @@ class CardsList extends StatelessWidget {
     'Card_2',
     'Card_3',
     'Card_4',
-    'Card_5',
-    'Card_6',
-    'Card_7',
-    'Card_8',
-    'Card_9',
-    'Card_10',
   ];
 
   @override
@@ -38,14 +27,23 @@ class CardsList extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-
+      
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              SizedBox(height: 40.0),
+              Text(
+                'My Wallets',
+                style: TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                  color: customColor,
+                ),
+              ),
 
-              SizedBox(height: 15.0),
+              SizedBox(height: 20.0),
               for (int index = 0; index < listOfCards.length; index++)
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0, right: 30.0),
@@ -62,7 +60,7 @@ class CardsList extends StatelessWidget {
                               showSlideWindow(context, listOfCards[index] as String);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 35, 147, 157),
+                              backgroundColor: customColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
@@ -78,7 +76,7 @@ class CardsList extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 6, 7, 6),
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -136,7 +134,7 @@ class CardsList extends StatelessWidget {
       ),
     );
   }
-  void showSlideWindow(BuildContext context, String userName) {
+  void showSlideWindow(BuildContext context, String cardName) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -151,7 +149,7 @@ class CardsList extends StatelessWidget {
                 children: [
                   SizedBox(height: 60),
                   Text(
-                    '${userName}',
+                    '${cardName}',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 30.0,

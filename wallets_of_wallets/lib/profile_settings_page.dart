@@ -1,4 +1,3 @@
-import 'package:firstly/create_wallet_page.dart';
 import 'package:firstly/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart'; // Replace this import with your actual main page import
@@ -27,104 +26,146 @@ class ProfileSettings extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 80,
-              backgroundImage: AssetImage('assets/emenike.png'), // Add your avatar image
-            ),
-            SizedBox(height: 10.0),
-            Center(
-              child: SizedBox(
-                width: 120.0, // Adjust the width as needed
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: customColor, // Set the button color
-                    minimumSize: Size(120.0, 40.0), // Set the minimum size of the button
-                  ),
-                  child: Text(
-                    'Change',
-                    style: TextStyle(
-                      color: Colors.white, // Set the text color
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+            GestureDetector(
+              onTap: () {
+              // Add your logic here to handle the avatar change
+              },
+              child: CircleAvatar(
+                radius: 65,
+                backgroundImage: AssetImage('assets/pp_1.png'), // Add your avatar image
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Icon(
+                      Icons.add,
+                      size: 40,
+                      color: customColor,
                     ),
                   ),
-                ),
               ),
             ),
             SizedBox(height: 40.0),
-            TextField(
-              maxLength: 50,
-              decoration: InputDecoration(
-                labelText: 'First Name',
-                filled: true,
-                fillColor: Color.fromARGB(100, 150, 150, 150),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            SizedBox(height: 10.0),
-            TextField(
-              maxLength: 50,
-              decoration: InputDecoration(
-                labelText: 'Last Name',
-                filled: true,
-                fillColor: Color.fromARGB(100, 150, 150, 150),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            SizedBox(height: 10.0),
-            Center(
-              child: SizedBox(
-                width: 120.0, // Adjust the width as needed
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: customColor, // Set the button color
-                    minimumSize: Size(120.0, 40.0), // Set the minimum size of the button
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextField(
+                          maxLength: 10,
+                          decoration: InputDecoration(
+                            labelText: 'First Name',
+                            filled: true,
+                            fillColor: Color.fromARGB(100, 150, 150, 150),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                          ),
+                          onChanged: (value) {
+                          },
+                        ),
                   ),
-                  child: Text(
-                    'Set',
-                    style: TextStyle(
-                      color: Colors.white, // Set the text color
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+
+                  SizedBox(width: 10.0),
+                  
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Add your logic here
+                      },
+                      child: Text(
+                        'Set',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: customColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+
+                ],
               ),
-            ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextField(
+                          maxLength: 10,
+                          decoration: InputDecoration(
+                            labelText: 'Last Name',
+                            filled: true,
+                            fillColor: Color.fromARGB(100, 150, 150, 150),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                          ),
+                          onChanged: (value) {
+                          },
+                        ),
+                  ),
+
+                  SizedBox(width: 10.0),
+                  
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Add your logic here
+                      },
+                      child: Text(
+                        'Set',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: customColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, size: 30.0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.close),
+            icon: Icon(Icons.close, size: 30.0),
             label: 'Cancel',
           ),
         ],
-        selectedIconTheme: IconThemeData(color: customColor), // Set color for selected icon
-        unselectedIconTheme: IconThemeData(color: customColor), // Set color for unselected icon
+        
+        selectedItemColor: customColor, // Set color for selected icon
+        selectedFontSize: double.parse('14.5'), // Set font size for selected label
+        
+        showUnselectedLabels: true,
+        unselectedItemColor: customColor, // Set color for unselected icon
+        unselectedFontSize: double.parse('14.5'), // Set font size for unselected label
+        unselectedLabelStyle: TextStyle(color: customColor), // Set color for unselected label
+
         onTap: (index) {
           // Add navigation logic based on the index of tapped item
           if (index == 0) {

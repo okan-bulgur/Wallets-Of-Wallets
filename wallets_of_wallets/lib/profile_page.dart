@@ -10,7 +10,7 @@ class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+const List<String> list = <String>['Card 1', 'Card 2', 'Card 3', 'Card 4'];
 
 String dropdownValue = list.first; //change this to the last selected
 
@@ -55,18 +55,26 @@ class _ProfilePageState extends State<ProfilePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: 80,
-            backgroundImage: AssetImage('assets/emenike.png'), // Add your avatar image
+            radius: 65,
+            backgroundImage: AssetImage('assets/pp_1.png'), // Add your avatar image
           ),
           SizedBox(height: 20),
           Text(
-            '\$$balance',
-            style: TextStyle(fontSize: 40),
+              '₺$balance',
+              style: TextStyle(
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold,
+                color: customColor
+              ),
           ),
           SizedBox(height: 20),
           Text(
-            'Selected User: $selectedUser',
-            style: TextStyle(fontSize: 20),
+            '$selectedUser',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+              color: customColor
+            ),
           ),
           SizedBox(height: 20),
           Padding(
@@ -77,8 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 filled: true,
                 fillColor: Color.fromARGB(100, 150, 150, 150),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                      15.0), // Adjust the radius for curved edges
+                  borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
                   borderSide:
                   BorderSide.none, // Set the border color to gray
                 ),
@@ -97,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },);
               },
               isExpanded: true)),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -106,8 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 filled: true,
                 fillColor: Color.fromARGB(100, 150, 150, 150),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                      15.0), // Adjust the radius for curved edges
+                  borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
                   borderSide:
                   BorderSide.none, // Set the border color to gray
                 ),
@@ -117,13 +123,10 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(height: 20),
           Center(
             child: SizedBox(
-              width: 120.0, // Adjust the width as needed
+              width: 300.0, // Adjust the width as needed
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
-                  );
+                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor, // Set the button color
@@ -143,13 +146,9 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(height: 20),
           Center(
             child: SizedBox(
-              width: 120.0, // Adjust the width as needed
+              width: 300.0, // Adjust the width as needed
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
-                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor, // Set the button color

@@ -84,7 +84,7 @@ class WalletSetting extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 100.0),
+              SizedBox(height: 50.0),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Column(
@@ -233,60 +233,51 @@ class WalletSetting extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                      Expanded(
-                        child: TextField(
-                              maxLength: 10,
-                              decoration: InputDecoration(
-                                labelText: 'Amount',
-                                filled: true,
-                                fillColor: Color.fromARGB(100, 150, 150, 150),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  borderSide: BorderSide.none,
+                        Expanded(
+                          child: TextField(
+                                maxLength: 10,
+                                decoration: InputDecoration(
+                                  labelText: 'Amount',
+                                  filled: true,
+                                  fillColor: Color.fromARGB(100, 150, 150, 150),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
                                 ),
-                                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                                onChanged: (value) {
+                                },
                               ),
-                              onChanged: (value) {
-                              },
-                            ),
-                      ),
+                        ),
 
-                      SizedBox(width: 10.0),
-                      
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 25.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Add your logic here
-                          },
-                          child: Text(
-                            'Set',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              
+                        SizedBox(width: 10.0),
+                        
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 25.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // Add your logic here
+                            },
+                            child: Text(
+                              'Set',
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                
+                              ),
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: customColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: customColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-
-                    ],),
-                    
-                    
-
-                    
-
-                   
-                    
-                  
-                    
+                      ],
+                    ),
                   ],
                 ),
               )
