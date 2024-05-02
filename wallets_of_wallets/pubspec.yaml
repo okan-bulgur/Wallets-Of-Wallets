@@ -38,6 +38,8 @@ dependencies:
   carousel_slider: ^4.2.1
   qr_flutter: ^4.1.0
   sliding_up_panel: ^2.0.0+1
+  firebase_core: ^2.30.1
+  firebase_auth: ^4.19.4
 
 dev_dependencies:
   flutter_test:

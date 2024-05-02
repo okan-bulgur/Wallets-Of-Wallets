@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "608723730127",
+    "project_id": "wallets-of-wallets",
+    "storage_bucket": "wallets-of-wallets.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608723730127:android:4e3f9c409614426f5141ba",
+        "android_client_info": {
+          "package_name": "com.example.firstly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA03oWfzowRQEDSdGTq2_BCoLnNFyjHX70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

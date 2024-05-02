@@ -2,10 +2,13 @@
 
 import 'package:flutter/material.dart';
 
-import 'main_page.dart';
+import 'data_base_manager.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatelessWidget {
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   final Color customColor = Color(0xFF0A5440);
 
@@ -43,6 +46,7 @@ class LoginPage extends StatelessWidget {
             child: Column(
               children: [
                 TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     prefixIcon: Icon(Icons.email),
@@ -58,6 +62,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 TextField(
+                  controller: passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: Icon(Icons.lock),
@@ -73,16 +78,10 @@ class LoginPage extends StatelessWidget {
                   obscureText: true,
                 ),
                 const SizedBox(height: 40),
+        
                 ElevatedButton(
-                  onPressed: () {
-                    // Perform login authentication here
-                    // For simplicity, let's just navigate to the main page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MainPage(),
-                      ),
-                    );
+                  onPressed: () async {
+                    DataBaseManager.login(context, emailController.text, passwordController.text);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(customColor), // Change background color

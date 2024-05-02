@@ -1,10 +1,15 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-
-import 'main_page.dart';
+import 'data_base_manager.dart';
 
 class RegisterPage extends StatelessWidget {
+
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController surnameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   final Color customColor = Color(0xFF0A5440);
 
@@ -42,6 +47,7 @@ class RegisterPage extends StatelessWidget {
               ),
               SizedBox(height: 24.0),
               TextField(
+                controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
                   prefixIcon: Icon(Icons.person),
@@ -55,6 +61,7 @@ class RegisterPage extends StatelessWidget {
               ),
               SizedBox(height: 16.0),
               TextField(
+                controller: surnameController,
                 decoration: InputDecoration(
                   labelText: 'Surname',
                   prefixIcon: Icon(Icons.person),
@@ -68,6 +75,7 @@ class RegisterPage extends StatelessWidget {
               ),
               SizedBox(height: 16.0),
               TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   prefixIcon: Icon(Icons.email),
@@ -81,6 +89,7 @@ class RegisterPage extends StatelessWidget {
               ),
               SizedBox(height: 16.0),
               TextField(
+                controller: passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   prefixIcon: Icon(Icons.lock),
@@ -96,14 +105,7 @@ class RegisterPage extends StatelessWidget {
               SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: () {
-                  // Perform registration logic here
-                  // For simplicity, let's just navigate to the main page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MainPage(),
-                    ),
-                  );
+                  DataBaseManager.signup(context, nameController.text, surnameController.text, emailController.text, passwordController.text);
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(customColor), // Change background color
@@ -141,59 +143,6 @@ class RegisterPage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
-
-  @override
-  _RegisterFormState createState() => _RegisterFormState();
-}
-
-class _RegisterFormState extends State<RegisterForm> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          TextField(
-            controller: _usernameController,
-            decoration: const InputDecoration(
-              labelText: 'Username',
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          TextField(
-            controller: _passwordController,
-            decoration: const InputDecoration(
-              labelText: 'Password',
-            ),
-            obscureText: true,
-          ),
-          const SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () {
-              // Perform registration logic here
-              // For simplicity, let's just navigate to the main page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MainPage(),
-                ),
-              );
-            },
-            child: const Text('Register'),
-          ),
-        ],
       ),
     );
   }
