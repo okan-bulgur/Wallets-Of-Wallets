@@ -1,6 +1,9 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, library_private_types_in_public_api, avoid_print, unused_import
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firstly/cards_page.dart';
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/profile_settings_page.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +20,39 @@ String dropdownValue = list.first; //change this to the last selected
 class _ProfilePageState extends State<ProfilePage> {
   final Color customColor = Color(0xFF0A5440);
 
-  String selectedUser = 'John Doe'; // Default user
+  String selectedUser = ''; // Default user
   double balance = 0.00;
+    // Get the current user's email
+  String? userEmail = FirebaseAuth.instance.currentUser!.email;
 
+  @override
+  void initState() {
+    super.initState();
+    // Fetch user data when the page is initialized
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    try {
+      // Retrieve user data from Firestore
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(userEmail).get();
+
+      // Extract user information
+      if (userSnapshot.exists) {
+        setState(() {
+          // Update selected user's name and surname
+          selectedUser = '${userSnapshot['name']} ${userSnapshot['surname']}';
+          // Update balance
+          balance = userSnapshot['balance'].toDouble();
+        });
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+    }
+  }
+
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
