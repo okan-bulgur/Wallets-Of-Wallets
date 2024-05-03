@@ -105,7 +105,7 @@ class RegisterPage extends StatelessWidget {
               SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: () {
-                  DataBaseManager.signup(context, nameController.text, surnameController.text, emailController.text, passwordController.text);
+                  AuthenticationManager.signup(context, nameController.text, surnameController.text, emailController.text, passwordController.text);
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(customColor), // Change background color

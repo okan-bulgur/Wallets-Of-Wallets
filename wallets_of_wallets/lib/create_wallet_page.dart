@@ -2,12 +2,28 @@
 
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firstly/Wallets/walletManager.dart';
+import 'package:firstly/main.dart';
+import 'data_base_manager.dart';
 
 import 'package:firstly/join_wallet_page.dart';
 import 'package:firstly/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+
+String generateRandomString(int length) {
+  const _randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const _charsLength = _randomChars.length;
+  final _rnd = Random();
+
+  final codeUnits = List.generate(
+    length,
+    (index) => _randomChars[_rnd.nextInt(_charsLength)].codeUnitAt(0),
+  );
+
+  return String.fromCharCodes(codeUnits);
+}
 
 class CreateWalletScreen extends StatefulWidget {
   @override
@@ -15,7 +31,11 @@ class CreateWalletScreen extends StatefulWidget {
 }
 
 class _CreateWalletScreenState extends State<CreateWalletScreen> {
-  
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController colorController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
   final Color customColor = Color(0xFF0A5440);
 
   late Color selectedColor; // Initialize late variable
@@ -110,6 +130,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
             SizedBox(height: 40.0),
             TextField(
               maxLength: 10,
+              controller: nameController,
               decoration: InputDecoration(
                 labelText: 'Set Wallet Name',
                 filled: true,
@@ -126,6 +147,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
             SizedBox(height: 20.0),
             TextField(
               maxLength: 25,
+              controller: descriptionController,
               decoration: InputDecoration(
                 labelText: 'Set Description',
                 filled: true,
@@ -146,7 +168,13 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     // Generate a wallet
-                    WalletManager.generateWallet(selectedColor, walletName, walletDescription);
+                    WalletsTableManager.addWallet(
+                      generateRandomString(6),
+                      nameController.text,
+                      descriptionController.text,
+                      selectedColor,
+                      FirebaseAuth.instanceFor(app: app).currentUser!.email.toString(),
+                    );
                     // Store the wallet or perform any other operations
 
                     // Navigate to MainPage
