@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
 import 'package:firstly/create_wallet_page.dart';
+import 'package:firstly/data_base_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart'; // Replace this import with your actual main page import
 
 class JoinWalletScreen extends StatelessWidget {
+
+  final TextEditingController walletIDController = TextEditingController();
 
   final Color customColor = Color(0xFF0A5440);
 
@@ -30,7 +33,8 @@ class JoinWalletScreen extends StatelessWidget {
           children: [
             SizedBox(height: 10.0),
             TextField(
-              maxLength: 50,
+              maxLength: 6,
+              controller: walletIDController,
               decoration: InputDecoration(
                 labelText: 'Enter Wallet ID',
                 filled: true,
@@ -47,10 +51,9 @@ class JoinWalletScreen extends StatelessWidget {
                 width: 120.0, // Adjust the width as needed
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
-                    );
+                    if (WalletsTableManager.joinWallet(context, walletIDController.text) == true) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully joined the wallet',textAlign: TextAlign.center)));
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: customColor, // Set the button color

@@ -3,8 +3,6 @@
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firstly/Wallets/walletManager.dart';
-import 'package:firstly/main.dart';
 import 'data_base_manager.dart';
 
 import 'package:firstly/join_wallet_page.dart';
@@ -167,9 +165,10 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                 width: 120.0, // Adjust the width as needed
                 child: ElevatedButton(
                   onPressed: () {
+                    String id = generateRandomString(6);
                     // Generate a wallet
                     WalletsTableManager.addWallet(
-                      generateRandomString(6),
+                      id,
                       nameController.text,
                       descriptionController.text,
                       selectedColor,

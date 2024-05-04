@@ -1,33 +1,30 @@
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:flutter/material.dart';
 
-import 'dart:math';
-
-String generateRandomString(int length) {
-  const _randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const _charsLength = _randomChars.length;
-  final _rnd = Random();
-
-  final codeUnits = List.generate(
-    length,
-    (index) => _randomChars[_rnd.nextInt(_charsLength)].codeUnitAt(0),
-  );
-
-  return String.fromCharCodes(codeUnits);
-}
-
 class WalletManager {
   static List<Wallet> wallets = [];
   static Wallet? selectedWallet;
 
-  static generateWallet(Color selectedColor, String name, String description) {
+  static void generateWallet(Color selectedColor, String name, String description, String id, int balance, int paymentAmount) {
     Wallet wallet = Wallet(
       color: selectedColor,
       name: name,
       description: description,
-      id: generateRandomString(6),
+      id: id,
+      balance: balance,
+      paymentAmount: paymentAmount,
     );
     WalletManager.addWallet(wallet);
+  }
+
+  static void setUsersWallets(List<Wallet> wallets) {
+    if (WalletManager.wallets.isNotEmpty) {
+      WalletManager.wallets.clear();
+    }
+    selectedWallet = null;
+    if (wallets.isNotEmpty) {
+      WalletManager.wallets = wallets;
+    }
   }
   
   static void addWallet(Wallet wallet) {

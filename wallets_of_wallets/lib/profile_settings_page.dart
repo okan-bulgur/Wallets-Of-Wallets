@@ -1,8 +1,5 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
-
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart'; // Replace this import with your actual main page import
@@ -12,10 +9,9 @@ class ProfileSettings extends StatelessWidget {
   final Color customColor = Color(0xFF0A5440);
 
   TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
+  TextEditingController surnameController = TextEditingController();
 
   // Get the current user's email
-  String? userEmail = FirebaseAuth.instance.currentUser!.email;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +79,7 @@ class ProfileSettings extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 25.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        updateUserName(context,userEmail!);
+                        UsersTableManager.updateUserName(context,userEmail!, firstNameController.text.trim());
                       },
                       child: Text(
                         'Set',
@@ -112,7 +108,7 @@ class ProfileSettings extends StatelessWidget {
                   Expanded(
                     child: TextField(
                           maxLength: 10,
-                          controller: lastNameController,
+                          controller: surnameController,
                           decoration: InputDecoration(
                             labelText: 'Last Name',
                             filled: true,
@@ -134,7 +130,7 @@ class ProfileSettings extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 25.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        updateUserSurname(context,userEmail!);
+                        UsersTableManager.updateUserSurname(context,userEmail!, surnameController.text.trim());
                       },
                       child: Text(
                         'Set',
@@ -195,63 +191,7 @@ class ProfileSettings extends StatelessWidget {
         },
       ),
     );
-  }
-  
-  void updateUserName(BuildContext context, String userEmail) async {
-    try {
-      String firstName = firstNameController.text.trim();
-
-      if (firstName.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please enter a valid name',textAlign: TextAlign.center,)));
-        return; // Stop further execution
-      }
-
-      // Update user data in Firestore using the user's email
-      await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
-        'name': firstName,
-      });
-
-      // Show success message or navigate to another page
-      // Example:
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name updated successfully ',textAlign: TextAlign.center,)));
-      // Navigator.pop(context as BuildContext); // Pop this screen and go back to the previous screen
-
-    } catch (e) {
-      print("Error updating user: $e");
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating user')));
-    }
-  }
-
-
-
-  void updateUserSurname(BuildContext context, String userEmail) async {
-    try {
-      
-      String lastName = lastNameController.text.trim();
-
-      if (lastName.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please enter a valid  username',textAlign: TextAlign.center,)));
-        return; // Stop further execution
-      }
-
-      // Update user data in Firestore
-      await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
-        'surname': lastName,
-      });
-
-      // Show success message or navigate to another page
-      // Example:
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Surname updated successfully',textAlign: TextAlign.center,)));
-      // Navigator.pop(context as BuildContext); // Pop this screen and go back to the previous screen
-
-    } catch (e) {
-      print("Error updating user: $e");
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating user')));
-    }
-  }
-  
+  } 
 }
 
 

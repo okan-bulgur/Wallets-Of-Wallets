@@ -81,7 +81,7 @@ class LoginPage extends StatelessWidget {
         
                 ElevatedButton(
                   onPressed: () async {
-                    AuthenticationManager.login(context, emailController.text, passwordController.text);
+                    AuthenticationManager.login(context, emailController.text, passwordController.text);                 
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(customColor), // Change background color

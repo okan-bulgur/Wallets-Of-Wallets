@@ -5,15 +5,16 @@ class Wallet {
   String _name;
   String _description;
   String _id;
-
-  int _balance = 0;
-  int _paymentAmount = 0;
+  int _balance;
+  int _paymentAmount;
  
-  Wallet({required Color color, required String name, required String description, required String id})
+  Wallet({required Color color, required String name, required String description, required String id, required int balance, required int paymentAmount})
       : _color = color,
         _name = name,
         _description = description,
-        _id = id;
+        _id = id,
+        _balance = balance,
+        _paymentAmount = paymentAmount;
 
   Color get walletColor => _color;
   set walletColor(Color newColor) => _color = newColor;
