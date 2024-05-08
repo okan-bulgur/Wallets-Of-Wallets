@@ -1,41 +1,56 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: unnecessary_string_interpolations, library_private_types_in_public_api, use_key_in_widget_constructors, prefer_const_constructors
+
+import 'package:firstly/data_base_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/transaction_page_admin.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_setting.dart';
-import 'package:flutter/material.dart';
-import 'package:firstly/Wallets/wallet.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 
-class MemberListPage extends StatelessWidget {
+class MemberListPage extends StatefulWidget {
+  @override
+  _MemberListPageState createState() => _MemberListPageState();
+}
 
+class _MemberListPageState extends State<MemberListPage> {
   final Color customColor = Color(0xFF0A5440);
+  List<List<Object>> listOfUsers = [];
+  late Wallet wallet;
+  @override
+  
+  void initState() {
+    super.initState();
+    wallet = WalletManager.selectedWallet!;
+    fetchMembersAndAdmins();
+  }
 
-  List<List<Object>> listOfUsers = [
-    ['User_1', 'Admin'],
-    ['User_2', 'Admin'],
-    ['User_3', 'Admin'],
-    ['User_4', 'Member'],
-    ['User_5', 'Member'],
-    ['User_6', 'Member'],
-    ['User_7', 'Member'],
-    ['User_8', 'Member'],
-    ['User_9', 'Member'],
-    ['User_10', 'Member'],
-    ['User_11', 'Member'],
-    ['User_12', 'Member'],
-    ['User_13', 'Member'],
-    ['User_14', 'Member'],
-    ['User_15', 'Member'],
-    ['User_16', 'Member'],
-    ['User_17', 'Member'],
-    ['User_18', 'Member'],
-    ['User_19', 'Member'],
-    ['User_20', 'Member'],
-  ];
+  Future<void> fetchMembersAndAdmins() async {
+    try {
+      DocumentSnapshot walletSnapshot = await FirebaseFirestore.instance
+          .collection('wallets')
+          .doc('${wallet.walletId}')
+          .get();
+      List<String> adminList =
+          List<String>.from(walletSnapshot['list_of_admins']);
+      List<String> memberList =
+          List<String>.from(walletSnapshot['list_of_members']);
 
-  Wallet wallet;
-  MemberListPage() : wallet = WalletManager.selectedWallet!;
+      setState(() {
+        listOfUsers = [];
+        adminList.forEach((admin) {
+          listOfUsers.add([admin, 'Admin']);
+        });
+        memberList.forEach((member) {
+          listOfUsers.add([member, 'Member']);
+        });
+      });
+    } catch (e) {
+      print("Error fetching members and admins: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +59,14 @@ class MemberListPage extends StatelessWidget {
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
-              fontSize: 30.0,
-              fontWeight: FontWeight.bold,
-              color: customColor),
+            fontSize: 30.0,
+            fontWeight: FontWeight.bold,
+            color: customColor,
+          ),
         ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -59,57 +74,54 @@ class MemberListPage extends StatelessWidget {
             children: [
               SizedBox(height: 30.0),
               Padding(
-                padding: const EdgeInsets.only(left: 40.0 , right: 40.0 ),
+                padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    
                     Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-    
-                          Text(
-                            '${wallet.walletName}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: customColor),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${wallet.walletName}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: customColor,
                           ),
-                          
-                          Text(
-                            '${wallet.walletDescription}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: customColor),
+                        ),
+                        Text(
+                          '${wallet.walletDescription}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: customColor,
                           ),
-
-
-                          Text(
-                            'Payment: ₺${wallet.walletPaymentAmount}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                                color: customColor),
+                        ),
+                        Text(
+                          'Payment: ₺${wallet.walletPaymentAmount}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: customColor,
                           ),
-                        ],
+                        ),
+                      ],
                     ),
-
                     Text(
-                        'ID: ${wallet.walletId}',
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                          color: customColor),
+                      'ID: ${wallet.walletId}',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: customColor,
+                      ),
                     ),
                   ],
                 ),
               ),
-
-             SizedBox(height: 15.0),
+              SizedBox(height: 15.0),
               for (int user = 0; user < listOfUsers.length; user++)
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0, right: 30.0),
@@ -123,19 +135,33 @@ class MemberListPage extends StatelessWidget {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              showSlideWindow(context, listOfUsers[user][0] as String, listOfUsers[user][1] as String);
+                              print(userEmail);
+                              print(listOfUsers[user][0]);
+                              if(userEmail != listOfUsers[user][0] as String){
+                                showSlideWindow(
+                                  context,
+                                  listOfUsers[user][0] as String,
+                                  listOfUsers[user][1] as String,
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: listOfUsers[user][1] == 'Admin' ? Color.fromARGB(255, 162, 68, 229) : Color.fromARGB(255, 35, 147, 157),
+                              backgroundColor: listOfUsers[user][1] == 'Admin'
+                                  ? Color.fromARGB(255, 162, 68, 229)
+                                  : Color.fromARGB(255, 35, 147, 157),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
                             child: Container(
                               height: 70.0,
-                              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                              padding: const EdgeInsets.only(
+                                left: 10.0,
+                                right: 10.0,
+                              ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "${listOfUsers[user][0]}",
@@ -162,53 +188,47 @@ class MemberListPage extends StatelessWidget {
                     ],
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
-
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem> [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 30.0), // Change the size value to your desired size
+            icon: Icon(Icons.home, size: 30.0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.paid, size: 30.0), // Change the size value to your desired size
+            icon: Icon(Icons.paid, size: 30.0),
             label: 'Payment',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.wallet, size: 30.0), // Change the size value to your desired size
+            icon: Icon(Icons.wallet, size: 30.0),
             label: 'Wallet',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings, size: 30.0), // Change the size value to your desired size
+            icon: Icon(Icons.settings, size: 30.0),
             label: 'Settings',
           ),
         ],
-        
-        selectedItemColor: customColor, // Set color for selected icon
-        selectedFontSize: double.parse('14.5'), // Set font size for selected label
-        
+        selectedItemColor: customColor,
+        selectedFontSize: 14.5,
         showUnselectedLabels: true,
-        unselectedItemColor: customColor, // Set color for unselected icon
-        unselectedFontSize: double.parse('14.5'), // Set font size for unselected label
-        unselectedLabelStyle: TextStyle(color: customColor), // Set color for unselected label
-        
+        unselectedItemColor: customColor,
+        unselectedFontSize: 14.5,
+        unselectedLabelStyle: TextStyle(color: customColor),
         onTap: (index) {
           switch (index) {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+                MaterialPageRoute(builder: (context) => MainPage()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => TransactionPageAdmin(),
-                ),
+                MaterialPageRoute(builder: (context) => TransactionPageAdmin()),
               );
               break;
             case 2:
@@ -219,8 +239,8 @@ class MemberListPage extends StatelessWidget {
               break;
             case 3:
               Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
+                context,
+                MaterialPageRoute(builder: (context) => WalletSetting()),
               );
               break;
           }
@@ -228,13 +248,14 @@ class MemberListPage extends StatelessWidget {
       ),
     );
   }
-  void showSlideWindow(BuildContext context, String userName, String userRole) {
+
+  void showSlideWindow(BuildContext context, String userMail, String userRole) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
           height: 350,
-          color: customColor, // Change the background color to blue
+          color: customColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -243,7 +264,7 @@ class MemberListPage extends StatelessWidget {
                 children: [
                   SizedBox(height: 60),
                   Text(
-                    '${userName}',
+                    '$userMail',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 30.0,
@@ -253,7 +274,7 @@ class MemberListPage extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    '${userRole}',
+                    '$userRole',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 15.0,
@@ -261,45 +282,47 @@ class MemberListPage extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 50), // Add spacing between buttons
-                  SizedBox(
-                    width: 250.0, // Adjust the width as needed
-                    child: ElevatedButton(
-                      onPressed: () {
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        minimumSize: Size(120.0, 50.0),
-                      ),
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        userRole == 'Admin' ? 'Dismis as Admin' : 'Make Wallet Admin',
-                        style: TextStyle(
-                          color: userRole == 'Admin' ? Colors.red : customColor,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  SizedBox(height: 50),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (userRole == 'Admin') {
+                        await WalletsTableManager.dismissAsAdmin(context, wallet.walletId, userMail);
+                      } else {
+                        await WalletsTableManager.makeWalletAdmin(context, wallet.walletId, userMail);
+                      }
+                      Navigator.pop(context); // Close the bottom sheet
+                      await fetchMembersAndAdmins();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      minimumSize: Size(120.0, 50.0),
+                    ),
+                    child: Text(
+                      userRole == 'Admin' ? 'Dismiss as Admin' : 'Make Wallet Admin',
+                      style: TextStyle(
+                        color: userRole == 'Admin' ? Colors.red : customColor,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  SizedBox(height: 30), // Add spacing between buttons
-                  SizedBox(
-                    width: 250.0, // Adjust the width as needed
-                    child: ElevatedButton(
-                      onPressed: () {
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        minimumSize: Size(120.0, 50.0),
-                      ),
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        'Remove User From Wallet',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () async {
+                      WalletsTableManager.removeUserFromWallet(wallet.walletId, userMail);
+                      Navigator.pop(context);
+                      await fetchMembersAndAdmins(); // Close the bottom sheet
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      minimumSize: Size(120.0, 50.0),
+                    ),
+                    child: Text(
+                      'Remove User From Wallet',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -311,4 +334,5 @@ class MemberListPage extends StatelessWidget {
       },
     );
   }
+
 }

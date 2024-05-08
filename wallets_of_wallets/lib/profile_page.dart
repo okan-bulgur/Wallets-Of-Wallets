@@ -75,10 +75,10 @@ class _ProfilePageState extends State<ProfilePage> {
               size: 40, // Replace with your desired size
             ),
             onPressed: () {
-              // Navigate to the login page
+              FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
+                MaterialPageRoute(builder: (_) => LoginPage()),
               );
             },
           ),

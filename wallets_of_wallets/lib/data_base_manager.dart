@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,9 @@ class AuthenticationManager {
           email: email,
           password: password,
         );
+
+        userEmail = FirebaseAuth.instance.currentUser!.email;
+        
         // If login successful, navigate to the main page
         List<Wallet> wallets = await WalletsTableManager.getUserWallets(email);
         WalletManager.setUsersWallets(wallets);
@@ -154,6 +159,7 @@ class UsersTableManager {
 }
 
 class WalletsTableManager{
+  
   static Future<void> addWallet(String walletID, String walletName, String walletDescription, Color walletColor, String email) async {
     try {
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).set({
@@ -333,4 +339,40 @@ class WalletsTableManager{
     }
     return false;
   }
+
+    static Future<void> dismissAsAdmin(BuildContext context, String walletID, String currentUser) async {
+      try {
+        await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+          'list_of_members': FieldValue.arrayUnion([currentUser]),
+          'list_of_admins': FieldValue.arrayRemove([currentUser])
+        });
+      } catch (e) {
+        print("Error dismissing as admin: $e");
+      }
+  }
+
+  static Future<void> makeWalletAdmin(BuildContext context, String walletID, String currentUser) async {
+    try {
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+        'list_of_admins': FieldValue.arrayUnion([currentUser]),
+        'list_of_members': FieldValue.arrayRemove([currentUser])
+      });
+    } catch (e) {
+      print("Error making wallet admin: $e");
+    }
+  }
+
+  static Future<void> removeUserFromWallet(String walletID, String userEmail) async {
+    try {
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+        'list_of_admins': FieldValue.arrayRemove([userEmail]),
+        'list_of_members': FieldValue.arrayRemove([userEmail])
+      });
+    } catch (e) {
+      print("Error removing user from wallet: $e");
+    }
+  }
+
+
+
 }
