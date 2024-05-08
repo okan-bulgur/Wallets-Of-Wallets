@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 FirebaseApp app = Firebase.app();
-String? userEmail = FirebaseAuth.instance.currentUser!.email;
+String? userEmail;
 
 class AuthenticationManager {
   static login(BuildContext context, email, String password) async {
@@ -26,6 +26,8 @@ class AuthenticationManager {
           context,
           MaterialPageRoute(builder: (context) => MainPage()),
         );
+
+        userEmail = FirebaseAuth.instance.currentUser!.email;
 
       } catch (e) {
         // Handle login errors (e.g., display error message)
@@ -55,6 +57,19 @@ class AuthenticationManager {
           content: Text("Signup failed. Please try again."),
         ),
       );
+    }
+  }
+
+  static logout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      userEmail = null;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } catch (e) {
+      print("Logout error: $e");
     }
   }
 }

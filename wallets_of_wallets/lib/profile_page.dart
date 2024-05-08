@@ -75,6 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
               size: 40, // Replace with your desired size
             ),
             onPressed: () {
+              AuthenticationManager.logout(context);
               // Navigate to the login page
               Navigator.pushReplacement(
                 context,
