@@ -173,20 +173,64 @@ class _MainPageState extends State<MainPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CreateWalletScreen()),
-          );
-        },
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        child: Icon(
-          Icons.add,
-          size: 50, // Adjust size of the icon
-          color: customColor,
-        ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30),
+            child: FloatingActionButton(
+              onPressed: () {
+                // Add functionality for the help button
+                // This could be a dialog or a new screen displaying information about the application
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("Help"),
+                      content: Text("To see your profile/balance click on the button top right.\nTo create/join wallet click on the button bottom right.\nTo view wallet click on the wallet square center of the screen."),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Close"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              child: Icon(
+                Icons.help,
+                size: 40, // Adjust size of the icon
+                color: customColor,
+              ),
+            ),
+          ),
+          
+    
+          
+          FloatingActionButton(
+            onPressed: () {
+              // Add functionality for the existing floating action button
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateWalletScreen()),
+              );
+            },
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            child: Icon(
+              Icons.add,
+              size: 50, // Adjust size of the icon
+              color: customColor,
+            ),
+          ),
+           // Add spacing between the buttons
+
+        ],
       ),
     );
   }
