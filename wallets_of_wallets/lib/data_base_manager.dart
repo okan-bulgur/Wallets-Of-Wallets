@@ -25,6 +25,7 @@ class AuthenticationManager {
         
         // If login successful, navigate to the main page
         List<Wallet> wallets = await WalletsTableManager.getUserWallets(email);
+        print(wallets.length);
         WalletManager.setUsersWallets(wallets);
         
         Navigator.push(
@@ -34,8 +35,10 @@ class AuthenticationManager {
 
         userEmail = FirebaseAuth.instance.currentUser!.email;
 
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login successful',textAlign: TextAlign.center,)));
+
       } catch (e) {
-        // Handle login errors (e.g., display error message)
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Password or email is incorrect !',textAlign: TextAlign.center,)));
         print("Login error: $e");
       }
   }
@@ -50,6 +53,7 @@ class AuthenticationManager {
       );
       UsersTableManager.addUser(name, surname, email);
       // If signup successful, navigate to the desired page (e.g., main page)
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Signup successful',textAlign: TextAlign.center,)));
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()), // Replace MainPage with your desired destination
@@ -108,15 +112,7 @@ class UsersTableManager {
     }  
   }
 
-  static Future<void> deleteUser(String email) async {
-    try {
-      await FirebaseFirestore.instance.collection('users').doc(email).delete();
-    } catch (e) {
-      print("Error deleting user: $e");
-    }
-  }
-
-  static void updateUserName(BuildContext context, String userEmail, String firstName) async {
+  static Future<void> updateUserName(BuildContext context, String userEmail, String firstName) async {
     try {
 
       if (firstName.isEmpty) {
@@ -140,7 +136,7 @@ class UsersTableManager {
     }
   }
 
-  static void updateUserSurname(BuildContext context, String userEmail, String surname) async {
+  static Future<void> updateUserSurname(BuildContext context, String userEmail, String surname) async {
     try {
 
       if (surname.isEmpty) {
@@ -164,13 +160,6 @@ class UsersTableManager {
     }
   }
 
-  static Future<void> getUser(String email) async {
-    try {
-      await FirebaseFirestore.instance.collection('users').doc(email).get();
-    } catch (e) {
-      print("Error getting user: $e");
-    }
-  }
 }
 
 class WalletsTableManager{
@@ -240,37 +229,82 @@ class WalletsTableManager{
     return true;
   }
 
-  static Future<void> deleteWallet(String walletID) async {
+  static Future<void> deleteWallet(BuildContext context, String walletID) async {
     try {
+
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) async {
+        List<String> admins = List<String>.from(value.data()!['list_of_admins']);
+        List<String> members = List<String>.from(value.data()!['list_of_members']);
+
+        for (var admin in admins) {
+          await FirebaseFirestore.instance.collection('users').doc(admin).update({
+            'list_of_wallets': FieldValue.arrayRemove([walletID])
+          });
+        }
+        
+        for (var member in members) {
+          await FirebaseFirestore.instance.collection('users').doc(member).update({
+            'list_of_wallets': FieldValue.arrayRemove([walletID])
+          });
+        }
+      });
+
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).delete();
 
-      for (var member in await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) => value.data()!['list_of_members'])) {
-        await FirebaseFirestore.instance.collection('users').doc(member).update({
-          'list_of_wallets': FieldValue.arrayRemove([walletID])
-        });
-      }
+      List<Wallet> wallets = await WalletsTableManager.getUserWallets(userEmail!);
+      WalletManager.setUsersWallets(wallets);
 
-      for (var admin in await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) => value.data()!['list_of_admins'])) {
-        await FirebaseFirestore.instance.collection('users').doc(admin).update({
-          'list_of_wallets': FieldValue.arrayRemove([walletID])
-        });
-      }
-
-    }
-    catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallet successfully deleted',textAlign: TextAlign.center,)));
+    } catch (e) {
       print("Error deleting wallet: $e");
     }
   }
 
-  static Future<void> updateWalletSettings(String walletID, String walletName, String walletDescription, Color walletColor) async {
+  static Future<void> updateWalletName(BuildContext context, String walletID, String name) async {
     try {
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
-        'name': walletName,
-        'description': walletDescription,
-        'color': walletColor.value.toString(),
+        'name': name,
       });
+      WalletManager.updateWalletName(name);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name of wallet updated successfully',textAlign: TextAlign.center)));
     } catch (e) {
-      print("Error updating wallet: $e");
+      print("Error updating wallet balance: $e");
+    }
+  }
+
+  static Future<void> updateWalletDescription(BuildContext context, String walletID, String description) async {
+    try {
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+        'description': description,
+      });
+      WalletManager.updateWalletDescription(description);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Description of wallet updated successfully',textAlign: TextAlign.center)));
+    } catch (e) {
+      print("Error updating wallet balance: $e");
+    }
+  }
+
+  static Future<void> updateWalletPaymentAmount(BuildContext context, String walletID, double payment_amount) async {
+    try {
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+        'payment_amount': payment_amount,
+      });
+      WalletManager.updateWalletPaymentAmount(payment_amount);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Payment amount of wallet updated successfully',textAlign: TextAlign.center)));
+    } catch (e) {
+      print("Error updating wallet balance: $e");
+    }
+  }
+
+  static Future<void> updateWalletColor(BuildContext context, String walletID, Color color) async {
+    try {
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+        'color': color.value.toString(),
+      });
+      WalletManager.updateWalletColor(color);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Color of wallet updated successfully',textAlign: TextAlign.center)));
+    } catch (e) {
+      print("Error updating wallet balance: $e");
     }
   }
 
@@ -278,15 +312,16 @@ class WalletsTableManager{
     List<Wallet> wallets = [];
     try {
       await FirebaseFirestore.instance.collection('users').doc(email).get().then((value) async {
-        for (var walletID in value.data()!['list_of_wallets']) {
+        List<String> walletIDs = List<String>.from(value.data()!['list_of_wallets']);
+        for (var walletID in walletIDs) {
           await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) {
             wallets.add(Wallet(
               color: Color(int.parse(value.data()!['color'])),
               name: value.data()!['name'],
               description: value.data()!['description'],
               id: value.data()!['id'],
-              balance: value.data()!['balance'],
-              paymentAmount: value.data()!['payment_amount']
+              balance: value.data()!['balance'].toDouble(),
+              paymentAmount: value.data()!['payment_amount'].toDouble(),
             ));
           });
         }

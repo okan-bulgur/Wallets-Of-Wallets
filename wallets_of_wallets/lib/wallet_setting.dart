@@ -1,18 +1,40 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+import 'dart:io';
 
 import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Wallets/walletManager.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-class WalletSetting extends StatelessWidget {
+class WalletSetting extends StatefulWidget {
+  @override
+  _WalletSetting createState() => _WalletSetting();
+}
+
+class _WalletSetting extends State<WalletSetting> {
   final Color customColor = Color(0xFF0A5440);
 
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController paymentAmountController = TextEditingController();
+  late Color selectedColor;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedColor = WalletManager.selectedWallet!.walletColor;
+  }
+
+  void changeColor(Color color) {
+    setState(() => selectedColor = color);
+  }
+
   final Wallet wallet;
-  WalletSetting({Key? key}) 
-    : wallet = WalletManager.selectedWallet!,
-      super(key: key);
+  _WalletSetting({Key? key}) 
+    : wallet = WalletManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +112,51 @@ class WalletSetting extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0), // Make corners curvy
+                              ),
+                              title: Text('Select a color'),
+                              content: SingleChildScrollView(
+                                child: ColorPicker(
+                                  pickerColor: selectedColor,
+                                  onColorChanged: changeColor,
+                                  showLabel: true,
+                                  pickerAreaHeightPercent: 0.8,
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text(
+                                    'SET COLOR',
+                                    style: TextStyle(
+                                      color: customColor, // Same color as title
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    WalletsTableManager.updateWalletColor(context, wallet.walletId, selectedColor);
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: 60.0,
+                        decoration: BoxDecoration(
+                          color: selectedColor,
+                          borderRadius: BorderRadius.circular(10.0), // Make corners curvy
+                        ),
+                      ),
+                    ),
                     
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -110,6 +177,7 @@ class WalletSetting extends StatelessWidget {
                       Expanded(
                         child: TextField(
                               maxLength: 10,
+                              controller: nameController,
                               decoration: InputDecoration(
                                 labelText: 'Name',
                                 filled: true,
@@ -131,7 +199,10 @@ class WalletSetting extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 25.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            // Add your logic here
+                            WalletsTableManager.updateWalletName(context, wallet.walletId, nameController.text.trim());
+                            setState(() {
+                              wallet.walletName = nameController.text.trim();
+                            });
                           },
                           child: Text(
                             'Set',
@@ -173,6 +244,7 @@ class WalletSetting extends StatelessWidget {
                       Expanded(
                         child: TextField(
                               maxLength: 20,
+                              controller: descriptionController,
                               decoration: InputDecoration(
                                 labelText: 'Description',
                                 filled: true,
@@ -194,7 +266,10 @@ class WalletSetting extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 25.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            // Add your logic here
+                            WalletsTableManager.updateWalletDescription(context, wallet.walletId, descriptionController.text.trim());
+                            setState(() {
+                              wallet.walletDescription = descriptionController.text.trim();
+                            });
                           },
                           child: Text(
                             'Set',
@@ -235,20 +310,25 @@ class WalletSetting extends StatelessWidget {
                       children: [
                         Expanded(
                           child: TextField(
-                                maxLength: 10,
-                                decoration: InputDecoration(
-                                  labelText: 'Amount',
-                                  filled: true,
-                                  fillColor: Color.fromARGB(100, 150, 150, 150),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                                ),
-                                onChanged: (value) {
-                                },
+                            maxLength: 10,
+                            controller: paymentAmountController,
+                            keyboardType: TextInputType.numberWithOptions(decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                            ],
+                            decoration: InputDecoration(
+                              labelText: 'Amount',
+                              filled: true,
+                              fillColor: Color.fromARGB(100, 150, 150, 150),
+                              border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide.none,
                               ),
+                              contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                            ),
+                            onChanged: (value) {
+                            },
+                            ),
                         ),
 
                         SizedBox(width: 10.0),
@@ -257,7 +337,10 @@ class WalletSetting extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 25.0),
                           child: ElevatedButton(
                             onPressed: () {
-                              // Add your logic here
+                              WalletsTableManager.updateWalletPaymentAmount(context, wallet.walletId, double.parse(paymentAmountController.text.trim()));
+                              setState(() {
+                                wallet.walletPaymentAmount = double.parse(paymentAmountController.text.trim());
+                              });
                             },
                             child: Text(
                               'Set',
@@ -276,8 +359,35 @@ class WalletSetting extends StatelessWidget {
                             ),
                           ),
                         ),
+
                       ],
                     ),
+
+                    SizedBox(height: 10.0),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () {
+                            WalletsTableManager.deleteWallet(context, wallet.walletId);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => MainPage()),
+                            );
+                          },
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          label: Text(
+                            'Delete Wallet',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               )

@@ -5,7 +5,7 @@ class WalletManager {
   static List<Wallet> wallets = [];
   static Wallet? selectedWallet;
 
-  static void generateWallet(Color selectedColor, String name, String description, String id, int balance, int paymentAmount) {
+  static void generateWallet(Color selectedColor, String name, String description, String id, double balance, double paymentAmount) {
     Wallet wallet = Wallet(
       color: selectedColor,
       name: name,
@@ -24,6 +24,30 @@ class WalletManager {
     selectedWallet = null;
     if (wallets.isNotEmpty) {
       WalletManager.wallets = wallets;
+    }
+  }
+
+  static void updateWalletName(String name) {
+    if (selectedWallet != null) {
+      selectedWallet?.walletName = name;
+    }
+  }
+
+  static void updateWalletDescription(String description) {
+    if (selectedWallet != null) {
+      selectedWallet?.walletDescription = description;
+    }
+  }
+
+  static void updateWalletPaymentAmount(double amount) {
+    if (selectedWallet != null) {
+      selectedWallet?.walletPaymentAmount = amount;
+    }
+  }
+
+  static void updateWalletColor(Color color) {
+    if (selectedWallet != null) {
+      selectedWallet?.walletColor = color;
     }
   }
   

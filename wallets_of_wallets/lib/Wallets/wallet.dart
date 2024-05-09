@@ -5,10 +5,10 @@ class Wallet {
   String _name;
   String _description;
   String _id;
-  int _balance;
-  int _paymentAmount;
+  double _balance;
+  double _paymentAmount;
  
-  Wallet({required Color color, required String name, required String description, required String id, required int balance, required int paymentAmount})
+  Wallet({required Color color, required String name, required String description, required String id, required double balance, required double paymentAmount})
       : _color = color,
         _name = name,
         _description = description,
@@ -28,9 +28,10 @@ class Wallet {
   String get walletId => _id;
   set walletId(String newId) => _id = newId;
 
-  int get walletBalance => _balance;
-  set walletBalance(int newBalance) => _balance = newBalance;
+  double get walletBalance => _balance;
+  set walletBalance(double newBalance) => _balance = newBalance;
 
-  int get walletPaymentAmount => _paymentAmount;
-  set walletPaymentAmount(int newBalance) => _paymentAmount = newBalance;
+  double get walletPaymentAmount => _paymentAmount;
+  set walletPaymentAmount(double newBalance) => _paymentAmount = newBalance;
+
 }
