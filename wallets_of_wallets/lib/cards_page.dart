@@ -1,17 +1,20 @@
 import 'package:firstly/add_card_page.dart';
 import 'package:firstly/main_page.dart';
 import 'package:flutter/material.dart';
+import 'package:firstly/Cards/cardManager.dart';
 
 class CardsList extends StatelessWidget {
 
   final Color customColor = Color(0xFF0A5440);
 
+  /*
   List<Object> listOfCards = [
     'Card_1',
     'Card_2',
     'Card_3',
     'Card_4',
   ];
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,7 @@ class CardsList extends StatelessWidget {
               ),
 
               SizedBox(height: 20.0),
-              for (int index = 0; index < listOfCards.length; index++)
+              for (int index = 0; index < CardManager.cards.length; index++)
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0, right: 30.0),
                   child: Column(
@@ -57,7 +60,7 @@ class CardsList extends StatelessWidget {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              showSlideWindow(context, listOfCards[index] as String);
+                              showSlideWindow(context, CardManager.cards[index].cardCardName);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: customColor,
@@ -72,7 +75,7 @@ class CardsList extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "${listOfCards[index]}",
+                                    "${CardManager.cards[index].cardCardName}",
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.normal,

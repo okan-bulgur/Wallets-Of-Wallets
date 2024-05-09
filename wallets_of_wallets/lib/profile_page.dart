@@ -2,6 +2,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firstly/Cards/card.dart';
+import 'package:firstly/Cards/cardManager.dart';
 import 'package:firstly/cards_page.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
@@ -15,7 +17,7 @@ class ProfilePage extends StatefulWidget {
 }
 const List<String> list = <String>['Card 1', 'Card 2', 'Card 3', 'Card 4'];
 
-String dropdownValue = list.first; //change this to the last selected
+//String dropdownValue = list.first; //change this to the last selected
 
 class _ProfilePageState extends State<ProfilePage> {
   final Color customColor = Color(0xFF0A5440);
@@ -114,30 +116,32 @@ class _ProfilePageState extends State<ProfilePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child:
-          DropdownButtonFormField(
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color.fromARGB(100, 150, 150, 150),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
-                  borderSide:
-                  BorderSide.none, // Set the border color to gray
+            DropdownButtonFormField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color.fromARGB(100, 150, 150, 150),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
+                    borderSide:
+                    BorderSide.none, // Set the border color to gray
+                  ),
                 ),
-              ),
-              value: dropdownValue,
-              items: list.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-              onChanged: (String? value) {
-                // This is called when the user selects an item.
-                setState(() {
-                  dropdownValue = value!;
-                },);
-              },
-              isExpanded: true)),
+                //value: dropdownValue,
+                items: [
+                  for (UserCard card in CardManager.cards)
+                    DropdownMenuItem<String>(
+                      value: card.cardCardName,
+                      child: Text(card.cardCardName),
+                    ),
+                ],
+                onChanged: (String? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    //dropdownValue = value!;
+                  },);
+                },
+                isExpanded: true)
+            ),
           SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.all(8.0),

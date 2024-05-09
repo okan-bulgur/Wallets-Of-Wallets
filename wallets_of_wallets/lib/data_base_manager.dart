@@ -2,6 +2,9 @@
 
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/Wallets/walletManager.dart';
+import 'package:firstly/Cards/card.dart';
+import 'package:firstly/Cards/cardManager.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firstly/login_page.dart';
 import 'main_page.dart';
@@ -27,6 +30,9 @@ class AuthenticationManager {
         List<Wallet> wallets = await WalletsTableManager.getUserWallets(email);
         print(wallets.length);
         WalletManager.setUsersWallets(wallets);
+        
+        List<UserCard> cards = await CardsTableManager.getUserCards(email);
+        CardManager.setUsersCards(cards);
         
         Navigator.push(
           context,
@@ -92,7 +98,8 @@ class UsersTableManager {
         'surname': surname,
         'email': email,
         'balance': 0,
-        'list_of_wallets': Map<String, bool>()
+        'list_of_wallets': Map<String, bool>(),
+        'list_of_cards'  : Map<String, bool>(),
       });
     } catch (e) {
       print("Error adding user: $e");
@@ -435,6 +442,80 @@ class WalletsTableManager{
     } catch (e) {
       print("Error removing user from wallet: $e");
     }
+  }
+
+
+
+}
+
+class CardsTableManager{
+
+  static Future<void> addCard(String CVC, String cardName, String cardNumber, String expDate, String name,String email) async {
+    try {
+      // Create a new document in the 'cards' collection and get the reference
+      DocumentReference cardRef = FirebaseFirestore.instance.collection('cards').doc();
+
+      // Use the reference to set the data
+      await cardRef.set({
+        'CVC': CVC,
+        'cardName': cardName,
+        'cardNumber': cardNumber,
+        'expDate': expDate,
+        'name': name
+      });
+
+      // Get the automatically generated ID from the document reference
+      String cardID = cardRef.id;
+
+      // Update the user's list of cards
+      await FirebaseFirestore.instance.collection('users').doc(email).update({
+        'list_of_cards': FieldValue.arrayUnion([cardID])
+      });
+
+      // Optionally generate a card using the data
+      CardManager.generateCard(CVC, cardName, cardNumber, expDate, name);
+    } catch (e) {
+      print("Error adding card: $e");
+    }
+  }
+
+  static Future<void> deleteCard(String cardID) async {
+    try {
+      await FirebaseFirestore.instance.collection('cards').doc(cardID).delete();
+
+      for (var member in await FirebaseFirestore.instance.collection('wallets').doc(cardID).get().then((value) => value.data()!['list_of_members'])) {
+        await FirebaseFirestore.instance.collection('users').doc(member).update({
+          'list_of_wallets': FieldValue.arrayRemove([cardID])
+        });
+      }
+
+    }
+    catch (e) {
+      print("Error deleting wallet: $e");
+    }
+  }
+
+  static Future<List<UserCard>> getUserCards(String email) async {
+    List<UserCard> cards = [];
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(email).get().then((value) async {
+        List<String> cardIDs = List<String>.from(value.data()!['list_of_cards']);
+        for (var cardID in cardIDs) {
+          await FirebaseFirestore.instance.collection('cards').doc(cardID).get().then((value) {
+            cards.add(UserCard(
+              cvc: value.data()!['CVC'],
+              cardName: value.data()!['cardName'],
+              cardNumber: value.data()!['cardNumber'],
+              expDate: value.data()!['expDate'],
+              name: value.data()!['name'],
+            ));
+          });
+        }
+      });
+    } catch (e) {
+      print("Error getting cards: $e");
+    }
+    return cards;
   }
 
 }
