@@ -2,6 +2,7 @@ import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/deposite_page_member.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/member_list_page.dart';
+import 'package:firstly/member_list_page_member.dart';
 import 'package:firstly/wallet_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Wallets/walletManager.dart';
@@ -171,7 +172,7 @@ class TransactionPageMember extends StatelessWidget {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MemberListPage()),
+                MaterialPageRoute(builder: (context) => MemberListPageMember()),
               );
               break;
           }

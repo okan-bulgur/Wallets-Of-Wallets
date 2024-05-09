@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:firstly/main_page.dart';
-import 'package:firstly/member_list_page.dart';
-import 'package:firstly/qr_page.dart';
+import 'package:firstly/member_list_page_member.dart';
+import 'package:firstly/qr_page_member.dart';
 import 'package:firstly/transaction_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Wallets/wallet.dart';
@@ -51,7 +51,7 @@ class WalletPageMember extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => QrPage(),
+                  builder: (context) => QrPageMember(),
                 ),
               );
             },
@@ -259,7 +259,7 @@ class WalletPageMember extends StatelessWidget {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MemberListPage()), // Navigate to MainPage
+                MaterialPageRoute(builder: (context) => MemberListPageMember()), // Navigate to MainPage
               );
               break;
           }

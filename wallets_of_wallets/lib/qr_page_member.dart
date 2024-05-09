@@ -1,17 +1,16 @@
 import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/main_page.dart';
-import 'package:firstly/member_list_page.dart';
-import 'package:firstly/transaction_page_admin.dart';
-import 'package:firstly/wallet_setting.dart';
+import 'package:firstly/member_list_page_member.dart';
+import 'package:firstly/transaction_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:firstly/Wallets/wallet.dart';
 
-class QrPage extends StatelessWidget {
+class QrPageMember extends StatelessWidget {
   final Color customColor = const Color(0xFF0A5440);
   final Wallet wallet;
 
-  QrPage({Key? key}) : wallet = WalletManager.selectedWallet!, super(key: key);
+  QrPageMember({Key? key}) : wallet = WalletManager.selectedWallet!, super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -139,10 +138,6 @@ class QrPage extends StatelessWidget {
             icon: Icon(Icons.group, size: 30.0),
             label: 'Members',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings, size: 30.0),
-            label: 'Settings',
-          ),
         ],
         selectedItemColor: customColor,
         selectedFontSize: 14.5,
@@ -161,20 +156,14 @@ class QrPage extends StatelessWidget {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TransactionPageAdmin()),
+                MaterialPageRoute(builder: (context) => TransactionPageMember()),
               );
               break;
             case 2:
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MemberListPage()), // Navigate to MainPage
+                  MaterialPageRoute(builder: (context) => MemberListPageMember()), // Navigate to MainPage
                 );
-              break;
-            case 3:
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
-              );
               break;
           }
         },

@@ -160,6 +160,15 @@ class UsersTableManager {
     }
   }
 
+  static Future<void> deleteWalletFromUser(String walletID, String email) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(email).update({
+        'list_of_wallets': FieldValue.arrayRemove([walletID])
+      });
+    } catch (e) {
+      print("Error deleting wallet from user: $e");
+    }
+  }
 }
 
 class WalletsTableManager{
@@ -364,11 +373,13 @@ class WalletsTableManager{
 
   static Future<bool> isUserAdminOfWallet(String walletID) async {
     try {
-      await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) {
-        if (value.data()!['list_of_admins'].contains(userEmail)) {
-          return true;
-        }
-      });
+      var snapshot = await FirebaseFirestore.instance.collection('wallets').doc(walletID).get();
+      if (snapshot.data()!['list_of_admins'].contains(userEmail)) {
+        return true;
+      } 
+      else {
+        return false;
+      }
     } catch (e) {
       print("Error checking if user is admin: $e");
     }
@@ -390,15 +401,15 @@ class WalletsTableManager{
     return false;
   }
 
-    static Future<void> dismissAsAdmin(BuildContext context, String walletID, String currentUser) async {
-      try {
-        await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
-          'list_of_members': FieldValue.arrayUnion([currentUser]),
-          'list_of_admins': FieldValue.arrayRemove([currentUser])
-        });
-      } catch (e) {
-        print("Error dismissing as admin: $e");
-      }
+  static Future<void> dismissAsAdmin(BuildContext context, String walletID, String currentUser) async {
+    try {
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+        'list_of_members': FieldValue.arrayUnion([currentUser]),
+        'list_of_admins': FieldValue.arrayRemove([currentUser])
+      });
+    } catch (e) {
+      print("Error dismissing as admin: $e");
+    }
   }
 
   static Future<void> makeWalletAdmin(BuildContext context, String walletID, String currentUser) async {
@@ -412,17 +423,18 @@ class WalletsTableManager{
     }
   }
 
-  static Future<void> removeUserFromWallet(String walletID, String userEmail) async {
+  static Future<void> removeUserFromWallet(String walletID, String email) async {
     try {
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
-        'list_of_admins': FieldValue.arrayRemove([userEmail]),
-        'list_of_members': FieldValue.arrayRemove([userEmail])
+        'list_of_admins': FieldValue.arrayRemove([email]),
+        'list_of_members': FieldValue.arrayRemove([email])
+
       });
+      await UsersTableManager.deleteWalletFromUser(walletID, email);
+      
     } catch (e) {
       print("Error removing user from wallet: $e");
     }
   }
-
-
 
 }

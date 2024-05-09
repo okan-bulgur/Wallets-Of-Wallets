@@ -1,21 +1,17 @@
-// ignore_for_file: unnecessary_string_interpolations, library_private_types_in_public_api, use_key_in_widget_constructors, prefer_const_constructors
-
-import 'package:firstly/data_base_manager.dart';
+import 'package:firstly/transaction_page_member.dart';
+import 'package:firstly/wallet_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/main_page.dart';
-import 'package:firstly/transaction_page_admin.dart';
-import 'package:firstly/wallet_page_admin.dart';
-import 'package:firstly/wallet_setting.dart';
 
-class MemberListPage extends StatefulWidget {
+class MemberListPageMember extends StatefulWidget {
   @override
-  _MemberListPageState createState() => _MemberListPageState();
+  _MemberListPageMemberState createState() => _MemberListPageMemberState();
 }
 
-class _MemberListPageState extends State<MemberListPage> {
+class _MemberListPageMemberState extends State<MemberListPageMember> {
   final Color customColor = Color(0xFF0A5440);
   List<List<Object>> listOfUsers = [];
   late Wallet wallet;
@@ -33,10 +29,8 @@ class _MemberListPageState extends State<MemberListPage> {
           .collection('wallets')
           .doc('${wallet.walletId}')
           .get();
-      List<String> adminList =
-          List<String>.from(walletSnapshot['list_of_admins']);
-      List<String> memberList =
-          List<String>.from(walletSnapshot['list_of_members']);
+      List<String> adminList = List<String>.from(walletSnapshot['list_of_admins']);
+      List<String> memberList = List<String>.from(walletSnapshot['list_of_members']);
 
       setState(() {
         listOfUsers = [];
@@ -135,13 +129,6 @@ class _MemberListPageState extends State<MemberListPage> {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              if(userEmail != listOfUsers[user][0] as String){
-                                showSlideWindow(
-                                  context,
-                                  listOfUsers[user][0] as String,
-                                  listOfUsers[user][1] as String,
-                                );
-                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: listOfUsers[user][1] == 'Admin'
@@ -203,11 +190,7 @@ class _MemberListPageState extends State<MemberListPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.wallet, size: 30.0),
             label: 'Wallet',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings, size: 30.0),
-            label: 'Settings',
-          ),
+          )
         ],
         selectedItemColor: customColor,
         selectedFontSize: 14.5,
@@ -226,19 +209,13 @@ class _MemberListPageState extends State<MemberListPage> {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TransactionPageAdmin()),
+                MaterialPageRoute(builder: (context) => TransactionPageMember()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
-              );
-              break;
-            case 3:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => WalletSetting()),
+                MaterialPageRoute(builder: (context) => WalletPageMember()),
               );
               break;
           }
@@ -246,91 +223,4 @@ class _MemberListPageState extends State<MemberListPage> {
       ),
     );
   }
-
-  void showSlideWindow(BuildContext context, String userMail, String userRole) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 350,
-          color: customColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 60),
-                  Text(
-                    '$userMail',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    '$userRole',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (userRole == 'Admin') {
-                        await WalletsTableManager.dismissAsAdmin(context, wallet.walletId, userMail);
-                      } else {
-                        await WalletsTableManager.makeWalletAdmin(context, wallet.walletId, userMail);
-                      }
-                      Navigator.pop(context); // Close the bottom sheet
-                      await fetchMembersAndAdmins();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      minimumSize: Size(120.0, 50.0),
-                    ),
-                    child: Text(
-                      userRole == 'Admin' ? 'Dismiss as Admin' : 'Make Wallet Admin',
-                      style: TextStyle(
-                        color: userRole == 'Admin' ? Colors.red : customColor,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: () async {
-                      WalletsTableManager.removeUserFromWallet(wallet.walletId, userMail);
-                      Navigator.pop(context);
-                      await fetchMembersAndAdmins(); // Close the bottom sheet
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      minimumSize: Size(120.0, 50.0),
-                    ),
-                    child: Text(
-                      'Remove User From Wallet',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
 }

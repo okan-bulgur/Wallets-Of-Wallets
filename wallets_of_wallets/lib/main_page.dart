@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
 import 'package:firstly/Wallets/walletManager.dart';
-
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/create_wallet_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_page_member.dart';
@@ -57,19 +57,26 @@ class _MainPageState extends State<MainPage> {
             CarouselSlider(
               items: [
                 if (WalletManager.wallets.isNotEmpty)
-                  for (int wallet = 0;
-                      wallet < WalletManager.wallets.length;
-                      wallet++)
+                  for (int wallet = 0; wallet < WalletManager.wallets.length; wallet++)
                     GestureDetector(
-                      onTap: () {
-                        WalletManager.selectedWallet =
-                            WalletManager.wallets[wallet];
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WalletPageAdmin(),
-                          ),
-                        );
+                      onTap: () async {
+                        WalletManager.selectedWallet = WalletManager.wallets[wallet];
+                        print("is admin: ${await WalletsTableManager.isUserAdminOfWallet(WalletManager.selectedWallet!.walletId)}");
+                        if (await WalletsTableManager.isUserAdminOfWallet(WalletManager.selectedWallet!.walletId)) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WalletPageAdmin(),
+                            ),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WalletPageMember(),
+                            ),
+                          );
+                        }
                       },
                       child: Container(
                         alignment: Alignment.center,
