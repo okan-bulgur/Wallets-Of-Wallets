@@ -1,17 +1,59 @@
-import 'package:firstly/Wallets/wallet.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firstly/main_page.dart';
 import 'package:firstly/member_list_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_setting.dart';
 import 'package:flutter/material.dart';
-import 'package:firstly/main_page.dart';
+import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 
 class DepositPageAdmin extends StatelessWidget {
-  final Color customColor = Color(0xFF0A5440);
-
+  final Color customColor = const Color(0xFF0A5440);
   final Wallet wallet;
+  final double amount;
 
-  DepositPageAdmin() : wallet = WalletManager.selectedWallet!;
+  DepositPageAdmin({Key? key, required this.amount})
+      : wallet = WalletManager.selectedWallet!,
+        super(key: key);
+
+  Future<void> depositToWallet(BuildContext context, double amount) async {
+    try {
+      // Update Firestore document
+      await FirebaseFirestore.instance
+          .collection('wallets')
+          .doc(wallet.walletId)
+          .update({
+        'balance': FieldValue.increment(amount),
+        'paymentAmount': FieldValue.increment(amount), // Update payment amount
+      });
+
+      // Fetch updated wallet data from Firestore
+      DocumentSnapshot<Object?> walletSnapshot = await FirebaseFirestore
+          .instance
+          .collection('wallets')
+          .doc(wallet.walletId)
+          .get();
+
+      // Update local wallet object with the latest data
+      final Map<String, dynamic>? walletData =
+          walletSnapshot.data() as Map<String, dynamic>?;
+      if (walletData != null) {
+        wallet.walletBalance = walletData['balance'] as double;
+        wallet.walletPaymentAmount = walletData['paymentAmount'] as double;
+      }
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Deposit successful')),
+      );
+    } catch (e) {
+      // Handle deposit error
+      print("Error depositing: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to deposit. Please try again.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +75,7 @@ class DepositPageAdmin extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 75.0),
+              const SizedBox(height: 75.0),
               Text(
                 '₺${wallet.walletBalance}',
                 style: TextStyle(
@@ -42,7 +84,7 @@ class DepositPageAdmin extends StatelessWidget {
                   color: customColor,
                 ),
               ),
-              SizedBox(height: 30.0),
+              const SizedBox(height: 30.0),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
@@ -52,7 +94,7 @@ class DepositPageAdmin extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${wallet.walletName}',
+                          wallet.walletName,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -61,7 +103,7 @@ class DepositPageAdmin extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${wallet.walletDescription}',
+                          wallet.walletDescription,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -91,34 +133,17 @@ class DepositPageAdmin extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 125.0),
+              const SizedBox(height: 125.0),
               ElevatedButton(
                 onPressed: () {
-                  // Perform withdraw action
+                  depositToWallet(
+                      context, amount); // Pass amount to depositToWallet
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,
-                  minimumSize: Size(275.0, 45.0),
+                  minimumSize: const Size(275.0, 45.0),
                 ),
-                child: Text(
-                  'To Bank Account',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 30.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Perform deposit action
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: customColor,
-                  minimumSize: Size(275.0, 45.0),
-                ),
-                child: Text(
+                child: const Text(
                   'To Main Wallet',
                   style: TextStyle(
                     color: Colors.white,
@@ -180,8 +205,10 @@ class DepositPageAdmin extends StatelessWidget {
               break;
             case 3:
               Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WalletSetting(),
+                ),
               );
               break;
           }

@@ -1,21 +1,31 @@
-import 'package:firstly/Wallets/wallet.dart';
+import 'package:flutter/material.dart';
 import 'package:firstly/deposite_page_admin.dart';
+import 'package:firstly/withdraw_page_admin.dart';
+import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/member_list_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_setting.dart';
-import 'package:firstly/withdraw_page_admin.dart';
-import 'package:flutter/material.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 
 class TransactionPageAdmin extends StatelessWidget {
-  final Color customColor = Color(0xFF0A5440);
-
-  final Wallet wallet;
-  TransactionPageAdmin() : wallet = WalletManager.selectedWallet!;
+  final Color customColor = const Color(0xFF0A5440);
 
   @override
   Widget build(BuildContext context) {
+    final Wallet? selectedWallet = WalletManager.selectedWallet;
+
+    if (selectedWallet == null) {
+      // Handle if no wallet is selected
+      return Scaffold(
+        body: Center(
+          child: Text('No wallet selected!'),
+        ),
+      );
+    }
+
+    TextEditingController amountController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -35,7 +45,7 @@ class TransactionPageAdmin extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 75.0),
+              const SizedBox(height: 75.0),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
@@ -45,7 +55,7 @@ class TransactionPageAdmin extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${wallet.walletName}',
+                          selectedWallet.walletName,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -54,7 +64,7 @@ class TransactionPageAdmin extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '${wallet.walletDescription}',
+                          selectedWallet.walletDescription,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -63,7 +73,7 @@ class TransactionPageAdmin extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Payment: ₺${wallet.walletPaymentAmount}',
+                          'Payment: ₺${selectedWallet.walletPaymentAmount}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -74,7 +84,7 @@ class TransactionPageAdmin extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      'ID: ${wallet.walletId}',
+                      'ID: ${selectedWallet.walletId}',
                       style: TextStyle(
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold,
@@ -84,43 +94,56 @@ class TransactionPageAdmin extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 100.0),
+              const SizedBox(height: 100.0),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextField(
-                      // Remove maxLength property to remove character limit
+                      controller: amountController,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Amount',
                         filled: true,
-                        fillColor: Color.fromARGB(100, 150, 150, 150),
+                        fillColor: const Color.fromARGB(100, 150, 150, 150),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.0),
                           borderSide: BorderSide.none,
                         ),
                       ),
                     ),
-                    SizedBox(height: 60.0),
+                    const SizedBox(height: 60.0),
                     SizedBox(
-                      width: 250.0, // Adjust the width as needed
+                      width: 250.0,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                WithdrawPageAdmin(),
-                            ),
-                          );
+                          double? amount =
+                              double.tryParse(amountController.text);
+                          if (amount != null && amount > 0) {
+                            // Navigate to deposit page with amount
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    DepositPageAdmin(amount: amount),
+                              ),
+                            );
+                          } else {
+                            // Handle invalid amount
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please enter a valid amount.'),
+                              ),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: customColor,
-                          minimumSize: Size(120.0, 40.0),
+                          minimumSize: const Size(120.0, 40.0),
                         ),
-                        child: Text(
-                          'Withdraw',
+                        child: const Text(
+                          'Deposit',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16.0,
@@ -129,24 +152,37 @@ class TransactionPageAdmin extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10), // Add spacing between buttons
+                    const SizedBox(height: 10), // Add spacing between buttons
                     SizedBox(
-                      width: 250.0, // Adjust the width as needed
+                      width: 250.0,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DepositPageAdmin(),
-                            ),
-                          );
+                          double? amount =
+                              double.tryParse(amountController.text);
+                          if (amount != null && amount > 0) {
+                            // Navigate to withdraw page with amount
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    WithdrawPageAdmin(amount: amount),
+                              ),
+                            );
+                          } else {
+                            // Handle invalid amount
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please enter a valid amount.'),
+                              ),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: customColor,
-                          minimumSize: Size(120.0, 40.0),
+                          minimumSize: const Size(120.0, 40.0),
                         ),
-                        child: Text(
-                          'Deposit',
+                        child: const Text(
+                          'Withdraw',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16.0,
@@ -163,6 +199,7 @@ class TransactionPageAdmin extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1, // Indicates the current page
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home, size: 30.0),
@@ -196,10 +233,7 @@ class TransactionPageAdmin extends StatelessWidget {
               );
               break;
             case 1:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
-              );
+              // Current page, do nothing
               break;
             case 2:
               Navigator.push(
@@ -209,8 +243,8 @@ class TransactionPageAdmin extends StatelessWidget {
               break;
             case 3:
               Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
+                context,
+                MaterialPageRoute(builder: (context) => WalletSetting()),
               );
               break;
           }
