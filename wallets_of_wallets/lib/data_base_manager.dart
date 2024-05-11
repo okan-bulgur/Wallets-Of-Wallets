@@ -444,8 +444,6 @@ class WalletsTableManager{
     }
   }
 
-
-
 }
 
 class CardsTableManager{
