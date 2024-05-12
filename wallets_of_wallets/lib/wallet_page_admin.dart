@@ -38,6 +38,7 @@ class WalletPageAdmin extends StatelessWidget {
               fontSize: 30.0, fontWeight: FontWeight.bold, color: customColor),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(

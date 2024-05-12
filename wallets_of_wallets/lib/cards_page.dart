@@ -1,4 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:firstly/Cards/card.dart';
 import 'package:firstly/add_card_page.dart';
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Cards/cardManager.dart';
@@ -6,15 +10,6 @@ import 'package:firstly/Cards/cardManager.dart';
 class CardsList extends StatelessWidget {
 
   final Color customColor = Color(0xFF0A5440);
-
-  /*
-  List<Object> listOfCards = [
-    'Card_1',
-    'Card_2',
-    'Card_3',
-    'Card_4',
-  ];
-  */
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +23,7 @@ class CardsList extends StatelessWidget {
               color: customColor),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
       
@@ -37,12 +33,14 @@ class CardsList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(height: 40.0),
-              Text(
-                'My Wallets',
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                  color: customColor,
+              Center(
+                child: Text(
+                  'My Cards',
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold,
+                    color: customColor,
+                  ),
                 ),
               ),
 
@@ -60,7 +58,7 @@ class CardsList extends StatelessWidget {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              showSlideWindow(context, CardManager.cards[index].cardCardName);
+                              showSlideWindow(context, CardManager.cards[index]);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: customColor,
@@ -75,7 +73,7 @@ class CardsList extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "${CardManager.cards[index].cardCardName}",
+                                    CardManager.cards[index].cardCardName,
                                     style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.normal,
@@ -137,7 +135,7 @@ class CardsList extends StatelessWidget {
       ),
     );
   }
-  void showSlideWindow(BuildContext context, String cardName) {
+  void showSlideWindow(BuildContext context, UserCard card) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -152,7 +150,7 @@ class CardsList extends StatelessWidget {
                 children: [
                   SizedBox(height: 60),
                   Text(
-                    '${cardName}',
+                    card.cardCardName,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 30.0,
@@ -164,7 +162,10 @@ class CardsList extends StatelessWidget {
                   SizedBox(
                     width: 250.0, // Adjust the width as needed
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () async{
+                        await CardsTableManager.deleteCard(card.cardID);
+                        Navigator.pop(context);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         minimumSize: Size(120.0, 50.0),

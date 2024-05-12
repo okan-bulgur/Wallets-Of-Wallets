@@ -40,6 +40,7 @@ class WalletPageMember extends StatelessWidget {
               color: customColor),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(

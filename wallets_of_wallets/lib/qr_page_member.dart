@@ -25,6 +25,7 @@ class QrPageMember extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Padding(

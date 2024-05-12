@@ -167,6 +167,40 @@ class UsersTableManager {
     }
   }
 
+  static Future<void> updateUserBalance(BuildContext context, String userEmail, double amount, bool isAdding) async {
+
+    //Yavuz: I added this function to update the balance of the user. It can be used to add or subtract balance from the user.
+
+    try {
+      // Update user data in Firestore using the user's email
+      if (isAdding) {
+        await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+          'balance': FieldValue.increment(amount),
+        });
+      } else {
+        //Check if there is enough balance to subtract
+        DocumentSnapshot user = await FirebaseFirestore.instance.collection('users').doc(userEmail).get();
+        if (user['balance'] < amount){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Not enough balance to subtract',textAlign: TextAlign.center,)));
+          return;
+        }
+        await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+          'balance': FieldValue.increment(-amount),
+        });
+      }
+
+      // Show success message or navigate to another page
+      // Example:
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Balance updated successfully',textAlign: TextAlign.center,)));
+      // Navigator.pop(context as BuildContext); // Pop this screen and go back to the previous screen
+
+    } catch (e) {
+      print("Error updating user: $e");
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating user',textAlign: TextAlign.center,)));
+    }
+  }
+
   static Future<void> deleteWalletFromUser(String walletID, String email) async {
     try {
       await FirebaseFirestore.instance.collection('users').doc(email).update({
@@ -455,6 +489,7 @@ class CardsTableManager{
 
       // Use the reference to set the data
       await cardRef.set({
+        'cardID': cardRef.id, // Automatically generated ID
         'CVC': CVC,
         'cardName': cardName,
         'cardNumber': cardNumber,
@@ -471,7 +506,7 @@ class CardsTableManager{
       });
 
       // Optionally generate a card using the data
-      CardManager.generateCard(CVC, cardName, cardNumber, expDate, name);
+      CardManager.generateCard(CVC, cardName, cardNumber, expDate, name,cardID);
     } catch (e) {
       print("Error adding card: $e");
     }
@@ -481,16 +516,17 @@ class CardsTableManager{
     try {
       await FirebaseFirestore.instance.collection('cards').doc(cardID).delete();
 
-      for (var member in await FirebaseFirestore.instance.collection('wallets').doc(cardID).get().then((value) => value.data()!['list_of_members'])) {
-        await FirebaseFirestore.instance.collection('users').doc(member).update({
-          'list_of_wallets': FieldValue.arrayRemove([cardID])
-        });
-      }
+      // Update the user's list of cards
+      await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+        'list_of_cards': FieldValue.arrayRemove([cardID])
+      });
 
+      updateCardList();
     }
     catch (e) {
-      print("Error deleting wallet: $e");
+      print("Error deleting card: $e");
     }
+    
   }
 
   static Future<List<UserCard>> getUserCards(String email) async {
@@ -501,6 +537,7 @@ class CardsTableManager{
         for (var cardID in cardIDs) {
           await FirebaseFirestore.instance.collection('cards').doc(cardID).get().then((value) {
             cards.add(UserCard(
+              cardID: value.data()!['cardID'],
               cvc: value.data()!['CVC'],
               cardName: value.data()!['cardName'],
               cardNumber: value.data()!['cardNumber'],
@@ -514,6 +551,10 @@ class CardsTableManager{
       print("Error getting cards: $e");
     }
     return cards;
+  }
+
+  static Future<void> updateCardList() async {
+    CardManager.cards = await getUserCards(userEmail!);
   }
 
 }

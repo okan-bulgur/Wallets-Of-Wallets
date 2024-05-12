@@ -15,17 +15,20 @@ class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
-const List<String> list = <String>['Card 1', 'Card 2', 'Card 3', 'Card 4'];
 
-//String dropdownValue = list.first; //change this to the last selected
 
 class _ProfilePageState extends State<ProfilePage> {
   final Color customColor = Color(0xFF0A5440);
 
   String selectedUser = ''; // Default user
   double balance = 0.00;
+
     // Get the current user's email
+    
   String? userEmail = FirebaseAuth.instance.currentUser!.email;
+
+  TextEditingController card = TextEditingController();
+  TextEditingController amount = TextEditingController();
 
   @override
   void initState() {
@@ -53,8 +56,25 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _fetchUserBalance() async {
+    try {
+      // Retrieve user data from Firestore
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(userEmail).get();
 
-  
+      // Extract user information
+      if (userSnapshot.exists) {
+        setState(() {
+          // Update balance
+          balance = userSnapshot['balance'].toDouble();
+        });
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,7 +146,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     BorderSide.none, // Set the border color to gray
                   ),
                 ),
-                //value: dropdownValue,
                 items: [
                   for (UserCard card in CardManager.cards)
                     DropdownMenuItem<String>(
@@ -137,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 onChanged: (String? value) {
                   // This is called when the user selects an item.
                   setState(() {
-                    //dropdownValue = value!;
+                    card.text = value!;
                   },);
                 },
                 isExpanded: true)
@@ -146,6 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: amount,
               decoration: InputDecoration(
                 labelText: 'Amount',
                 filled: true,
@@ -163,8 +183,20 @@ class _ProfilePageState extends State<ProfilePage> {
             child: SizedBox(
               width: 300.0, // Adjust the width as needed
               child: ElevatedButton(
-                onPressed: () {
-                  
+                onPressed: () async{ // Yavuz : async added because we are using await in the function
+                  //check if card selected using textEditingController
+                  if (card.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please select a card'),
+                        duration: Duration(milliseconds: 500),
+                      ),
+                    );
+                    return;
+                  }
+                  double withdrawalAmount = double.parse(amount.text);
+                  await UsersTableManager.updateUserBalance(context, userEmail!, withdrawalAmount, false);
+                  _fetchUserBalance();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor, // Set the button color
@@ -186,7 +218,20 @@ class _ProfilePageState extends State<ProfilePage> {
             child: SizedBox(
               width: 300.0, // Adjust the width as needed
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async { // Yavuz: async added because we are using await in the function
+                  //check if card selected using textEditingController
+                  if (card.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please select a card'),
+                        duration: Duration(milliseconds: 500),
+                      ),
+                    );
+                    return;
+                  }
+                  double depositAmount = double.parse(amount.text);
+                  await UsersTableManager.updateUserBalance(context, userEmail!, depositAmount, true);
+                  _fetchUserBalance();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor, // Set the button color

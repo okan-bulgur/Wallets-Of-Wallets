@@ -5,8 +5,9 @@ class CardManager {
   static List<UserCard> cards = [];
   static UserCard? selectedCard;
 
-  static void generateCard(String cvc, String cardName, String cardNumber, String expDate, String name) {
+  static void generateCard(String cvc, String cardName, String cardNumber, String expDate, String name, String cardID) {
     UserCard card = UserCard(
+      cardID: cardID,
       cvc: cvc,
       cardName: cardName,
       cardNumber: cardNumber,

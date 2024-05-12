@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
 class UserCard {
+  String _cardID;
   String _cvc;
   String _cardName;
   String _cardNumber;
   String _expDate;
   String _name;
  
-  UserCard({required String cvc, required String cardName, required String cardNumber, required String expDate, required String name})
+  UserCard({required String cvc, required String cardName, required String cardNumber, required String expDate, required String name, required String cardID})
       : _cvc = cvc,
         _cardName = cardName,
         _cardNumber = cardNumber,
         _expDate = expDate,
-        _name = name;
+        _name = name,
+        _cardID = cardID;
 
   String get cardCvc => _cvc;
   set cardCvc(String newCvc) => _cvc = newCvc;
@@ -28,4 +30,7 @@ class UserCard {
 
   String get cardName => _name;
   set cardName(String newName) => _name = newName;
+
+  String get cardID => _cardID;
+  set cardID(String newCardID) => _cardID = newCardID;
 }
