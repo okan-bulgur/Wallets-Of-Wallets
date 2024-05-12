@@ -19,7 +19,6 @@ String? userEmail;
 String? userPhoto;
 
 class AuthenticationManager {
-  static login(BuildContext context, String email, String password) async {
 
   static login(BuildContext context, email, String password) async {
     try {

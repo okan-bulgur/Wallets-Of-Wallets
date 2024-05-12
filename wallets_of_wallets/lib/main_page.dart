@@ -1,6 +1,4 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
-import 'package:firstly/Transactions/transaction.dart';
-import 'package:firstly/Transactions/transactionManager.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/create_wallet_page.dart';

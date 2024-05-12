@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, sort_child_properties_last, prefer_const_literals_to_create_immutables
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/profile_page.dart';
 import 'package:flutter/material.dart';
