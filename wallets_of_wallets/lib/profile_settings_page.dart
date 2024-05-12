@@ -1,8 +1,10 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, sort_child_properties_last, prefer_const_literals_to_create_immutables
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart'; // Replace this import with your actual main page import
+import 'package:image_picker/image_picker.dart';
 
 class ProfileSettings extends StatelessWidget {
 
@@ -34,12 +36,21 @@ class ProfileSettings extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: () {
+              onTap: () async{
               // Add your logic here to handle the avatar change
+
+                ImagePicker imagePicker = ImagePicker();
+                //limit the size of the image to 1MB
+                XFile? file = await imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 70, maxHeight: 1024, maxWidth: 1024);
+
+                if (file == null) return;
+                UsersTableManager.updateUserPhoto(context, file);
+
               },
               child: CircleAvatar(
                 radius: 65,
-                backgroundImage: AssetImage('assets/pp_1.png'), // Add your avatar image
+                //get Image from the database
+                backgroundImage: userPhoto!.isEmpty ? AssetImage('assets/pp_1.png') as ImageProvider<Object> : NetworkImage(userPhoto!),
                   child: Align(
                     alignment: Alignment.topRight,
                     child: Icon(

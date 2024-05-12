@@ -112,7 +112,8 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           CircleAvatar(
             radius: 65,
-            backgroundImage: AssetImage('assets/pp_1.png'), // Add your avatar image
+            //if userPhoto is empty String, show default image
+            backgroundImage: userPhoto!.isEmpty ? AssetImage('assets/pp_1.png') as ImageProvider<Object> : NetworkImage(userPhoto!),
           ),
           SizedBox(height: 20),
           Text(

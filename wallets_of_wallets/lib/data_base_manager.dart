@@ -1,5 +1,7 @@
 // ignore_for_file: dead_code
 
+import 'dart:io';
+
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/Cards/card.dart';
@@ -7,15 +9,19 @@ import 'package:firstly/Cards/cardManager.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firstly/login_page.dart';
+import 'package:image_picker/image_picker.dart';
 import 'main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 FirebaseApp app = Firebase.app();
 String? userEmail;
+String? userPhoto;
 
 class AuthenticationManager {
+
   static login(BuildContext context, email, String password) async {
     try {
         print("Email: ${email}, Password: ${password}");
@@ -33,6 +39,8 @@ class AuthenticationManager {
         
         List<UserCard> cards = await CardsTableManager.getUserCards(email);
         CardManager.setUsersCards(cards);
+
+        UsersTableManager.setUserPhoto(email);
         
         Navigator.push(
           context,
@@ -87,9 +95,11 @@ class AuthenticationManager {
       print("Logout error: $e");
     }
   }
+
 }
 
 class UsersTableManager {
+
   static Future<void> addUser(String name, String surname, String email) async {
     try {
       print("Adding user: $name, $surname, $email");
@@ -100,6 +110,7 @@ class UsersTableManager {
         'balance': 0,
         'list_of_wallets': Map<String, bool>(),
         'list_of_cards'  : Map<String, bool>(),
+        'photo': '',
       });
     } catch (e) {
       print("Error adding user: $e");
@@ -169,7 +180,8 @@ class UsersTableManager {
 
   static Future<void> updateUserBalance(BuildContext context, String userEmail, double amount, bool isAdding) async {
 
-    //Yavuz: I added this function to update the balance of the user. It can be used to add or subtract balance from the user.
+    // Yavuz: I added this function to update the balance of the user. It can be used to add or subtract balance from the user.
+    // isAdding is a boolean variable that determines whether the balance will be added or subtracted.
 
     try {
       // Update user data in Firestore using the user's email
@@ -208,6 +220,63 @@ class UsersTableManager {
       });
     } catch (e) {
       print("Error deleting wallet from user: $e");
+    }
+  }
+
+  static Future<void> updateUserPhoto(BuildContext context, XFile file) async {
+    try {
+      
+      String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+      //Get a reference to storage root
+      Reference referenceRoot = FirebaseStorage.instance.ref();
+      Reference referenceDirImages = referenceRoot.child('images');
+
+      //Create a reference for the image to be stored
+      Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+      //Handle errors/success
+      try {
+        //Store the file
+        await referenceImageToUpload.putFile(File(file.path));
+        //Delete the old photo
+        if (userPhoto!.isNotEmpty) {
+          await FirebaseStorage.instance.refFromURL(userPhoto!).delete();
+        }
+        //Success: get the download URL
+        String imageUrl = await referenceImageToUpload.getDownloadURL();
+        // Update user data in Firestore using the user's email
+        await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+          'photo': imageUrl,
+        });
+
+        await setUserPhoto(userEmail!);
+
+        // Show success message or navigate to another page
+        // Example:
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Photo updated successfully',textAlign: TextAlign.center,)));
+        // Navigator.pop(context as BuildContext); // Pop this screen and go back to the previous screen
+
+      } catch (error) {
+        //Some error occurred
+        print("Error updating user photo: $error");
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating user photo',textAlign: TextAlign.center,)));
+      }
+    } catch (e) {
+      print("Error updating user photo: $e");
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating user photo',textAlign: TextAlign.center,)));
+    }
+  }
+
+  static Future<void> setUserPhoto(String email) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(email).get().then((value) {
+        userPhoto = value.data()!['photo'];
+      });
+    } catch (e) {
+      print("Error getting user photo: $e");
     }
   }
 }
