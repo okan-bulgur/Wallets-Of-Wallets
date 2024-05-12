@@ -76,28 +76,37 @@ class JoinWalletScreen extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, size: 30.0),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.group),
+            icon: Icon(Icons.group, size: 30.0),
             label: 'Create Wallet',
           ),
         ],
-        selectedIconTheme: IconThemeData(color: customColor), // Set color for selected icon
-        unselectedIconTheme: IconThemeData(color: customColor), // Set color for unselected icon
+
+        selectedItemColor: customColor, // Set color for selected icon
+        selectedFontSize: double.parse('14.5'), // Set font size for selected label
+        
+        showUnselectedLabels: true,
+        unselectedItemColor: customColor, // Set color for unselected icon
+        unselectedFontSize: double.parse('14.5'), // Set font size for unselected label
+        unselectedLabelStyle: TextStyle(color: customColor), // Set color for unselected label
+        
         onTap: (index) {
-          // Add navigation logic based on the index of tapped item
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MainPage()), // Replace MainPage() with your main page widget
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateWalletScreen()), // Replace JoinWalletScreen() with your JoinWalletScreen widget
-            );
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainPage()), // Navigate to MainPage
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateWalletScreen()), // Replace MainPage() with your main page widget
+              );
+              break;
           }
         },
       ),

@@ -328,7 +328,7 @@ class _WalletSetting extends State<WalletSetting> {
                             ),
                             onChanged: (value) {
                             },
-                            ),
+                          ),
                         ),
 
                         SizedBox(width: 10.0),

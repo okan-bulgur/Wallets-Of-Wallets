@@ -1,14 +1,15 @@
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/deposite_page_member.dart';
 import 'package:firstly/main_page.dart';
-import 'package:firstly/member_list_page.dart';
 import 'package:firstly/member_list_page_member.dart';
 import 'package:firstly/wallet_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Wallets/walletManager.dart';
+import 'package:flutter/services.dart';
 
 class TransactionPageMember extends StatelessWidget {
   final Color customColor = Color(0xFF0A5440);
+  final TextEditingController amountController = TextEditingController();
 
   final Wallet wallet;
   TransactionPageMember() : wallet = WalletManager.selectedWallet!;
@@ -34,7 +35,15 @@ class TransactionPageMember extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 75.0),
+              SizedBox(height: 60.0),
+              Text(
+                  '₺${wallet.walletBalance}',
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold,
+                    color: customColor),
+              ),
+              SizedBox(height: 15.0),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
@@ -83,33 +92,45 @@ class TransactionPageMember extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 100.0),
+              SizedBox(height: 70.0),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextField(
-                      // Remove maxLength property to remove character limit
+                      maxLength: 10,
+                      controller: amountController,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                      ],
                       decoration: InputDecoration(
                         labelText: 'Amount',
                         filled: true,
                         fillColor: Color.fromARGB(100, 150, 150, 150),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide.none,
                         ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
                       ),
+                      onChanged: (value) {
+                      },
                     ),
                     SizedBox(height: 60.0),
                     SizedBox(
                       width: 250.0, // Adjust the width as needed
                       child: ElevatedButton(
                         onPressed: () {
+                          if(amountController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please enter the amount',textAlign: TextAlign.center,)));
+                            return;
+                          }
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DepositPageMember(),
+                              builder: (context) => DepositPageMember(amount: double.parse(amountController.text)),
                             ),
                           );
                         },

@@ -39,6 +39,16 @@ class WalletManager {
     }
   }
 
+  static void updateWalletBalance(double balance, bool isAdding) {
+    if (selectedWallet != null) {
+      if (isAdding) {
+        selectedWallet?.walletBalance += balance;
+      } else {
+        selectedWallet?.walletBalance -= balance;
+      }
+    }
+  }
+
   static void updateWalletPaymentAmount(double amount) {
     if (selectedWallet != null) {
       selectedWallet?.walletPaymentAmount = amount;

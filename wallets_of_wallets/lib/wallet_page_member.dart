@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:firstly/Transactions/transaction.dart';
+import 'package:firstly/Transactions/transactionManager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/member_list_page_member.dart';
 import 'package:firstly/qr_page_member.dart';
@@ -11,18 +13,7 @@ class WalletPageMember extends StatelessWidget {
 
   final Color customColor = Color(0xFF0A5440);
 
-  List<List<Object>> listOfMovements = [
-    ['User_2', 'Incomming', 400],
-    ['User_2', 'Outcomming', 200],
-    ['User_3', 'Incomming', 300],
-    ['User_3', 'Incomming', 100],
-    ['User_4', 'Incomming', 500],
-    ['User_4', 'Incomming', 600],
-    ['User_5', 'Incomming', 700],
-    ['User_5', 'Outcomming', 800],
-    ['User_6', 'Incomming', 900],
-    ['User_6', 'Outcomming', 1000],
-  ];
+  List<TransactionWallet> listOfTransactions = TransactionManager.getTransactions(WalletManager.selectedWallet!.walletId);
 
   Wallet wallet;
 
@@ -122,9 +113,7 @@ class WalletPageMember extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: customColor),
                     ),
-                    
-                    
-                   
+
                   ],
                 ),
               ),
@@ -154,7 +143,8 @@ class WalletPageMember extends StatelessWidget {
               ),
 
              SizedBox(height: 15.0),
-              for (int movement = 0; movement < listOfMovements.length; movement++)
+              for (int movement = 0; movement < listOfTransactions.length; movement++)
+
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                   child: Column(
@@ -164,7 +154,9 @@ class WalletPageMember extends StatelessWidget {
                         child: Container(
                           height: 70.0,
                           decoration: BoxDecoration(
-                            color: listOfMovements[movement][1] == 'Outcomming' ? const Color.fromARGB(255, 206, 136, 131) : const Color.fromARGB(255, 151, 222, 153),
+                            color: listOfTransactions[movement].type == 'Outcoming' 
+                                  ? const Color.fromARGB(255, 206, 136, 131) 
+                                  : const Color.fromARGB(255, 151, 222, 153),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.only(
@@ -180,7 +172,7 @@ class WalletPageMember extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "${listOfMovements[movement][0]}",
+                                        "${listOfTransactions[movement].name}",
                                         style: TextStyle(
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.normal,
@@ -188,7 +180,7 @@ class WalletPageMember extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        "${listOfMovements[movement][1]}",
+                                        "${listOfTransactions[movement].type}",
                                         style: TextStyle(
                                           fontSize: 13.0,
                                           fontWeight: FontWeight.normal,
@@ -199,7 +191,7 @@ class WalletPageMember extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "₺ ${listOfMovements[movement][2]}",
+                                  "₺ ${listOfTransactions[movement].amount}",
                                   style: TextStyle(
                                     fontSize: 25.0,
                                     fontWeight: FontWeight.normal,

@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
+import 'package:firstly/Transactions/transaction.dart';
+import 'package:firstly/Transactions/transactionManager.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/create_wallet_page.dart';
@@ -61,7 +63,7 @@ class _MainPageState extends State<MainPage> {
                     GestureDetector(
                       onTap: () async {
                         WalletManager.selectedWallet = WalletManager.wallets[wallet];
-                        print("is admin: ${await WalletsTableManager.isUserAdminOfWallet(WalletManager.selectedWallet!.walletId)}");
+
                         if (await WalletsTableManager.isUserAdminOfWallet(WalletManager.selectedWallet!.walletId)) {
                           Navigator.push(
                             context,
@@ -140,20 +142,16 @@ class _MainPageState extends State<MainPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for (int wallet = 0;
-                            wallet < WalletManager.wallets.length;
-                            wallet++)
+                        for (int wallet = 0; wallet < WalletManager.wallets.length; wallet++)
                           Container(
                             width: 12.0,
                             height: 12.0,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 2.0),
+                            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: currentIndex == wallet
                                   ? customColor
-                                  : Color.fromARGB(255, 255, 255, 255)
-                                      .withOpacity(0.5),
+                                  : Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.5),

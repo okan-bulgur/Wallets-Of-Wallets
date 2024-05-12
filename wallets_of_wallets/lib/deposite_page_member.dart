@@ -1,15 +1,19 @@
 import 'package:firstly/Wallets/wallet.dart';
-import 'package:firstly/member_list_page.dart';
-import 'package:firstly/wallet_page_admin.dart';
+import 'package:firstly/data_base_manager.dart';
+import 'package:firstly/member_list_page_member.dart';
+import 'package:firstly/wallet_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 
 class DepositPageMember extends StatelessWidget {
-  final Color customColor = Color(0xFF0A5440);
 
+  final Color customColor = Color(0xFF0A5440);
   final Wallet wallet;
-  DepositPageMember() : wallet = WalletManager.selectedWallet!;
+  final double amount;
+
+  DepositPageMember({required this.amount}) : 
+    wallet = WalletManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,7 @@ class DepositPageMember extends StatelessWidget {
             children: [
               SizedBox(height: 75.0),
               Text(
-                '₺${wallet.walletBalance}',
+                '₺$amount',
                 style: TextStyle(
                   fontSize: 40.0,
                   fontWeight: FontWeight.bold,
@@ -92,14 +96,14 @@ class DepositPageMember extends StatelessWidget {
               SizedBox(height: 125.0),
               ElevatedButton(
                 onPressed: () {
-                  // Perform withdraw action
+                  TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,
                   minimumSize: Size(275.0, 45.0),
                 ),
                 child: Text(
-                  'To Bank Account',
+                  'From Bank/Credit Card',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,
@@ -110,14 +114,14 @@ class DepositPageMember extends StatelessWidget {
               SizedBox(height: 30.0),
               ElevatedButton(
                 onPressed: () {
-                  // Perform deposit action
+                  TransactionTableManager.depositFromUserBalance(context, wallet.walletId, amount);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,
                   minimumSize: Size(275.0, 45.0),
                 ),
                 child: Text(
-                  'To Main Wallet',
+                  'From Main Wallet',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,
@@ -161,13 +165,13 @@ class DepositPageMember extends StatelessWidget {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                MaterialPageRoute(builder: (context) => WalletPageMember()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MemberListPage()),
+                MaterialPageRoute(builder: (context) => MemberListPageMember()),
               );
               break;
           }

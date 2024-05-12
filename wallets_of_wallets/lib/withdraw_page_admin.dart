@@ -1,62 +1,20 @@
-import 'package:firstly/main_page.dart';
+import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/member_list_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_setting.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/main_page.dart';
 import 'package:firstly/Wallets/walletManager.dart';
 
 class WithdrawPageAdmin extends StatelessWidget {
   final Color customColor = const Color(0xFF0A5440);
+
   final Wallet wallet;
   final double amount;
 
-  WithdrawPageAdmin({Key? key, required this.amount})
-      : wallet = WalletManager.selectedWallet!,
-        super(key: key);
-
-  // Method to handle the withdrawal action
-  Future<void> withdrawFromWallet(BuildContext context, double amount) async {
-    try {
-      // Check if the withdrawal amount is valid
-      if (amount > wallet.walletBalance) {
-        // Show error message if the withdrawal amount exceeds the balance
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Insufficient balance')),
-        );
-        return;
-      }
-
-      // Deduct the amount from the wallet balance
-      double updatedBalance = wallet.walletBalance - amount;
-      double updatedPaymentAmount = wallet.walletPaymentAmount - amount;
-
-      // Update the wallet balance in Firestore
-      await FirebaseFirestore.instance
-          .collection('wallets')
-          .doc(wallet.walletId)
-          .update({
-        'balance': updatedBalance,
-        'paymentAmount': updatedPaymentAmount,
-      });
-
-      // Update the wallet object with the new balance
-      wallet.walletBalance = updatedBalance;
-      wallet.walletPaymentAmount = updatedPaymentAmount;
-
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Withdrawal successful')),
-      );
-    } catch (e) {
-      // Handle withdrawal error
-      print("Error withdrawing: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to withdraw. Please try again.')),
-      );
-    }
-  }
+  WithdrawPageAdmin({required this.amount}) : 
+    wallet = WalletManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {
@@ -78,16 +36,16 @@ class WithdrawPageAdmin extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 75.0),
+              SizedBox(height: 75.0),
               Text(
-                '₺${wallet.walletBalance}',
+                '₺$amount',
                 style: TextStyle(
                   fontSize: 40.0,
                   fontWeight: FontWeight.bold,
                   color: customColor,
                 ),
               ),
-              const SizedBox(height: 15.0),
+              SizedBox(height: 15.0),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
@@ -97,7 +55,7 @@ class WithdrawPageAdmin extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          wallet.walletName,
+                          '${wallet.walletName}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -106,7 +64,7 @@ class WithdrawPageAdmin extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          wallet.walletDescription,
+                          '${wallet.walletDescription}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -136,17 +94,37 @@ class WithdrawPageAdmin extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 125.0),
+              SizedBox(height: 125.0),
               ElevatedButton(
                 onPressed: () {
-                  withdrawFromWallet(context, amount);
+                  // Perform withdraw action
+                  TransactionTableManager.withdrawToCard(context, wallet.walletId, amount);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,
-                  minimumSize: const Size(275.0, 45.0),
+                  minimumSize: Size(275.0, 45.0),
                 ),
-                child: const Text(
-                  'From Main Wallet',
+                child: Text(
+                  'To Bank Account',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 30.0),
+              ElevatedButton(
+                onPressed: () {
+                  // Perform deposit action
+                  TransactionTableManager.withdrawToUserBalance(context, wallet.walletId, amount);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: customColor,
+                  minimumSize: Size(275.0, 45.0),
+                ),
+                child: Text(
+                  'To Main Wallet',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,
@@ -194,7 +172,9 @@ class WithdrawPageAdmin extends StatelessWidget {
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                MaterialPageRoute(
+                  builder: (context) => WalletPageAdmin(),
+                ),
               );
               break;
             case 2:
@@ -205,8 +185,8 @@ class WithdrawPageAdmin extends StatelessWidget {
               break;
             case 3:
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => WalletSetting()),
+                  context,
+                  MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
               );
               break;
           }

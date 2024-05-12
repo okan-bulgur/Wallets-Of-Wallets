@@ -1,30 +1,28 @@
-// ignore_for_file: dead_code
-
-import 'dart:io';
-
+import 'package:firstly/Transactions/transaction.dart';
 import 'package:firstly/Wallets/wallet.dart';
+import 'dart:io';
 import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/Cards/card.dart';
 import 'package:firstly/Cards/cardManager.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firstly/login_page.dart';
-import 'package:image_picker/image_picker.dart';
+import 'Transactions/transactionManager.dart';
 import 'main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 FirebaseApp app = Firebase.app();
 String? userEmail;
 String? userPhoto;
 
 class AuthenticationManager {
+  static login(BuildContext context, String email, String password) async {
 
   static login(BuildContext context, email, String password) async {
     try {
-        print("Email: ${email}, Password: ${password}");
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
@@ -34,11 +32,15 @@ class AuthenticationManager {
         
         // If login successful, navigate to the main page
         List<Wallet> wallets = await WalletsTableManager.getUserWallets(email);
-        print(wallets.length);
         WalletManager.setUsersWallets(wallets);
         
         List<UserCard> cards = await CardsTableManager.getUserCards(email);
         CardManager.setUsersCards(cards);
+
+        for (var wallet in wallets) {
+          List<TransactionWallet> transactions = await TransactionTableManager.getWalletTransactions(wallet.walletId);
+          TransactionManager.setTransactions(transactions);
+        }
 
         UsersTableManager.setUserPhoto(email);
         
@@ -59,7 +61,6 @@ class AuthenticationManager {
 
   static signup(BuildContext context,String name, String surname, String email, String password) async {
     try {
-      print("name: ${name}, surname: ${surname} Email: ${email}, Password: ${password}");
       // Create a new user with the provided email and password
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
@@ -178,7 +179,7 @@ class UsersTableManager {
     }
   }
 
-  static Future<void> updateUserBalance(BuildContext context, String userEmail, double amount, bool isAdding) async {
+  static Future<bool> updateUserBalance(BuildContext context, String userEmail, double amount, bool isAdding) async {
 
     // Yavuz: I added this function to update the balance of the user. It can be used to add or subtract balance from the user.
     // isAdding is a boolean variable that determines whether the balance will be added or subtracted.
@@ -189,12 +190,13 @@ class UsersTableManager {
         await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
           'balance': FieldValue.increment(amount),
         });
-      } else {
+      } 
+      else {
         //Check if there is enough balance to subtract
         DocumentSnapshot user = await FirebaseFirestore.instance.collection('users').doc(userEmail).get();
         if (user['balance'] < amount){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Not enough balance to subtract',textAlign: TextAlign.center,)));
-          return;
+          return false;
         }
         await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
           'balance': FieldValue.increment(-amount),
@@ -204,6 +206,7 @@ class UsersTableManager {
       // Show success message or navigate to another page
       // Example:
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Balance updated successfully',textAlign: TextAlign.center,)));
+      return true;
       // Navigator.pop(context as BuildContext); // Pop this screen and go back to the previous screen
 
     } catch (e) {
@@ -211,6 +214,7 @@ class UsersTableManager {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating user',textAlign: TextAlign.center,)));
     }
+    return false;
   }
 
   static Future<void> deleteWalletFromUser(String walletID, String email) async {
@@ -295,7 +299,6 @@ class WalletsTableManager{
         'color': walletColor.value.toString(),
         'list_of_admins': [email],
         'list_of_members': [],
-        'list_of_transactions': []
       });
       await FirebaseFirestore.instance.collection('users').doc(email).update({
         'list_of_wallets': FieldValue.arrayUnion([walletID])
@@ -309,11 +312,9 @@ class WalletsTableManager{
 
   static Future<void> addMemberToWallet(String walletID) async {
     try {
-      print("Adding member to wallet: $userEmail id: $walletID");
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
         'list_of_members': FieldValue.arrayUnion([userEmail])
       });
-      print("Added member to wallet: $userEmail");
     } catch (e) {
       print("Error adding member to wallet: $e");
     }
@@ -328,13 +329,11 @@ class WalletsTableManager{
       // Check if the text field is empty
       bool isThereWallet = await WalletsTableManager.isThereWallet(context, walletID);
       if (isThereWallet) {
-        print("Wallet found");
+
         bool isUserAdmin = await WalletsTableManager.isUserAdminOfWallet(walletID);
         bool isUserMember = await WalletsTableManager.isUserMemberOfWallet(walletID);
-        print(isUserAdmin);
-        print(isUserMember);
+
         if (isUserAdmin || isUserMember) {
-          print("User is already in the wallet");
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('You are already in the wallet ',textAlign: TextAlign.center)));
           return false;
         }
@@ -401,6 +400,35 @@ class WalletsTableManager{
     } catch (e) {
       print("Error updating wallet balance: $e");
     }
+  }
+
+  static Future<bool> updateWalletBalance(BuildContext context, String walletID, double amount, bool isAdding) async {
+    try {
+
+      if(isAdding){
+        await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+          'balance': FieldValue.increment(amount),
+        });
+        WalletManager.updateWalletBalance(amount, isAdding);
+        return true;
+      }
+      else{
+        DocumentSnapshot wallet = await FirebaseFirestore.instance.collection('wallets').doc(walletID).get();
+        if (wallet['balance'] < amount){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Not enough balance to subtract',textAlign: TextAlign.center)));
+          return false;
+        }
+        await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+          'balance': FieldValue.increment(-amount),
+        });
+        WalletManager.updateWalletBalance(amount, isAdding);
+        return true;
+      }
+
+    } catch (e) {
+      print("Error updating wallet balance: $e");
+    }
+    return false;
   }
 
   static Future<void> updateWalletPaymentAmount(BuildContext context, String walletID, double payment_amount) async {
@@ -624,6 +652,142 @@ class CardsTableManager{
 
   static Future<void> updateCardList() async {
     CardManager.cards = await getUserCards(userEmail!);
+  }
+
+}
+
+
+class TransactionTableManager{
+
+  static Future<void> addTransaction(BuildContext context, String walletID, String type, double amount, String userEmail) async{
+    try {
+
+      String date = DateTime.now().toString();
+      TransactionWallet newTransaction = await TransactionManager.generateTransaction(walletID, type, amount, date, userEmail);
+      String transactionID = newTransaction.transactionID;
+
+      TransactionManager.addTransaction(newTransaction);
+
+      await FirebaseFirestore.instance.collection('transactions').doc(transactionID).set({
+        'transactionID': newTransaction.transactionID,
+        'walletID': newTransaction.walletID,
+        'type': newTransaction.type,
+        'amount': newTransaction.amount,
+        'date': newTransaction.date,
+        'userEmail': newTransaction.userEmail,
+        'name': newTransaction.name,
+      });
+
+    } catch (e) {
+      print("Error adding transaction: $e");
+    }
+  }
+
+  static Future<void> depositFromCard(BuildContext context, String walletID, double amount) async {
+    try {
+      
+      // Wallet + amount, Card - amount
+      print("Amount: {$amount}");
+      String type = "Incoming";
+
+      addTransaction(context, walletID, type, amount, userEmail!);
+      await WalletsTableManager.updateWalletBalance(context, walletID, amount, true);
+
+      await ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was completed successfully',textAlign: TextAlign.center,)));
+
+    } catch (e) {
+      print("Error depositing from card: $e");
+    }
+  }
+
+  static Future<void> depositFromUserBalance(BuildContext context, String walletID, double amount) async {
+    try {
+      
+      // Wallet + amount, User Balance - amount
+
+      String type = "Incoming";
+
+      addTransaction(context, walletID, type, amount, userEmail!);
+      bool isUpdated = await UsersTableManager.updateUserBalance(context, userEmail!, amount, false);
+
+      if (isUpdated == false) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was not completed',textAlign: TextAlign.center,)));
+        return;
+      }
+
+      await WalletsTableManager.updateWalletBalance(context, walletID, amount, true);
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was completed successfully',textAlign: TextAlign.center,)));
+
+    } catch (e) {
+      print("Error depositing from wallet: $e");
+    }
+  }
+
+  static Future<void> withdrawToCard(BuildContext context, String walletID, double amount) async {
+    try {
+
+      // Wallet - amount, Card + amount
+
+      String type = "Outcoming";
+
+      addTransaction(context, walletID, type, amount, userEmail!);
+      await WalletsTableManager.updateWalletBalance(context, walletID, amount, false);
+
+      await ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was completed successfully',textAlign: TextAlign.center,)));
+
+    } catch (e) {
+      print("Error withdrawing to card: $e");
+    }
+  }
+
+  static Future<void> withdrawToUserBalance(BuildContext context, String walletID, double amount) async {
+    try {
+
+      // Wallet - amount, User Balance + amount
+
+      String type = "Outcoming";
+
+      addTransaction(context, walletID, type, amount, userEmail!);
+      bool isUpdated = await WalletsTableManager.updateWalletBalance(context, walletID, amount, false);
+
+      if (isUpdated == false) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was not completed',textAlign: TextAlign.center,)));
+        return;
+      }
+
+      await UsersTableManager.updateUserBalance(context, userEmail!, amount, true);
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was completed successfully',textAlign: TextAlign.center,)));
+
+    } catch (e) {
+      print("Error withdrawing to wallet: $e");
+    }
+  }
+
+  static Future<List<TransactionWallet>> getWalletTransactions(String walletID) async {
+    List<TransactionWallet> transactions = [];
+    try {
+      var querySnapshot = await FirebaseFirestore.instance.collection('transactions').get();
+      for (var transaction in querySnapshot.docs) {
+        if (transaction.data()['walletID'] == walletID) {
+          transactions.add(
+            TransactionWallet(
+              transactionID: transaction.data()['transactionID'],
+              walletID: transaction.data()['walletID'],
+              type: transaction.data()['type'],
+              amount: transaction.data()['amount'].toDouble(),
+              date: transaction.data()['date'],
+              userEmail: transaction.data()['userEmail'],
+              name: transaction.data()['name'],
+            )
+          );
+        }
+      }
+    } catch (e) {
+      print("Error getting transactions: $e");
+    }
+    return transactions;
   }
 
 }
