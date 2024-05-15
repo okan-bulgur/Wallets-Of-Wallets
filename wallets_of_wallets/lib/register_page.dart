@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'data_base_manager.dart';
 
 class RegisterPage extends StatelessWidget {
-
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController surnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -15,12 +13,21 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double screenHeight = screenSize.height;
+    final double screenWidth = screenSize.width;
+
+    final double appBarTitleSize = screenHeight * 0.04;
+    final double signUpTitleSize = screenHeight * 0.05;
+    final double buttonTextSize = screenHeight * 0.02;
+    final double loginTextSize = screenHeight * 0.02;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
-            fontSize: 30.0,
+            fontSize: appBarTitleSize,
             fontWeight: FontWeight.bold,
             color: customColor,
           ),
@@ -30,22 +37,21 @@ class RegisterPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(screenWidth * 0.04),
           child: Column(
-            //crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SizedBox(height: 130.0),
+              SizedBox(height: screenHeight * 0.1),
               Center(
                 child: Text(
                   'Sign Up',
                   style: TextStyle(
-                    fontSize: 35.0,
+                    fontSize: signUpTitleSize,
                     fontWeight: FontWeight.w900,
                     color: customColor,
                   ),
                 ),
               ),
-              SizedBox(height: 24.0),
+              SizedBox(height: screenHeight * 0.02),
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
@@ -54,12 +60,12 @@ class RegisterPage extends StatelessWidget {
                   filled: true,
                   fillColor: Color.fromARGB(100, 150, 150, 150),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
-                    borderSide: BorderSide.none, // Set the border color to gray
+                    borderRadius: BorderRadius.circular(screenHeight * 0.03),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: screenHeight * 0.02),
               TextField(
                 controller: surnameController,
                 decoration: InputDecoration(
@@ -68,12 +74,12 @@ class RegisterPage extends StatelessWidget {
                   filled: true,
                   fillColor: Color.fromARGB(100, 150, 150, 150),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
-                    borderSide: BorderSide.none, // Set the border color to gray
+                    borderRadius: BorderRadius.circular(screenHeight * 0.03),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: screenHeight * 0.02),
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
@@ -82,12 +88,12 @@ class RegisterPage extends StatelessWidget {
                   filled: true,
                   fillColor: Color.fromARGB(100, 150, 150, 150),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
-                    borderSide: BorderSide.none, // Set the border color to gray
+                    borderRadius: BorderRadius.circular(screenHeight * 0.03),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: screenHeight * 0.02),
               TextField(
                 controller: passwordController,
                 decoration: InputDecoration(
@@ -96,38 +102,49 @@ class RegisterPage extends StatelessWidget {
                   filled: true,
                   fillColor: Color.fromARGB(100, 150, 150, 150),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0), // Adjust the radius for curved edges
-                    borderSide: BorderSide.none, // Set the border color to gray
+                    borderRadius: BorderRadius.circular(screenHeight * 0.03),
+                    borderSide: BorderSide.none,
                   ),
                 ),
                 obscureText: true,
               ),
-              SizedBox(height: 32.0),
+              SizedBox(height: screenHeight * 0.04),
               ElevatedButton(
                 onPressed: () {
-                  AuthenticationManager.signup(context, nameController.text, surnameController.text, emailController.text, passwordController.text);
+                  AuthenticationManager.signup(
+                    context,
+                    nameController.text,
+                    surnameController.text,
+                    emailController.text,
+                    passwordController.text,
+                  );
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(customColor), // Change background color
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(customColor),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0), // Adjust border radius
+                      borderRadius:
+                          BorderRadius.circular(screenHeight * 0.04),
                     ),
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 40.0),
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenHeight * 0.01,
+                    horizontal: screenWidth * 0.1,
+                  ),
                   child: Text(
                     'Sign Up',
                     style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: buttonTextSize,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white, // Change text color
+                      color: Colors.white,
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: screenHeight * 0.02),
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -136,7 +153,7 @@ class RegisterPage extends StatelessWidget {
                   'Already have an account? Login',
                   style: TextStyle(
                     color: customColor,
-                    fontSize: 16.0,
+                    fontSize: loginTextSize,
                   ),
                 ),
               ),

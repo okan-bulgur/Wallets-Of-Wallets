@@ -6,7 +6,6 @@ import 'data_base_manager.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatelessWidget {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -16,14 +15,27 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double screenWidth = screenSize.width;
+    final double screenHeight = screenSize.height;
+
+    final double titleFontSize = screenWidth * 0.08;
+    final double welcomeFontSize = screenWidth * 0.08;
+    final double textFieldHeight = screenHeight * 0.06;
+    final double buttonHeight = screenHeight * 0.055;
+    final double buttonWidth = screenWidth * 0.6;
+    final double buttonTextFontSize = screenWidth * 0.04;
+    final double signUpFontSize = screenWidth * 0.04;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
-              fontSize: 30.0,
-              fontWeight: FontWeight.bold,
-              color: customColor),
+            fontSize: titleFontSize,
+            fontWeight: FontWeight.bold,
+            color: customColor,
+          ),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -32,83 +44,94 @@ class LoginPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.0),
+            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
             child: Text(
               'Welcome Back !',
               style: TextStyle(
-                  fontSize: 35.0,
-                  fontWeight: FontWeight.w900, //makes LOGIN bold
-                  color: customColor),
+                fontSize: welcomeFontSize,
+                fontWeight: FontWeight.w900,
+                color: customColor,
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(screenWidth * 0.04),
             child: Column(
               children: [
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
-                    filled: true,
-                    fillColor: Color.fromARGB(100, 150, 150, 150),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          15.0), // Adjust the radius for curved edges
-                      borderSide:
-                          BorderSide.none, // Set the border color to gray
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock),
-                    filled: true,
-                    fillColor: Color.fromARGB(100, 150, 150, 150),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          15.0), // Adjust the radius for curved edges
-                      borderSide:
-                          BorderSide.none, // Set the border color to gray
-                    ),
-                  ),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 40),
-        
-                ElevatedButton(
-                  onPressed: () async {
-                    AuthenticationManager.login(context, emailController.text, passwordController.text);                 
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(customColor), // Change background color
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(20.0), // Adjust border radius
-                      ),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 40.0),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white, // Change text color
+                SizedBox(
+                  height: textFieldHeight,
+                  child: TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.email),
+                      filled: true,
+                      fillColor: Color.fromARGB(100, 150, 150, 150),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide.none,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: screenHeight * 0.02),
+                SizedBox(
+                  height: textFieldHeight,
+                  child: TextField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(Icons.lock),
+                      filled: true,
+                      fillColor: Color.fromARGB(100, 150, 150, 150),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    obscureText: true,
+                  ),
+                ),
+                SizedBox(height: screenHeight * 0.04),
+                SizedBox(
+                  height: buttonHeight,
+                  width: buttonWidth,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      AuthenticationManager.login(
+                        context,
+                        emailController.text,
+                        passwordController.text,
+                      );
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(customColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 40.0,
+                      ),
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: buttonTextFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: screenHeight * 0.03),
                 TextButton(
                   onPressed: () {
-                    // Navigate to the register page
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -120,7 +143,7 @@ class LoginPage extends StatelessWidget {
                     'Don\'t have an account ? Sign Up',
                     style: TextStyle(
                       color: customColor,
-                      fontSize: 16.0,
+                      fontSize: signUpFontSize,
                     ),
                   ),
                 ),
