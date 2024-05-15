@@ -573,6 +573,39 @@ class WalletsTableManager{
       return wallets;
     });
   } 
+
+  static Future<void> disjoinWallet(BuildContext context, String walletID) async {
+    try {
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) async {
+        List<String> admins = List<String>.from(value.data()!['list_of_admins']);
+        List<String> members = List<String>.from(value.data()!['list_of_members']);
+
+        if (admins.contains(userEmail)) {
+          if (admins.length == 1) {
+            await deleteWallet(context, walletID);
+          } 
+          else {
+            await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+              'list_of_admins': FieldValue.arrayRemove([userEmail])
+            });
+            await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+              'list_of_wallets': FieldValue.arrayRemove([walletID])
+            });
+          }
+        } 
+        else if (members.contains(userEmail)) {
+          await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+            'list_of_members': FieldValue.arrayRemove([userEmail])
+          });
+          await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+            'list_of_wallets': FieldValue.arrayRemove([walletID])
+          });
+        }
+      });
+    } catch (e) {
+      print("Error disjoining wallet: $e");
+    }
+  }
 }
 
 

@@ -311,60 +311,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     builder: (context) => CardsList()), // Navigate to MainPage
               );
               break;
-              break;
             case 2:
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ProfileSettings()), // Navigate to MainPage
+                    builder: (context) => ProfileSettings()), // Navigate to MainPage
               );
               break;
           }
         },
       ),
-    );
-  }
-
-  void _showBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 200,
-          child: Column(
-            children: <Widget>[
-              ListTile(
-                title: Text('John Doe'),
-                onTap: () {
-                  setState(() {
-                    selectedUser = 'John Doe';
-                  });
-                  Navigator.pop(context); // Close the bottom sheet
-                },
-              ),
-              ListTile(
-                title: Text('Jane Smith'),
-                onTap: () {
-                  setState(() {
-                    selectedUser = 'Jane Smith';
-                  });
-                  Navigator.pop(context); // Close the bottom sheet
-                },
-              ),
-              ListTile(
-                title: Text('Alice Johnson'),
-                onTap: () {
-                  setState(() {
-                    selectedUser = 'Alice Johnson';
-                  });
-                  Navigator.pop(context); // Close the bottom sheet
-                },
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

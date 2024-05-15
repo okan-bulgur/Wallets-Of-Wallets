@@ -71,6 +71,33 @@ class _MainPageState extends State<MainPage> {
                 if (list_of_wallets != null && list_of_wallets!.isNotEmpty)
                   for (int wallet = 0; wallet < list_of_wallets!.length; wallet++)
                     GestureDetector(
+                      onLongPress: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text("Leave Wallet"),
+                              content: Text("Are you sure you want to leave this wallet?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("No"),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    // Add functionality to leave wallet
+                                    await WalletsTableManager.disjoinWallet(context, list_of_wallets![wallet].walletId);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("Yes"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       onTap: () async {
                         WalletsTableManager.selectedWallet = list_of_wallets![wallet];
 
@@ -94,8 +121,7 @@ class _MainPageState extends State<MainPage> {
                         alignment: Alignment.center,
                         margin: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
-                          color: list_of_wallets![wallet].walletColor
-                              as Color?,
+                          color: list_of_wallets![wallet].walletColor as Color?,
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
@@ -204,7 +230,7 @@ class _MainPageState extends State<MainPage> {
                   builder: (context) {
                     return AlertDialog(
                       title: Text("Help"),
-                      content: Text("To see your profile/balance click on the button top right.\nTo create/join wallet click on the button bottom right.\nTo view wallet click on the wallet square center of the screen."),
+                      content: Text("* To see your profile/balance click on the button top right.\n* To create/join wallet click on the button bottom right.\n* To view wallet click on the wallet square center of the screen.\n* Press and hold the wallet to leave the wallet."),
                       actions: [
                         TextButton(
                           onPressed: () {
