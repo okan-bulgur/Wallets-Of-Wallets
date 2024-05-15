@@ -1,9 +1,9 @@
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/transaction_page_member.dart';
 import 'package:firstly/wallet_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firstly/Wallets/wallet.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/main_page.dart';
 
 class MemberListPageMember extends StatefulWidget {
@@ -12,14 +12,14 @@ class MemberListPageMember extends StatefulWidget {
 }
 
 class _MemberListPageMemberState extends State<MemberListPageMember> {
-  final Color customColor = Color(0xFF0A5440);
+  final Color customColor = const Color(0xFF0A5440);
   List<List<Object>> listOfUsers = [];
   late Wallet wallet;
   @override
   
   void initState() {
     super.initState();
-    wallet = WalletManager.selectedWallet!;
+    wallet = WalletsTableManager.selectedWallet!;
     fetchMembersAndAdmins();
   }
 

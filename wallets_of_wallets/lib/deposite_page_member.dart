@@ -4,16 +4,15 @@ import 'package:firstly/member_list_page_member.dart';
 import 'package:firstly/wallet_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 
 class DepositPageMember extends StatelessWidget {
 
-  final Color customColor = Color(0xFF0A5440);
+  final Color customColor = const Color(0xFF0A5440);
   final Wallet wallet;
   final double amount;
 
-  DepositPageMember({required this.amount}) : 
-    wallet = WalletManager.selectedWallet!;
+  DepositPageMember({super.key, required this.amount}) : 
+    wallet = WalletsTableManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {

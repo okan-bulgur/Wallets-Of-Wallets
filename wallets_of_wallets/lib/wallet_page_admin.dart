@@ -1,5 +1,5 @@
 import 'package:firstly/Transactions/transaction.dart';
-import 'package:firstly/Transactions/transactionManager.dart';
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/member_list_page.dart';
 import 'package:firstly/qr_page.dart';
@@ -7,16 +7,33 @@ import 'package:firstly/transaction_page_admin.dart';
 import 'package:firstly/wallet_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Wallets/wallet.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 
 // ignore: must_be_immutable
-class WalletPageAdmin extends StatelessWidget {
+class WalletPageAdmin extends StatefulWidget {
   final Color customColor = Color(0xFF0A5440);
 
-  Wallet wallet;
-  List<TransactionWallet> listOfTransactions = TransactionManager.getTransactions(WalletManager.selectedWallet!.walletId);
-  
-  WalletPageAdmin() : wallet = WalletManager.selectedWallet!;
+  @override
+  _WalletPageAdminState createState() => _WalletPageAdminState();
+}
+
+class _WalletPageAdminState extends State<WalletPageAdmin> {
+  Wallet? wallet;
+  List<TransactionWallet>? listOfTransactions;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeTransactions();
+  }
+
+  void initializeTransactions() async {
+    wallet = WalletsTableManager.selectedWallet!;
+    List<TransactionWallet>? transaction = await TransactionTableManager.getWalletTransactions(wallet!.walletId);
+
+    setState(() {
+      listOfTransactions = transaction;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +42,7 @@ class WalletPageAdmin extends StatelessWidget {
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
-              fontSize: 30.0, fontWeight: FontWeight.bold, color: customColor),
+              fontSize: 30.0, fontWeight: FontWeight.bold, color: widget.customColor),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -33,7 +50,7 @@ class WalletPageAdmin extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.qr_code,
-              color: customColor, // Replace with your desired color
+              color: widget.customColor, // Replace with your desired color
               size: 40, // Replace with your desired size
             ),
             onPressed: () {
@@ -55,11 +72,11 @@ class WalletPageAdmin extends StatelessWidget {
             children: [
               SizedBox(height: 60.0),
               Text(
-                '₺${wallet.walletBalance}',
+                '₺${wallet!.walletBalance}',
                 style: TextStyle(
                     fontSize: 40.0,
                     fontWeight: FontWeight.bold,
-                    color: customColor),
+                    color: widget.customColor),
               ),
               SizedBox(height: 15.0),
               Padding(
@@ -71,37 +88,37 @@ class WalletPageAdmin extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${wallet.walletName}',
+                          '${wallet!.walletName}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
-                              color: customColor),
+                              color: widget.customColor),
                         ),
                         Text(
-                          '${wallet.walletDescription}',
+                          '${wallet!.walletDescription}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
-                              color: customColor),
+                              color: widget.customColor),
                         ),
                         Text(
-                          'Payment: ₺${wallet.walletPaymentAmount}',
+                          'Payment: ₺${wallet!.walletPaymentAmount}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold,
-                              color: customColor),
+                              color: widget.customColor),
                         ),
                       ],
                     ),
                     Text(
-                      'ID: ${wallet.walletId}',
+                      'ID: ${wallet!.walletId}',
                       style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
-                          color: customColor),
+                          color: widget.customColor),
                     ),
                   ],
                 ),
@@ -116,20 +133,20 @@ class WalletPageAdmin extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
-                          color: customColor),
+                          color: widget.customColor),
                     ),
                     SizedBox(width: 5.0),
                     Icon(
                       Icons.chevron_right,
                       size: 15.0,
-                      color: customColor,
+                      color: widget.customColor,
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 15.0),
-              for (int movement = 0; movement < listOfTransactions.length; movement++)
-
+              if(listOfTransactions != null && listOfTransactions!.isNotEmpty)
+              for (int movement = 0; movement < listOfTransactions!.length; movement++)
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                   child: Column(
@@ -139,7 +156,7 @@ class WalletPageAdmin extends StatelessWidget {
                         child: Container(
                           height: 70.0,
                           decoration: BoxDecoration(
-                            color: listOfTransactions[movement].type == 'Outcoming'
+                            color: listOfTransactions![movement].type == 'Outcoming'
                                 ? const Color.fromARGB(255, 206, 136, 131)
                                 : const Color.fromARGB(255, 151, 222, 153),
                           ),
@@ -156,16 +173,16 @@ class WalletPageAdmin extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "${listOfTransactions[movement].name}",
-                                        style: TextStyle(
+                                        listOfTransactions![movement].name,
+                                        style: const TextStyle(
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.normal,
                                           color: Color.fromARGB(255, 6, 7, 6),
                                         ),
                                       ),
                                       Text(
-                                        "${listOfTransactions[movement].type}",
-                                        style: TextStyle(
+                                        listOfTransactions![movement].type,
+                                        style: const TextStyle(
                                           fontSize: 13.0,
                                           fontWeight: FontWeight.normal,
                                           color: Color.fromARGB(255, 0, 0, 0),
@@ -175,8 +192,8 @@ class WalletPageAdmin extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "₺ ${listOfTransactions[movement].amount}",
-                                  style: TextStyle(
+                                  "₺ ${listOfTransactions![movement].amount}",
+                                  style: const TextStyle(
                                     fontSize: 25.0,
                                     fontWeight: FontWeight.normal,
                                     color: Color.fromARGB(255, 6, 6, 6),
@@ -190,6 +207,8 @@ class WalletPageAdmin extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (listOfTransactions == null) // Kontrol ekledim
+                  CircularProgressIndicator(),
             ],
           ),
         ),
@@ -214,12 +233,12 @@ class WalletPageAdmin extends StatelessWidget {
           ),
           // Add a new BottomNavigationBarItem for Transactions
         ],
-        selectedItemColor: customColor,
+        selectedItemColor: widget.customColor,
         selectedFontSize: 14.5,
         showUnselectedLabels: true,
-        unselectedItemColor: customColor,
+        unselectedItemColor: widget.customColor,
         unselectedFontSize: 14.5,
-        unselectedLabelStyle: TextStyle(color: customColor),
+        unselectedLabelStyle: TextStyle(color: widget.customColor),
         onTap: (index) {
           switch (index) {
             case 0:

@@ -1,12 +1,11 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, library_private_types_in_public_api
-import 'package:firstly/Wallets/walletManager.dart';
+import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/create_wallet_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
 import 'profile_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -15,11 +14,24 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final Color customColor = Color(0xFF0A5440);
 
   CarouselController buttonCarouselController = CarouselController();
-
+  final Color customColor = Color(0xFF0A5440);
   int currentIndex = 0;
+  List<Wallet>? list_of_wallets;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeWallets();
+  }
+
+  void initializeWallets() async {
+    List<Wallet>? wallets = await WalletsTableManager.getWalletsOfUser(userEmail!);
+    setState(() {
+      list_of_wallets = wallets;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +68,13 @@ class _MainPageState extends State<MainPage> {
           children: <Widget>[
             CarouselSlider(
               items: [
-                if (WalletManager.wallets.isNotEmpty)
-                  for (int wallet = 0; wallet < WalletManager.wallets.length; wallet++)
+                if (list_of_wallets != null && list_of_wallets!.isNotEmpty)
+                  for (int wallet = 0; wallet < list_of_wallets!.length; wallet++)
                     GestureDetector(
                       onTap: () async {
-                        WalletManager.selectedWallet = WalletManager.wallets[wallet];
+                        WalletsTableManager.selectedWallet = list_of_wallets![wallet];
 
-                        if (await WalletsTableManager.isUserAdminOfWallet(WalletManager.selectedWallet!.walletId)) {
+                        if (await WalletsTableManager.isUserAdminOfWallet(WalletsTableManager.selectedWallet!.walletId)) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -82,7 +94,7 @@ class _MainPageState extends State<MainPage> {
                         alignment: Alignment.center,
                         margin: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
-                          color: WalletManager.wallets[wallet].walletColor
+                          color: list_of_wallets![wallet].walletColor
                               as Color?,
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
@@ -95,7 +107,7 @@ class _MainPageState extends State<MainPage> {
                           ],
                         ),
                         child: Text(
-                          WalletManager.wallets[wallet].walletName,
+                          list_of_wallets![wallet].walletName,
                           style: TextStyle(
                             fontSize: 30.0,
                             fontWeight: FontWeight.bold,
@@ -105,6 +117,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     )
               ], // Add your items here
+              
               carouselController: buttonCarouselController,
               options: CarouselOptions(
                 initialPage: 0,
@@ -124,9 +137,9 @@ class _MainPageState extends State<MainPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (WalletManager.wallets.isNotEmpty)
+                  if (list_of_wallets!.isNotEmpty)
                     Text(
-                      '${WalletManager.wallets[currentIndex].walletName}',
+                      '${list_of_wallets![currentIndex].walletName}',
                       style: TextStyle(
                         color: customColor,
                       ),
@@ -140,7 +153,7 @@ class _MainPageState extends State<MainPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for (int wallet = 0; wallet < WalletManager.wallets.length; wallet++)
+                        for (int wallet = 0; wallet < list_of_wallets!.length; wallet++)
                           Container(
                             width: 12.0,
                             height: 12.0,
@@ -163,9 +176,9 @@ class _MainPageState extends State<MainPage> {
                       ],
                     ),
                   ),
-                  if (WalletManager.wallets.isNotEmpty)
+                  if (list_of_wallets!.isNotEmpty)
                     Text(
-                      'ID: ${WalletManager.wallets[currentIndex].walletId}',
+                      'ID: ${list_of_wallets![currentIndex].walletId}',
                       style: TextStyle(
                         color: customColor,
                       ),
@@ -176,6 +189,7 @@ class _MainPageState extends State<MainPage> {
           ],
         ),
       ),
+      
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -213,8 +227,6 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           
-    
-          
           FloatingActionButton(
             onPressed: () {
               // Add functionality for the existing floating action button
@@ -232,7 +244,6 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
            // Add spacing between the buttons
-
         ],
       ),
     );

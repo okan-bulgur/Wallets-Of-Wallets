@@ -4,7 +4,6 @@ import 'package:firstly/data_base_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firstly/Wallets/wallet.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/transaction_page_admin.dart';
 import 'package:firstly/wallet_page_admin.dart';
@@ -23,7 +22,7 @@ class _MemberListPageState extends State<MemberListPage> {
   
   void initState() {
     super.initState();
-    wallet = WalletManager.selectedWallet!;
+    wallet = WalletsTableManager.selectedWallet!;
     fetchMembersAndAdmins();
   }
 

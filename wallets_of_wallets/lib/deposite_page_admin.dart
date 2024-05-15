@@ -5,7 +5,6 @@ import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 
 class DepositPageAdmin extends StatelessWidget {
 
@@ -13,8 +12,8 @@ class DepositPageAdmin extends StatelessWidget {
   final Wallet wallet;
   final double amount;
 
-  DepositPageAdmin({required this.amount}) : 
-    wallet = WalletManager.selectedWallet!;
+  DepositPageAdmin({super.key, required this.amount}) : 
+    wallet = WalletsTableManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {

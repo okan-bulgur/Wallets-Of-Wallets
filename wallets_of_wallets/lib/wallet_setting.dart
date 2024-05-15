@@ -3,17 +3,18 @@ import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:flutter/material.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class WalletSetting extends StatefulWidget {
+  const WalletSetting({super.key});
+
   @override
   _WalletSetting createState() => _WalletSetting();
 }
 
 class _WalletSetting extends State<WalletSetting> {
-  final Color customColor = Color(0xFF0A5440);
+  final Color customColor = const Color(0xFF0A5440);
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -23,7 +24,7 @@ class _WalletSetting extends State<WalletSetting> {
   @override
   void initState() {
     super.initState();
-    selectedColor = WalletManager.selectedWallet!.walletColor;
+    selectedColor = WalletsTableManager.selectedWallet!.walletColor;
   }
 
   void changeColor(Color color) {
@@ -32,7 +33,7 @@ class _WalletSetting extends State<WalletSetting> {
 
   final Wallet wallet;
   _WalletSetting({Key? key}) 
-    : wallet = WalletManager.selectedWallet!;
+    : wallet = WalletsTableManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {

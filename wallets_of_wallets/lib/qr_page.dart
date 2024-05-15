@@ -1,4 +1,4 @@
-import 'package:firstly/Wallets/walletManager.dart';
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/member_list_page.dart';
 import 'package:firstly/transaction_page_admin.dart';
@@ -11,7 +11,7 @@ class QrPage extends StatelessWidget {
   final Color customColor = const Color(0xFF0A5440);
   final Wallet wallet;
 
-  QrPage({Key? key}) : wallet = WalletManager.selectedWallet!, super(key: key);
+  QrPage({Key? key}) : wallet = WalletsTableManager.selectedWallet!, super(key: key);
 
   @override
   Widget build(BuildContext context) {

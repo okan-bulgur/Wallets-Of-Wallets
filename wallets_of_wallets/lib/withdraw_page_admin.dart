@@ -5,7 +5,6 @@ import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 
 class WithdrawPageAdmin extends StatelessWidget {
   final Color customColor = const Color(0xFF0A5440);
@@ -14,7 +13,7 @@ class WithdrawPageAdmin extends StatelessWidget {
   final double amount;
 
   WithdrawPageAdmin({required this.amount}) : 
-    wallet = WalletManager.selectedWallet!;
+    wallet = WalletsTableManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {
