@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart'; // Replace this import with your actual main page import
 import 'package:image_picker/image_picker.dart';
 
+
+
 class ProfileSettings extends StatelessWidget {
 
   final Color customColor = Color(0xFF0A5440);
+  static bool isUploaded = false;
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController surnameController = TextEditingController();
@@ -44,6 +47,35 @@ class ProfileSettings extends StatelessWidget {
 
                 if (file == null) return;
                 UsersTableManager.updateUserPhoto(context, file);
+
+                //create pop up to show the user that the image is being uploaded with 5 seconds delay and make it uncloseable
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Uploading Image'),
+                      content: Text('Please wait while the image is being uploaded'),
+                    );
+                  },
+                );
+                
+                //Future.delayed(Duration(seconds: 1));
+                while (!isUploaded) {
+                  await Future.delayed(Duration(milliseconds: 500));
+                }
+                isUploaded = false;
+
+                //close the pop up
+                Navigator.pop(context);
+
+
+                //return to the profile page
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+
 
               },
               child: CircleAvatar(

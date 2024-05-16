@@ -1,4 +1,5 @@
 import 'package:firstly/Cards/card.dart';
+import 'package:firstly/cards_page.dart';
 import 'package:flutter/material.dart';
 
 class CardManager {
@@ -29,5 +30,6 @@ class CardManager {
   
   static void addCard(UserCard card) {
     cards.add(card);
+    CardsList.isCardChanged = true;
   }
 }

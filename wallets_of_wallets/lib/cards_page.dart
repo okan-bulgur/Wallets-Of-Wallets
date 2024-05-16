@@ -4,12 +4,14 @@ import 'package:firstly/Cards/card.dart';
 import 'package:firstly/add_card_page.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
+import 'package:firstly/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Cards/cardManager.dart';
 
 class CardsList extends StatelessWidget {
 
   final Color customColor = Color(0xFF0A5440);
+  static bool isCardChanged = false;
 
   @override
   Widget build(BuildContext context) {
@@ -163,8 +165,38 @@ class CardsList extends StatelessWidget {
                     width: 250.0, // Adjust the width as needed
                     child: ElevatedButton(
                       onPressed: () async{
-                        await CardsTableManager.deleteCard(card.cardID);
+                        CardsTableManager.deleteCard(card.cardID);
+
+                        //create pop up to show that the card is being removed and user cant close it
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Removing Card'),
+                              content: Text('Please wait while the card is being removed'),
+                            );
+                          },
+                        );
+
+                        while (!isCardChanged) {
+                          await Future.delayed(Duration(milliseconds: 500));
+                        }
+                        isCardChanged = false;
+
+                        //close the pop up
                         Navigator.pop(context);
+                        Navigator.pop(context);
+
+                        //refresh the page and clear the previous page from the stack
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => CardsList()),
+                        );
+
+
+
+                        
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

@@ -1,5 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables
 
+import 'package:firstly/cards_page.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -197,7 +198,7 @@ class _AddCardState extends State<AddCard> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 25.0),
                     child: ElevatedButton(
-                      onPressed:() {
+                      onPressed:() async{
                         CardsTableManager.addCard(
                           cvcController.text,
                           cardNameController.text,
@@ -207,7 +208,25 @@ class _AddCardState extends State<AddCard> {
                           FirebaseAuth.instanceFor(app: app).currentUser!.email.toString(),
                         );
 
-                        Navigator.push(
+                        //create pop up to show that the card is being created
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Creating Card'),
+                              content: Text('Please wait while the card is being created'),
+                            );
+                          },
+                        );
+
+                        // I will use CardsList isCardChanged variable to synchronise the changes
+                        while (!CardsList.isCardChanged) {
+                          await Future.delayed(Duration(milliseconds: 500));
+                        }
+                        CardsList.isCardChanged = false;
+
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => ProfilePage()),
                         );

@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/Cards/card.dart';
 import 'package:firstly/Cards/cardManager.dart';
+import 'package:firstly/cards_page.dart';
+import 'package:firstly/profile_settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/login_page.dart';
 import 'Transactions/transactionManager.dart';
@@ -258,6 +260,7 @@ class UsersTableManager {
         // Show success message or navigate to another page
         // Example:
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Photo updated successfully',textAlign: TextAlign.center,)));
+        ProfileSettings.isUploaded = true;
         // Navigator.pop(context as BuildContext); // Pop this screen and go back to the previous screen
 
       } catch (error) {
@@ -651,6 +654,7 @@ class CardsTableManager{
 
   static Future<void> updateCardList() async {
     CardManager.cards = await getUserCards(userEmail!);
+    CardsList.isCardChanged = true;
   }
 
 }
