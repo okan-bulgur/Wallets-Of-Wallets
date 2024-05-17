@@ -531,6 +531,7 @@ class WalletsTableManager{
   }
 
   static Future<List<Wallet>> getWalletsOfUser(String email) async{
+    
     List<Wallet> wallets = [];
     try {
       FirebaseFirestore.instance.collection('users').doc(email).get().then((value) async {
@@ -555,7 +556,8 @@ class WalletsTableManager{
   
   }
 
-  static Stream<List<Wallet>> getWalletsOfUserStream(String email) {
+  static Stream<List<Wallet>> getWalletsOfUserStream() {
+    var email = FirebaseAuth.instance.currentUser!.email;
     return FirebaseFirestore.instance.collection('users').doc(email).snapshots().asyncMap((snapshot) async {
       List<String> walletIDs = List<String>.from(snapshot.data()!['list_of_wallets']);
       List<Wallet> wallets = [];
