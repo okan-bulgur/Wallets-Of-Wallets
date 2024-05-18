@@ -96,8 +96,33 @@ class WithdrawPageAdmin extends StatelessWidget {
               SizedBox(height: 125.0),
               ElevatedButton(
                 onPressed: () {
-                  // Perform withdraw action
-                  TransactionTableManager.withdrawToCard(context, wallet.walletId, amount);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Withdraw To Card'),
+                        content: Text('Are you sure you want to withdraw to your card?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              TransactionTableManager.withdrawToCard(context, wallet.walletId, amount);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                              );
+                            },
+                            child: Text('Withdraw'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,
@@ -115,8 +140,33 @@ class WithdrawPageAdmin extends StatelessWidget {
               SizedBox(height: 30.0),
               ElevatedButton(
                 onPressed: () {
-                  // Perform deposit action
-                  TransactionTableManager.withdrawToUserBalance(context, wallet.walletId, amount);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Withdraw To Balance'),
+                        content: Text('Are you sure you want to withdraw to your balance?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              TransactionTableManager.withdrawToUserBalance(context, wallet.walletId, amount);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                              );
+                            },
+                            child: Text('Withdraw'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,

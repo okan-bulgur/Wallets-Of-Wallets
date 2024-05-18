@@ -739,7 +739,10 @@ class TransactionTableManager{
       String type = "Incoming";
 
       bool isUpdated = await UsersTableManager.updateUserBalance(context, userEmail!, amount, false);
-      addTransaction(context, walletID, type, amount, userEmail!);
+
+      if(isUpdated == true){
+        addTransaction(context, walletID, type, amount, userEmail!);
+      }
 
       if (isUpdated == false) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was not completed',textAlign: TextAlign.center,)));
@@ -780,7 +783,10 @@ class TransactionTableManager{
       String type = "Outcoming";
 
       bool isUpdated = await WalletsTableManager.updateWalletBalance(context, walletID, amount, false);
-      addTransaction(context, walletID, type, amount, userEmail!);
+
+      if(isUpdated == true){
+        addTransaction(context, walletID, type, amount, userEmail!);
+      }
 
       if (isUpdated == false) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was not completed',textAlign: TextAlign.center,)));

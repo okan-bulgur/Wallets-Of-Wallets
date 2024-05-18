@@ -96,7 +96,33 @@ class DepositPageAdmin extends StatelessWidget {
               SizedBox(height: 125.0),
               ElevatedButton(
                 onPressed: () {
-                  TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Deposit From Card'),
+                        content: Text('Are you sure you want to deposit from card?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                              );
+                            },
+                            child: Text('Deposit'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,
@@ -114,7 +140,33 @@ class DepositPageAdmin extends StatelessWidget {
               SizedBox(height: 30.0),
               ElevatedButton(
                 onPressed: () {
-                  TransactionTableManager.depositFromUserBalance(context, wallet.walletId, amount);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Deposit From User Balance'),
+                        content: Text('Are you sure you want to deposit from your balance?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              TransactionTableManager.depositFromUserBalance(context, wallet.walletId, amount);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                              );
+                            },
+                            child: Text('Deposit'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,
