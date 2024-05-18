@@ -119,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
               radius: 65,
               //if userPhoto is empty String, show default image
               backgroundImage: userPhoto!.isEmpty
-                  ? AssetImage('assets/pp_1.png') as ImageProvider<Object>
+                  ? AssetImage('assets/anonymous.png') as ImageProvider<Object>
                   : NetworkImage(userPhoto!),
             ),
             SizedBox(height: 20),

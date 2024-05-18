@@ -59,7 +59,16 @@ class _MainPageState extends State<MainPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text(''));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No wallets found.'));
+            return Center(
+              child: Text(
+                'You can create or join a wallet\nwith the + button.',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: customColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            );
           } else {
             List<Wallet> list_of_wallets = snapshot.data!;
             if (initialLoad) {

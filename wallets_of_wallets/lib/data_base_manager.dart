@@ -355,6 +355,13 @@ class WalletsTableManager{
         }
       });
 
+      // Delete all transactions associated with the wallet
+      await FirebaseFirestore.instance.collection('transactions').where('walletID', isEqualTo: walletID).get().then((snapshot) {
+        for (var doc in snapshot.docs) {
+          doc.reference.delete();
+        }
+      });
+
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).delete();
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallet successfully deleted',textAlign: TextAlign.center,)));
