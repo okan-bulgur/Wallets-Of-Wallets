@@ -169,8 +169,7 @@ class _WalletPageAdminState extends State<WalletPageAdmin> {
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         listOfTransactions![movement].name,
@@ -191,13 +190,27 @@ class _WalletPageAdminState extends State<WalletPageAdmin> {
                                     ],
                                   ),
                                 ),
-                                Text(
-                                  "₺ ${listOfTransactions![movement].amount}",
-                                  style: const TextStyle(
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color.fromARGB(255, 6, 6, 6),
-                                  ),
+                                Column(
+                                  children: [
+                                    SizedBox(height: 10.0),
+                                    Text(
+                                      "₺ ${listOfTransactions![movement].amount}",
+                                      style: const TextStyle(
+                                        fontSize: 25.0,
+                                        fontWeight: FontWeight.normal,
+                                        color: Color.fromARGB(255, 6, 6, 6),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5.0),
+                                    Text(
+                                      listOfTransactions![movement].date,
+                                      style: const TextStyle(
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.normal,
+                                        color: Color.fromARGB(255, 6, 6, 6),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 FirebaseApp app = Firebase.app();
 String? userEmail;
@@ -695,12 +696,20 @@ class CardsTableManager{
 
 class TransactionTableManager{
 
+  static String formatDateTime(String dateTimeString) {
+
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    DateFormat formatter = DateFormat('HH:mm dd-MM-yyyy');
+    
+    return formatter.format(dateTime.add(Duration(hours: 3)));
+  }
+
   static Future<void> addTransaction(BuildContext context, String walletID, String type, double amount, String userEmail) async{
     try {
 
       DocumentReference transactionRef = FirebaseFirestore.instance.collection('transactions').doc();
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(userEmail).get();
-      String date = DateTime.now().toString();
+      String date = formatDateTime(DateTime.now().toString());
 
       await transactionRef.set({
         'transactionID': transactionRef.id,
@@ -823,6 +832,8 @@ class TransactionTableManager{
           );
         }
       }
+      // Sort transactions by date
+      transactions.sort((a, b) => b.date.compareTo(a.date));
     } catch (e) {
       print("Error getting transactions: $e");
     }

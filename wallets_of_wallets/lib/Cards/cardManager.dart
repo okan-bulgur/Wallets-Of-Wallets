@@ -1,5 +1,4 @@
 import 'package:firstly/Cards/card.dart';
-import 'package:flutter/material.dart';
 
 class CardManager {
   static List<UserCard> cards = [];
