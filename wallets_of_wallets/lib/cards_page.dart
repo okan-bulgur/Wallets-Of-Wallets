@@ -163,14 +163,36 @@ class CardsList extends StatelessWidget {
                   SizedBox(
                     width: 250.0, // Adjust the width as needed
                     child: ElevatedButton(
-                      onPressed: () async{
-                        await CardsTableManager.deleteCard(context, card.cardID);
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProfilePage()
-                          ),
+                      onPressed: (){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Delete Card'),
+                              content: Text('Are you sure you want to delete the card?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () async{
+                                    await CardsTableManager.deleteCard(context, card.cardID);
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ProfilePage()
+                                      ),
+                                    );
+                                  },
+                                  child: Text('Delete'),
+                                ),
+                              ],
+                            );
+                          },
                         );
                       },
                       style: ElevatedButton.styleFrom(
