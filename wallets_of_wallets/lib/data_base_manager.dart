@@ -613,7 +613,7 @@ class WalletsTableManager{
 
 class CardsTableManager{
 
-  static Future<void> addCard(String CVC, String cardName, String cardNumber, String expDate, String name,String email) async {
+  static Future<void> addCard(BuildContext context, String CVC, String cardName, String cardNumber, String expDate, String name,String email) async {
     try {
       // Create a new document in the 'cards' collection and get the reference
       DocumentReference cardRef = FirebaseFirestore.instance.collection('cards').doc();
@@ -638,12 +638,13 @@ class CardsTableManager{
 
       // Optionally generate a card using the data
       CardManager.generateCard(CVC, cardName, cardNumber, expDate, name,cardID);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Card was added successfully',textAlign: TextAlign.center,)));
     } catch (e) {
       print("Error adding card: $e");
     }
   }
 
-  static Future<void> deleteCard(String cardID) async {
+  static Future<void> deleteCard(BuildContext context, String cardID) async {
     try {
       await FirebaseFirestore.instance.collection('cards').doc(cardID).delete();
 
@@ -653,6 +654,7 @@ class CardsTableManager{
       });
 
       updateCardList();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Card was deleted successfully',textAlign: TextAlign.center,)));
     }
     catch (e) {
       print("Error deleting card: $e");

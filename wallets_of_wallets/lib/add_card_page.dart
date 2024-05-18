@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables
-
 import 'package:firstly/data_base_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -36,169 +34,209 @@ class _AddCardState extends State<AddCard> {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-
-            Text(
-              'Add Card',
-              style: TextStyle(
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-                color: customColor,
-              ),
-            ),
-            SizedBox(height: 10.0),
-            Text(
-              '! Please add a debit or credit card to complete your purchase.',
-              style: TextStyle(
-                fontSize: 10.0,
-                fontWeight: FontWeight.normal,
-                color: customColor,
-              ),
-            ),
-            SizedBox(height: 20.0),
-            TextField(
-              controller: ownerController,
-              decoration: InputDecoration(
-                labelText: 'owner name',
-                filled: true,
-                fillColor: Color.fromARGB(100, 150, 150, 150),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                      15.0), // Adjust the radius for curved edges
-                  borderSide:
-                  BorderSide.none, // Set the border color to gray
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Add Card',
+                style: TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                  color: customColor,
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: cardNumberController,
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(16), // Adjusted for spaces
-                TextInputFormatter.withFunction((oldValue, newValue) {
-                  String newText = '';
-                  for (int i = 0; i < newValue.text.length; i++) {
-                    if (i % 4 == 0) {
-                      newText += ' ';
+              SizedBox(height: 10.0),
+              Text(
+                '! Please add a debit or credit card to complete your purchase.',
+                style: TextStyle(
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.normal,
+                  color: customColor,
+                ),
+              ),
+              SizedBox(height: 20.0),
+              TextField(
+                controller: ownerController,
+                decoration: InputDecoration(
+                  labelText: 'owner name',
+                  filled: true,
+                  fillColor: Color.fromARGB(100, 150, 150, 150),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                        15.0), // Adjust the radius for curved edges
+                    borderSide:
+                        BorderSide.none, // Set the border color to gray
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: cardNumberController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(16), // Adjusted for spaces
+                  TextInputFormatter.withFunction((oldValue, newValue) {
+                    String newText = '';
+                    for (int i = 0; i < newValue.text.length; i++) {
+                      if (i % 4 == 0) {
+                        newText += ' ';
+                      }
+                      newText += newValue.text[i];
                     }
-                    newText += newValue.text[i];
-                  }
-                  return TextEditingValue(
-                    text: newText,
-                    selection: TextSelection.collapsed(offset: newText.length),
-                  );
-                }),
-              ],
-              decoration: InputDecoration(
-                labelText: 'card number',
-                filled: true,
-                fillColor: Color.fromARGB(100, 150, 150, 150),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                      15.0), // Adjust the radius for curved edges
-                  borderSide:
-                  BorderSide.none, // Set the border color to gray
+                    return TextEditingValue(
+                      text: newText,
+                      selection: TextSelection.collapsed(offset: newText.length),
+                    );
+                  }),
+                ],
+                decoration: InputDecoration(
+                  labelText: 'card number',
+                  filled: true,
+                  fillColor: Color.fromARGB(100, 150, 150, 150),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                        15.0), // Adjust the radius for curved edges
+                    borderSide:
+                        BorderSide.none, // Set the border color to gray
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Row(children: [
-              Expanded(
-                child: TextField(
-                  controller: expiryDateController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'MM/YY',
-                    filled: true,
-                    fillColor: Color.fromARGB(100, 150, 150, 150),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          15.0), // Adjust the radius for curved edges
-                      borderSide:
-                      BorderSide.none, // Set the border color to gray
+              SizedBox(height: 20),
+              Row(children: [
+                Expanded(
+                  child: TextField(
+                    controller: expiryDateController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'MM/YY',
+                      filled: true,
+                      fillColor: Color.fromARGB(100, 150, 150, 150),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                            15.0), // Adjust the radius for curved edges
+                        borderSide:
+                            BorderSide.none, // Set the border color to gray
+                      ),
                     ),
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d{0,2}(\/\d{0,2})?$')), // Allow only numbers 
-                    LengthLimitingTextInputFormatter(5), // Limit length to 5 characters (XX/XX)
-                    TextInputFormatter.withFunction((oldValue, newValue) {
-                      if (oldValue.text.length > newValue.text.length) {
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d{0,2}(\/\d{0,2})?$')), // Allow only numbers 
+                      LengthLimitingTextInputFormatter(5), // Limit length to 5 characters (XX/XX)
+                      TextInputFormatter.withFunction((oldValue, newValue) {
+                        if (oldValue.text.length > newValue.text.length) {
+                          return newValue;
+                        }
+
+                        // If the user is entering a value, then add a '/' after 2 characters
+                        if (newValue.text.length == 2) {
+                          return TextEditingValue(
+                            text: '${newValue.text}/',
+                            selection: TextSelection.collapsed(offset: newValue.selection.end+1),
+                          );
+                        }
+
                         return newValue;
-                      }
-
-                      // If the user is entering a value, then add a '/' after 2 characters
-                      if (newValue.text.length == 2) {
-                        return TextEditingValue(
-                          text: '${newValue.text}/',
-                          selection: TextSelection.collapsed(offset: newValue.selection.end+1),
-                        );
-                      }
-
-                      return newValue;
-                    }),
-                  ],
-                                  
-                ),
-              ),
-              SizedBox(width: 20),
-              Expanded(
-                child: TextField(
-                  controller: cvcController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(3), // Limit to 3 digits for CVC
-                  ],
-                  decoration: InputDecoration(
-                    labelText: 'CVC',
-                    filled: true,
-                    fillColor: Color.fromARGB(100, 150, 150, 150),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          15.0), // Adjust the radius for curved edges
-                      borderSide:
-                      BorderSide.none, // Set the border color to gray
-                    ),
+                      }),
+                    ],
                   ),
                 ),
-              )
-            ]),
-            SizedBox( height: 20),
-            Row(
+                SizedBox(width: 20),
+                Expanded(
+                  child: TextField(
+                    controller: cvcController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(3), // Limit to 3 digits for CVC
+                    ],
+                    decoration: InputDecoration(
+                      labelText: 'CVC',
+                      filled: true,
+                      fillColor: Color.fromARGB(100, 150, 150, 150),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                            15.0), // Adjust the radius for curved edges
+                        borderSide:
+                            BorderSide.none, // Set the border color to gray
+                      ),
+                    ),
+                  ),
+                )
+              ]),
+              SizedBox(height: 20),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: TextField(
-                          controller: cardNameController,
-                          maxLength: 20,
-                          decoration: InputDecoration(
-                            labelText: 'card name',
-                            filled: true,
-                            fillColor: Color.fromARGB(100, 150, 150, 150),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                          ),
-                          onChanged: (value) {
-                          },
+                      controller: cardNameController,
+                      maxLength: 20,
+                      decoration: InputDecoration(
+                        labelText: 'card name',
+                        filled: true,
+                        fillColor: Color.fromARGB(100, 150, 150, 150),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: BorderSide.none,
                         ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                      ),
+                      onChanged: (value) {},
+                    ),
                   ),
-
                   SizedBox(width: 10.0),
-                  
                   Padding(
                     padding: const EdgeInsets.only(bottom: 25.0),
                     child: ElevatedButton(
-                      onPressed:() {
+                      onPressed: () {
+                        if(cvcController.text == '' || cardNameController.text == '' || cardNumberController.text == '' || expiryDateController.text == '' || ownerController.text == '') {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Error'),
+                                content: Text('Please fill in all fields.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        if(cardNumberController.text.length != 20){
+                          print(cardNumberController.text.length);
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Error'),
+                                content: Text('Card number must be 16 digits.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
                         CardsTableManager.addCard(
+                          context,
                           cvcController.text,
                           cardNameController.text,
                           cardNumberController.text,
@@ -218,7 +256,6 @@ class _AddCardState extends State<AddCard> {
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -229,13 +266,11 @@ class _AddCardState extends State<AddCard> {
                       ),
                     ),
                   ),
-
                 ],
               ),
-              
-          ]
-        )
-
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
@@ -248,7 +283,7 @@ class _AddCardState extends State<AddCard> {
             label: 'Cancel',
           ),
         ],
-        
+
         selectedItemColor: customColor, // Set color for selected icon
         selectedFontSize: double.parse('14.5'), // Set font size for selected label
 
@@ -274,16 +309,4 @@ class _AddCardState extends State<AddCard> {
       ),
     );
   }
-
-/*
-  @override
-  void dispose() {
-    _ownerController.dispose();
-    _cardNumberController.dispose();
-    _expiryDateController.dispose();
-    _cvcController.dispose();
-    _cardNameController.dispose();
-    super.dispose();
-  }
-  */
 }

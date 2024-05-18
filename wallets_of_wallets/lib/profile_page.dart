@@ -24,7 +24,6 @@ class _ProfilePageState extends State<ProfilePage> {
   double balance = 0.00;
 
   // Get the current user's email
-
   String? userEmail = FirebaseAuth.instance.currentUser!.email;
 
   TextEditingController card = TextEditingController();
@@ -111,162 +110,166 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            radius: 65,
-            //if userPhoto is empty String, show default image
-            backgroundImage: userPhoto!.isEmpty
-                ? AssetImage('assets/pp_1.png') as ImageProvider<Object>
-                : NetworkImage(userPhoto!),
-          ),
-          SizedBox(height: 20),
-          Text(
-            '₺$balance',
-            style: TextStyle(
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold,
-                color: customColor),
-          ),
-          SizedBox(height: 20),
-          Text(
-            '$selectedUser',
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: customColor),
-          ),
-          SizedBox(height: 20),
-          Padding(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 20),
+            CircleAvatar(
+              radius: 65,
+              //if userPhoto is empty String, show default image
+              backgroundImage: userPhoto!.isEmpty
+                  ? AssetImage('assets/pp_1.png') as ImageProvider<Object>
+                  : NetworkImage(userPhoto!),
+            ),
+            SizedBox(height: 20),
+            Text(
+              '₺$balance',
+              style: TextStyle(
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold,
+                  color: customColor),
+            ),
+            SizedBox(height: 20),
+            Text(
+              '$selectedUser',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: customColor),
+            ),
+            SizedBox(height: 20),
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color.fromARGB(100, 150, 150, 150),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                            15.0), // Adjust the radius for curved edges
+                        borderSide:
+                            BorderSide.none, // Set the border color to gray
+                      ),
+                    ),
+                    items: [
+                      for (UserCard card in CardManager.cards)
+                        DropdownMenuItem<String>(
+                          value: card.cardCardName,
+                          child: Text(card.cardCardName),
+                        ),
+                    ],
+                    onChanged: (String? value) {
+                      // This is called when the user selects an item.
+                      setState(
+                        () {
+                          card.text = value!;
+                        },
+                      );
+                    },
+                    isExpanded: true)),
+            SizedBox(height: 10),
+            Padding(
               padding: const EdgeInsets.all(8.0),
-              child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Color.fromARGB(100, 150, 150, 150),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          15.0), // Adjust the radius for curved edges
-                      borderSide:
-                          BorderSide.none, // Set the border color to gray
-                    ),
+              child: TextField(
+                controller: amount,
+                keyboardType: TextInputType.number, // Open number keyboard
+                inputFormatters: <TextInputFormatter>[
+                  //only 2 digits after the decimal point
+                  FilteringTextInputFormatter.allow(RegExp(
+                      r'^\d+\.?\d{0,2}') //only 2 digits after the decimal point
                   ),
-                  items: [
-                    for (UserCard card in CardManager.cards)
-                      DropdownMenuItem<String>(
-                        value: card.cardCardName,
-                        child: Text(card.cardCardName),
-                      ),
-                  ],
-                  onChanged: (String? value) {
-                    // This is called when the user selects an item.
-                    setState(
-                      () {
-                        card.text = value!;
-                      },
-                    );
+                ],
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  filled: true,
+                  fillColor: Color.fromARGB(100, 150, 150, 150),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                        15.0), // Adjust the radius for curved edges
+                    borderSide: BorderSide.none, // Set the border color to gray
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: SizedBox(
+                width: 300.0, // Adjust the width as needed
+                child: ElevatedButton(
+                  onPressed: () async {
+                    // Yavuz : async added because we are using await in the function
+                    //check if card selected using textEditingController
+                    if (card.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please select a card'),
+                          duration: Duration(milliseconds: 500),
+                        ),
+                      );
+                      return;
+                    }
+                    double withdrawalAmount = double.parse(amount.text);
+                    await UsersTableManager.updateUserBalance(
+                        context, userEmail!, withdrawalAmount, false);
+                    _fetchUserBalance();
                   },
-                  isExpanded: true)),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: amount,
-              inputFormatters: <TextInputFormatter>[
-                //only 2 digits after the decimal point
-                FilteringTextInputFormatter.allow(RegExp(
-                        r'^\d+\.?\d{0,2}') //only 2 digits after the decimal point
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: customColor, // Set the button color
+                    minimumSize:
+                        Size(120.0, 40.0), // Set the minimum size of the button
+                  ),
+                  child: Text(
+                    'Withdraw',
+                    style: TextStyle(
+                      color: Colors.white, // Set the text color
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                     ),
-              ],
-              decoration: InputDecoration(
-                labelText: 'Amount',
-                filled: true,
-                fillColor: Color.fromARGB(100, 150, 150, 150),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                      15.0), // Adjust the radius for curved edges
-                  borderSide: BorderSide.none, // Set the border color to gray
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 20),
-          Center(
-            child: SizedBox(
-              width: 300.0, // Adjust the width as needed
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Yavuz : async added because we are using await in the function
-                  //check if card selected using textEditingController
-                  if (card.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Please select a card'),
-                        duration: Duration(milliseconds: 500),
-                      ),
-                    );
-                    return;
-                  }
-                  double withdrawalAmount = double.parse(amount.text);
-                  await UsersTableManager.updateUserBalance(
-                      context, userEmail!, withdrawalAmount, false);
-                  _fetchUserBalance();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: customColor, // Set the button color
-                  minimumSize:
-                      Size(120.0, 40.0), // Set the minimum size of the button
-                ),
-                child: Text(
-                  'Withdraw',
-                  style: TextStyle(
-                    color: Colors.white, // Set the text color
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 20),
-          Center(
-            child: SizedBox(
-              width: 300.0, // Adjust the width as needed
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Yavuz: async added because we are using await in the function
-                  //check if card selected using textEditingController
-                  if (card.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Please select a card'),
-                        duration: Duration(milliseconds: 500),
-                      ),
-                    );
-                    return;
-                  }
-                  double depositAmount = double.parse(amount.text);
-                  await UsersTableManager.updateUserBalance(
-                      context, userEmail!, depositAmount, true);
-                  _fetchUserBalance();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: customColor, // Set the button color
-                  minimumSize:
-                      Size(120.0, 40.0), // Set the minimum size of the button
-                ),
-                child: Text(
-                  'Deposit',
-                  style: TextStyle(
-                    color: Colors.white, // Set the text color
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+            SizedBox(height: 20),
+            Center(
+              child: SizedBox(
+                width: 300.0, // Adjust the width as needed
+                child: ElevatedButton(
+                  onPressed: () async {
+                    // Yavuz: async added because we are using await in the function
+                    //check if card selected using textEditingController
+                    if (card.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please select a card'),
+                          duration: Duration(milliseconds: 500),
+                        ),
+                      );
+                      return;
+                    }
+                    double depositAmount = double.parse(amount.text);
+                    await UsersTableManager.updateUserBalance(
+                        context, userEmail!, depositAmount, true);
+                    _fetchUserBalance();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: customColor, // Set the button color
+                    minimumSize:
+                        Size(120.0, 40.0), // Set the minimum size of the button
+                  ),
+                  child: Text(
+                    'Deposit',
+                    style: TextStyle(
+                      color: Colors.white, // Set the text color
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

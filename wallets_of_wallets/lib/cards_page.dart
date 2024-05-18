@@ -4,6 +4,7 @@ import 'package:firstly/Cards/card.dart';
 import 'package:firstly/add_card_page.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
+import 'package:firstly/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/Cards/cardManager.dart';
 
@@ -163,8 +164,14 @@ class CardsList extends StatelessWidget {
                     width: 250.0, // Adjust the width as needed
                     child: ElevatedButton(
                       onPressed: () async{
-                        await CardsTableManager.deleteCard(card.cardID);
+                        await CardsTableManager.deleteCard(context, card.cardID);
                         Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfilePage()
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
