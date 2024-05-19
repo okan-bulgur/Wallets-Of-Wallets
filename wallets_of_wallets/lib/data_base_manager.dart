@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firstly/Transactions/transaction.dart';
 import 'package:firstly/Wallets/wallet.dart';
 import 'dart:io';
@@ -86,11 +88,7 @@ class AuthenticationManager {
     } catch (e) {
       // Handle signup errors (e.g., display error message)
       print("Signup error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Signup failed. Please try again."),
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signup failed. Please try again.")));
     }
   }
 
@@ -102,6 +100,7 @@ class AuthenticationManager {
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Successful log out.',textAlign: TextAlign.center,)));
     } catch (e) {
       print("Logout error: $e");
     }
@@ -342,12 +341,20 @@ class WalletsTableManager{
         bool isUserAdmin = await WalletsTableManager.isUserAdminOfWallet(walletID);
         bool isUserMember = await WalletsTableManager.isUserMemberOfWallet(walletID);
 
+        print("isUserAdmin: $isUserAdmin, isUserMember: $isUserMember");
+
         if (isUserAdmin || isUserMember) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('You are already in the wallet ',textAlign: TextAlign.center)));
           return false;
         }
         WalletsTableManager.addMemberToWallet(walletID);
         UsersTableManager.addWalletToUser(walletID);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('You are join wallet successfully',textAlign: TextAlign.center)));
+        
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
       }
     } catch (e) {
       print("Error joining wallet: $e");
@@ -523,15 +530,16 @@ class WalletsTableManager{
 
   static Future<bool> isUserMemberOfWallet(String walletID) async {
     try {
-      await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) {
-        print(value.data()!['list_of_members']);
-        if (value.data()!['list_of_members'].contains(userEmail)) {
-          print("User is member");
-          return true;
-        }
-      });
+      var snapshot = await FirebaseFirestore.instance.collection('wallets').doc(walletID).get();
+      if (snapshot.data()!['list_of_members'].contains(userEmail)) {
+        return true;
+      } 
+      else {
+        return false;
+      }
+
     } catch (e) {
-      print("Error checking if user is admin: $e");
+      print("Error checking if user is member: $e");
     }
     return false;
   }

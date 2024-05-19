@@ -252,7 +252,7 @@ class _MemberListPageState extends State<MemberListPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.paid, size: 30.0),
-            label: 'Payment',
+            label: 'Transactions',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.wallet, size: 30.0),

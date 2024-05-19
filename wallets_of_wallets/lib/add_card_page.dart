@@ -193,6 +193,69 @@ class _AddCardState extends State<AddCard> {
                     padding: const EdgeInsets.only(bottom: 25.0),
                     child: ElevatedButton(
                       onPressed:() async{
+                        if(cvcController.text == '' || cardNameController.text == '' || cardNumberController.text == '' || expiryDateController.text == '' || ownerController.text == '' || expiryDateController.text.length != 5) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Error'),
+                                content: Text('Please fill in all fields.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        if(cardNumberController.text.length != 20){
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Error'),
+                                content: Text('Card number must be 16 digits.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        if(cvcController.text.length != 3){
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Error'),
+                                content: Text('CVC must be 3 digits.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
                         CardsTableManager.addCard(
                           context,
                           cvcController.text,

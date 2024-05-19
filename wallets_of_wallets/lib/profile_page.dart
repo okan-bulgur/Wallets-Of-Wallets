@@ -133,11 +133,33 @@ class _ProfilePageState extends State<ProfilePage> {
               size: 40, // Replace with your desired size
             ),
             onPressed: () {
-              AuthenticationManager.logout(context);
-              // Navigate to the login page
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => LoginPage()),
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Log out'),
+                    content: Text('Are you want to log out?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          AuthenticationManager.logout(context);
+                          // Navigate to the login page
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => LoginPage()),
+                          );
+                        },
+                        child: Text('Log Out'),
+                      ),
+                    ],
+                  );
+                },
               );
             },
           ),
