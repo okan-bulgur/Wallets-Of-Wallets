@@ -18,6 +18,11 @@ class _WalletPageMemberState extends State<WalletPageMember> {
   Wallet? wallet;
   List<TransactionWallet>? listOfTransactions;
 
+  String helperText = "* On this screen you can view all transactions in the wallet.\n" +
+    "* To invite a new user to the wallet, you can share their ID code or invite them with a QR code by clicking on the QR code button on the top right.\n" +
+    "* You can deposit money to this wallet with the Transactions button.\n" +
+    "* You can view the list of users from the Members button.\n";
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +43,32 @@ class _WalletPageMemberState extends State<WalletPageMember> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.help,
+            color: customColor, // Replace with your desired color
+            size: 40, // Replace with your desired size
+          ),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text("Help"),
+                  content: Text(helperText),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Close"),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(

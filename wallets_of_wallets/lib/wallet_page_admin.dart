@@ -20,6 +20,13 @@ class _WalletPageAdminState extends State<WalletPageAdmin> {
   Wallet? wallet;
   List<TransactionWallet>? listOfTransactions;
 
+  String helperText = "* On this screen you can view all transactions in the wallet.\n" +
+    "* To invite a new user to the wallet, you can share their ID code or invite them with a QR code by clicking on the QR code button on the top right.\n" +
+    "* You can deposit or withdraw money to this wallet with the Transactions button.\n" +
+    "* You can view the list of users from the Members button and change the required user permissions.\n" +
+    "* You can set the wallet's information in the Settings button.\n" +
+    "* You can delete the wallet via the Settings button.";
+
   @override
   void initState() {
     super.initState();
@@ -39,10 +46,39 @@ class _WalletPageAdminState extends State<WalletPageAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.help,
+            color: widget.customColor, // Replace with your desired color
+            size: 40, // Replace with your desired size
+          ),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text("Help"),
+                  content: Text(helperText),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Close"),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
-              fontSize: 30.0, fontWeight: FontWeight.bold, color: widget.customColor),
+            fontSize: 30.0,
+            fontWeight: FontWeight.bold,
+            color: widget.customColor,
+          ),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -64,6 +100,7 @@ class _WalletPageAdminState extends State<WalletPageAdmin> {
           ),
         ],
       ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
