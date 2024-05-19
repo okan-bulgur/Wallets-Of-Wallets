@@ -338,6 +338,17 @@ class WalletsTableManager{
   static Future<void> deleteWallet(BuildContext context, String walletID) async {
     try {
 
+      // Get wallet balance
+      DocumentSnapshot wallet = await FirebaseFirestore.instance.collection('wallets').doc(walletID).get();
+      double balance = wallet['balance'];
+
+      // Add balance to admin balance
+      await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+        'balance': FieldValue.increment(balance),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('₺${balance} added your balance',textAlign: TextAlign.center,)));
+
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) async {
         List<String> admins = List<String>.from(value.data()!['list_of_admins']);
         List<String> members = List<String>.from(value.data()!['list_of_members']);
