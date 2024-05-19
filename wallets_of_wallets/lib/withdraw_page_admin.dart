@@ -1,4 +1,5 @@
 import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/card_selection_page.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/member_list_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
@@ -96,32 +97,41 @@ class WithdrawPageAdmin extends StatelessWidget {
               SizedBox(height: 125.0),
               ElevatedButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Withdraw To Card'),
-                        content: Text('Are you sure you want to withdraw to your card?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              TransactionTableManager.withdrawToCard(context, wallet.walletId, amount);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CardSelectionPage(
+                        onCardSelected: (selectedCard) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Withdraw To Card'),
+                                content: Text('Are you sure you want to withdraw to ${selectedCard.cardCardName}?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      TransactionTableManager.withdrawToCard(context, wallet.walletId, amount);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                                      );
+                                    },
+                                    child: Text('Withdraw'),
+                                  ),
+                                ],
                               );
                             },
-                            child: Text('Withdraw'),
-                          ),
-                        ],
-                      );
-                    },
+                          );
+                        },
+                      ),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(

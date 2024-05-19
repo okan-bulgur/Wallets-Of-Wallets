@@ -1,19 +1,20 @@
+import 'package:firstly/card_selection_page.dart';
+import 'package:flutter/material.dart';
+import 'package:firstly/main_page.dart';
 import 'package:firstly/Wallets/wallet.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/member_list_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_setting.dart';
-import 'package:flutter/material.dart';
-import 'package:firstly/main_page.dart';
 
 class DepositPageAdmin extends StatelessWidget {
-
   final Color customColor = const Color(0xFF0A5440);
   final Wallet wallet;
   final double amount;
+  
 
-  DepositPageAdmin({super.key, required this.amount}) : 
-    wallet = WalletsTableManager.selectedWallet!;
+  DepositPageAdmin({super.key, required this.amount})
+      : wallet = WalletsTableManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {
@@ -96,32 +97,41 @@ class DepositPageAdmin extends StatelessWidget {
               SizedBox(height: 125.0),
               ElevatedButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Deposit From Card'),
-                        content: Text('Are you sure you want to deposit from card?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CardSelectionPage(
+                        onCardSelected: (selectedCard) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Deposit From Card'),
+                                content: Text('Are you sure you want to deposit from ${selectedCard.cardCardName}?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => WalletPageAdmin()),
+                                      );
+                                    },
+                                    child: Text('Deposit'),
+                                  ),
+                                ],
                               );
                             },
-                            child: Text('Deposit'),
-                          ),
-                        ],
-                      );
-                    },
+                          );
+                        },
+                      ),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -234,8 +244,8 @@ class DepositPageAdmin extends StatelessWidget {
               break;
             case 3:
               Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
+                context,
+                MaterialPageRoute(builder: (context) => WalletSetting()), // Navigate to MainPage
               );
               break;
           }

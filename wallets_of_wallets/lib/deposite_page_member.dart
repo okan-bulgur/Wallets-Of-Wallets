@@ -1,4 +1,5 @@
 import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/card_selection_page.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/member_list_page_member.dart';
 import 'package:firstly/wallet_page_member.dart';
@@ -95,7 +96,42 @@ class DepositPageMember extends StatelessWidget {
               SizedBox(height: 125.0),
               ElevatedButton(
                 onPressed: () {
-                  TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CardSelectionPage(
+                        onCardSelected: (selectedCard) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Deposit From Card'),
+                                content: Text('Are you sure you want to deposit from ${selectedCard.cardCardName}?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => WalletPageMember()),
+                                      );
+                                    },
+                                    child: Text('Deposit'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,
