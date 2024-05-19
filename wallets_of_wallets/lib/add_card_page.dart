@@ -192,7 +192,7 @@ class _AddCardState extends State<AddCard> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 25.0),
                     child: ElevatedButton(
-                      onPressed:() {
+                      onPressed:() async{
                         CardsTableManager.addCard(
                           context,
                           cvcController.text,
