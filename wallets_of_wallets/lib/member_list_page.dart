@@ -17,9 +17,14 @@ class MemberListPage extends StatefulWidget {
 class _MemberListPageState extends State<MemberListPage> {
   final Color customColor = Color(0xFF0A5440);
   List<List<Object>> listOfUsers = [];
-  late Wallet wallet;
-  @override
   
+  late Wallet wallet;
+
+  String helperText = '* In this page, you can see the members and admins of the wallet.\n'+
+      '* You can make a member an admin or dismiss an admin.\n'+
+      '* You can also remove a user from the wallet.';
+
+  @override
   void initState() {
     super.initState();
     wallet = WalletsTableManager.selectedWallet!;
@@ -75,7 +80,23 @@ class _MemberListPageState extends State<MemberListPage> {
             size: 40,
           ),
           onPressed: () {
-            // Help button logic
+            showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("Help"),
+                      content: Text(helperText),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Close"),
+                        ),
+                      ],
+                    );
+                  },
+                );
           },
         ),
         title: Text(

@@ -26,6 +26,13 @@ class _ProfilePageState extends State<ProfilePage> {
   // Get the current user's email
   String? userEmail = FirebaseAuth.instance.currentUser!.email;
 
+  String helperText ="* This is the profile page.\n"+
+    "* You can see your balance, name, surname and photo here.\n"+
+    "* You can also withdraw or deposit money to your account.\n" + 
+    "* You can also see your cards and add new cards by clicking the My Cards button.\n"+
+    "* You can also change your information by clicking the Settings button.\n"+
+    "* You can logout from the app by clicking the logout button on the top right corner.";
+
   TextEditingController card = TextEditingController();
   TextEditingController amount = TextEditingController();
 
@@ -82,6 +89,32 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.help,
+            color: customColor, // Replace with your desired color
+            size: 40, // Replace with your desired size
+          ),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text("Help"),
+                  content: Text(helperText),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Close"),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(

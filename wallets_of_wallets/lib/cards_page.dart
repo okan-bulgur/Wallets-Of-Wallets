@@ -12,16 +12,47 @@ class CardsList extends StatelessWidget {
 
   final Color customColor = Color(0xFF0A5440);
 
+  String helperText = "* This page displays all the cards that you have added to your account.\n" +
+    "* You can also delete a card by clicking on the card and then clicking on the 'Remove Card' button.\n" +
+    "* To add a new card, click on the 'Add Card' button at the bottom of the screen.";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.help,
+            color: customColor,
+            size: 40,
+          ),
+          onPressed: () {
+            showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("Help"),
+                      content: Text(helperText),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Close"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+          },
+        ),
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
-              fontSize: 30.0,
-              fontWeight: FontWeight.bold,
-              color: customColor),
+            fontSize: 30.0,
+            fontWeight: FontWeight.bold,
+            color: customColor,
+          ),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
