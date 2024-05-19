@@ -15,19 +15,34 @@ class _MemberListPageMemberState extends State<MemberListPageMember> {
   final Color customColor = const Color(0xFF0A5440);
   List<List<Object>> listOfUsers = [];
   late Wallet wallet;
+
   @override
-  
   void initState() {
     super.initState();
     wallet = WalletsTableManager.selectedWallet!;
     fetchMembersAndAdmins();
   }
 
+  Future<String> getUserName(String userMail) async {
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userMail)
+          .get();
+      String name = userSnapshot['name'];
+      String surname = userSnapshot['surname'];
+      return '$name $surname';
+    } catch (e) {
+      print("Error getting user name: $e");
+      return '';
+    }
+  }
+
   Future<void> fetchMembersAndAdmins() async {
     try {
       DocumentSnapshot walletSnapshot = await FirebaseFirestore.instance
           .collection('wallets')
-          .doc('${wallet.walletId}')
+          .doc(wallet.walletId)
           .get();
       List<String> adminList = List<String>.from(walletSnapshot['list_of_admins']);
       List<String> memberList = List<String>.from(walletSnapshot['list_of_members']);
@@ -59,6 +74,7 @@ class _MemberListPageMemberState extends State<MemberListPageMember> {
           ),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -76,7 +92,7 @@ class _MemberListPageMemberState extends State<MemberListPageMember> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${wallet.walletName}',
+                          wallet.walletName,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -85,7 +101,7 @@ class _MemberListPageMemberState extends State<MemberListPageMember> {
                           ),
                         ),
                         Text(
-                          '${wallet.walletDescription}',
+                          wallet.walletDescription,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15.0,
@@ -117,61 +133,71 @@ class _MemberListPageMemberState extends State<MemberListPageMember> {
               ),
               SizedBox(height: 15.0),
               for (int user = 0; user < listOfUsers.length; user++)
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0, right: 30.0),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: listOfUsers[user][1] == 'Admin'
-                                  ? Color.fromARGB(255, 162, 68, 229)
-                                  : Color.fromARGB(255, 35, 147, 157),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            child: Container(
-                              height: 70.0,
-                              padding: const EdgeInsets.only(
-                                left: 10.0,
-                                right: 10.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${listOfUsers[user][0]}",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 6, 7, 6),
+                FutureBuilder<String>(
+                  future: getUserName(listOfUsers[user][0] as String),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: listOfUsers[user][1] == 'Admin'
+                                        ? Color.fromARGB(255, 162, 68, 229)
+                                        : Color.fromARGB(255, 35, 147, 157),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
                                   ),
-                                  Text(
-                                    "${listOfUsers[user][1]}",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 6, 6, 6),
+                                  child: Container(
+                                    height: 70.0,
+                                    padding: const EdgeInsets.only(
+                                      left: 10.0,
+                                      right: 10.0,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          snapshot.data ?? "",
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.normal,
+                                            color: Color.fromARGB(255, 6, 7, 6),
+                                          ),
+                                        ),
+                                        Text(
+                                          listOfUsers[user][1] as String,
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.normal,
+                                            color: Color.fromARGB(255, 6, 6, 6),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
+                      );
+                    }
+                  },
                 ),
             ],
           ),

@@ -26,16 +26,29 @@ class _MemberListPageState extends State<MemberListPage> {
     fetchMembersAndAdmins();
   }
 
+  Future<String> getUserName(String userMail) async {
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userMail)
+          .get();
+      String name = userSnapshot['name'];
+      String surname = userSnapshot['surname'];
+      return '$name $surname';
+    } catch (e) {
+      print("Error getting user name: $e");
+      return '';
+    }
+  }
+
   Future<void> fetchMembersAndAdmins() async {
     try {
       DocumentSnapshot walletSnapshot = await FirebaseFirestore.instance
           .collection('wallets')
-          .doc('${wallet.walletId}')
+          .doc(wallet.walletId)
           .get();
-      List<String> adminList =
-          List<String>.from(walletSnapshot['list_of_admins']);
-      List<String> memberList =
-          List<String>.from(walletSnapshot['list_of_members']);
+      List<String> adminList = List<String>.from(walletSnapshot['list_of_admins']);
+      List<String> memberList = List<String>.from(walletSnapshot['list_of_members']);
 
       setState(() {
         listOfUsers = [];
@@ -55,6 +68,16 @@ class _MemberListPageState extends State<MemberListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.help,
+            color: customColor,
+            size: 40,
+          ),
+          onPressed: () {
+            // Help button logic
+          },
+        ),
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
@@ -64,6 +87,7 @@ class _MemberListPageState extends State<MemberListPage> {
           ),
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -122,68 +146,78 @@ class _MemberListPageState extends State<MemberListPage> {
               ),
               SizedBox(height: 15.0),
               for (int user = 0; user < listOfUsers.length; user++)
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0, right: 30.0),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if(userEmail != listOfUsers[user][0] as String){
-                                showSlideWindow(
-                                  context,
-                                  listOfUsers[user][0] as String,
-                                  listOfUsers[user][1] as String,
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: listOfUsers[user][1] == 'Admin'
-                                  ? Color.fromARGB(255, 162, 68, 229)
-                                  : Color.fromARGB(255, 35, 147, 157),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            child: Container(
-                              height: 70.0,
-                              padding: const EdgeInsets.only(
-                                left: 10.0,
-                                right: 10.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${listOfUsers[user][0]}",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 6, 7, 6),
+                FutureBuilder<String>(
+                  future: getUserName(listOfUsers[user][0] as String),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if(userEmail != listOfUsers[user][0] as String){
+                                      showSlideWindow(
+                                        context,
+                                        listOfUsers[user][0] as String,
+                                        listOfUsers[user][1] as String,
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: listOfUsers[user][1] == 'Admin'
+                                        ? Color.fromARGB(255, 162, 68, 229)
+                                        : Color.fromARGB(255, 35, 147, 157),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
                                   ),
-                                  Text(
-                                    "${listOfUsers[user][1]}",
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal,
-                                      color: Color.fromARGB(255, 6, 6, 6),
+                                  child: Container(
+                                    height: 70.0,
+                                    padding: const EdgeInsets.only(
+                                      left: 10.0,
+                                      right: 10.0,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          snapshot.data ?? "",
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.normal,
+                                            color: Color.fromARGB(255, 6, 7, 6),
+                                          ),
+                                        ),
+                                        Text(
+                                          listOfUsers[user][1] as String,
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.normal,
+                                            color: Color.fromARGB(255, 6, 6, 6),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
+                      );
+                    }
+                  },
                 ),
             ],
           ),
