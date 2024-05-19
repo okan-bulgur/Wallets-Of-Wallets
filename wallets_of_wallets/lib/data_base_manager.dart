@@ -343,14 +343,16 @@ class WalletsTableManager{
 
       // Get wallet balance
       DocumentSnapshot wallet = await FirebaseFirestore.instance.collection('wallets').doc(walletID).get();
-      double balance = wallet['balance'];
+      if(wallet['balance'] != 0){
+        double balance = wallet['balance'];
+        await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+          'balance': FieldValue.increment(balance),
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('₺${balance} added your balance',textAlign: TextAlign.center,)));
+      }
 
       // Add balance to admin balance
-      await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
-        'balance': FieldValue.increment(balance),
-      });
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('₺${balance} added your balance',textAlign: TextAlign.center,)));
 
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) async {
         List<String> admins = List<String>.from(value.data()!['list_of_admins']);
@@ -625,6 +627,8 @@ class WalletsTableManager{
             'list_of_wallets': FieldValue.arrayRemove([walletID])
           });
         }
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Successfully disjoin the wallet',textAlign: TextAlign.center,)));
       });
     } catch (e) {
       print("Error disjoining wallet: $e");
