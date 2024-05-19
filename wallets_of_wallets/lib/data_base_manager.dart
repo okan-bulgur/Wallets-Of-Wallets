@@ -5,6 +5,7 @@ import 'package:firstly/Cards/card.dart';
 import 'package:firstly/Cards/cardManager.dart';
 import 'package:firstly/cards_page.dart';
 import 'package:firstly/profile_settings_page.dart';
+import 'package:firstly/user.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/login_page.dart';
 import 'main_page.dart';
@@ -18,6 +19,7 @@ import 'package:intl/intl.dart';
 FirebaseApp app = Firebase.app();
 String? userEmail;
 String? userPhoto;
+UserSession? user;
 
 
 class AuthenticationManager {
@@ -30,6 +32,22 @@ class AuthenticationManager {
         );
 
         userEmail = FirebaseAuth.instance.currentUser!.email;
+
+        var userSnapshot = await FirebaseFirestore.instance.collection('users').doc(email).get();
+        if (userSnapshot.exists) {
+          var userData = userSnapshot.data();
+          user = UserSession(
+            name: userData!['name'],
+            surname: userData['surname'],
+            email: userData['email'],
+            photoUrl: userData['photo'],
+            balance: userData['balance'].toDouble(),
+          );
+          // Now you have your user object ready for further processing.
+        } else {
+          // Handle the case where the document doesn't exist.
+        }
+
         
         List<UserCard> cards = await CardsTableManager.getUserCards(email);
         CardManager.setUsersCards(cards);
