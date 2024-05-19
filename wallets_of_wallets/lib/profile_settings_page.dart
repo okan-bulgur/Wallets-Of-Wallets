@@ -81,7 +81,7 @@ class ProfileSettings extends StatelessWidget {
               child: CircleAvatar(
                 radius: 65,
                 //get Image from the database
-                backgroundImage: userPhoto!.isEmpty ? AssetImage('assets/pp_1.png') as ImageProvider<Object> : NetworkImage(userPhoto!),
+                backgroundImage: userPhoto!.isEmpty ? AssetImage('assets/anonymous.png') as ImageProvider<Object> : NetworkImage(userPhoto!),
                   child: Align(
                     alignment: Alignment.topRight,
                     child: Icon(

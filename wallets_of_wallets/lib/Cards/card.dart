@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class UserCard {
   String _cardID;
   String _cvc;

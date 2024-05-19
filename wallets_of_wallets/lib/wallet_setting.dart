@@ -3,17 +3,18 @@ import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/wallet_page_admin.dart';
 import 'package:flutter/material.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class WalletSetting extends StatefulWidget {
+  const WalletSetting({Key? key}) : super(key: key);
+
   @override
-  _WalletSetting createState() => _WalletSetting();
+  _WalletSettingState createState() => _WalletSettingState();
 }
 
-class _WalletSetting extends State<WalletSetting> {
-  final Color customColor = Color(0xFF0A5440);
+class _WalletSettingState extends State<WalletSetting> {
+  final Color customColor = const Color(0xFF0A5440);
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -23,7 +24,7 @@ class _WalletSetting extends State<WalletSetting> {
   @override
   void initState() {
     super.initState();
-    selectedColor = WalletManager.selectedWallet!.walletColor;
+    selectedColor = WalletsTableManager.selectedWallet!.walletColor;
   }
 
   void changeColor(Color color) {
@@ -31,8 +32,8 @@ class _WalletSetting extends State<WalletSetting> {
   }
 
   final Wallet wallet;
-  _WalletSetting({Key? key}) 
-    : wallet = WalletManager.selectedWallet!;
+  _WalletSettingState({Key? key}) 
+    : wallet = WalletsTableManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {
@@ -49,131 +50,132 @@ class _WalletSetting extends State<WalletSetting> {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(height: 80.0),
-              Padding(
-                padding: const EdgeInsets.only(left: 40.0, right: 40.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${wallet.walletName}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: customColor,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(height: 50.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0, right: 40.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${wallet.walletName}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: customColor,
+                            ),
                           ),
-                        ),
-                        Text(
-                          '${wallet.walletDescription}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: customColor,
+                          Text(
+                            '${wallet.walletDescription}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: customColor,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Payment: ₺${wallet.walletPaymentAmount}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                            color: customColor,
+                          Text(
+                            'Payment: ₺${wallet.walletPaymentAmount}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: customColor,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'ID: ${wallet.walletId}',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: customColor,
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 50.0),
-              Padding(
-                padding: const EdgeInsets.only(left: 40.0, right: 40.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0), // Make corners curvy
-                              ),
-                              title: Text('Select a color'),
-                              content: SingleChildScrollView(
-                                child: ColorPicker(
-                                  pickerColor: selectedColor,
-                                  onColorChanged: changeColor,
-                                  showLabel: true,
-                                  pickerAreaHeightPercent: 0.8,
-                                ),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text(
-                                    'SET COLOR',
-                                    style: TextStyle(
-                                      color: customColor, // Same color as title
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    WalletsTableManager.updateWalletColor(context, wallet.walletId, selectedColor);
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 60.0,
-                        decoration: BoxDecoration(
-                          color: selectedColor,
-                          borderRadius: BorderRadius.circular(10.0), // Make corners curvy
-                        ),
-                      ),
-                    ),
-                    
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        'Change Wallet\'s Name',
-                        textAlign: TextAlign.left,
+                      Text(
+                        'ID: ${wallet.walletId}',
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
                           color: customColor,
                         ),
                       ),
-                    ),
-                    
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                      Expanded(
-                        child: TextField(
+                    ],
+                  ),
+                ),
+                SizedBox(height: 50.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0, right: 40.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0), // Make corners curvy
+                                ),
+                                title: Text('Select a color'),
+                                content: SingleChildScrollView(
+                                  child: ColorPicker(
+                                    pickerColor: selectedColor,
+                                    onColorChanged: changeColor,
+                                    showLabel: true,
+                                    pickerAreaHeightPercent: 0.8,
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text(
+                                      'SET COLOR',
+                                      style: TextStyle(
+                                        color: customColor, // Same color as title
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      WalletsTableManager.updateWalletColor(context, wallet.walletId, selectedColor);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 60.0,
+                          decoration: BoxDecoration(
+                            color: selectedColor,
+                            borderRadius: BorderRadius.circular(10.0), // Make corners curvy
+                          ),
+                        ),
+                      ),
+                      
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          'Change Wallet\'s Name',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: customColor,
+                          ),
+                        ),
+                      ),
+                      
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextField(
                               maxLength: 10,
                               controller: nameController,
                               decoration: InputDecoration(
@@ -189,58 +191,55 @@ class _WalletSetting extends State<WalletSetting> {
                               onChanged: (value) {
                               },
                             ),
+                          ),
+                          SizedBox(width: 10.0),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 25.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                WalletsTableManager.updateWalletName(context, wallet.walletId, nameController.text.trim());
+                                setState(() {
+                                  wallet.walletName = nameController.text.trim();
+                                });
+                              },
+                              child: Text(
+                                'Set',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: customColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
 
-                      SizedBox(width: 10.0),
-                      
+                      SizedBox(height: 10.0,),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 25.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            WalletsTableManager.updateWalletName(context, wallet.walletId, nameController.text.trim());
-                            setState(() {
-                              wallet.walletName = nameController.text.trim();
-                            });
-                          },
-                          child: Text(
-                            'Set',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: customColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          'Change Wallet\'s Description',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: customColor,
                           ),
                         ),
                       ),
-
-                    ],),
-
-                    SizedBox(height: 10.0,),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        'Change Wallet\'s Description',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                          color: customColor,
-                        ),
-                      ),
-                    ),
-                    
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                      Expanded(
-                        child: TextField(
+                      
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextField(
                               maxLength: 20,
                               controller: descriptionController,
                               decoration: InputDecoration(
@@ -256,140 +255,156 @@ class _WalletSetting extends State<WalletSetting> {
                               onChanged: (value) {
                               },
                             ),
-                      ),
-
-                      SizedBox(width: 10.0),
-                      
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 25.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            WalletsTableManager.updateWalletDescription(context, wallet.walletId, descriptionController.text.trim());
-                            setState(() {
-                              wallet.walletDescription = descriptionController.text.trim();
-                            });
-                          },
-                          child: Text(
-                            'Set',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              
-                            ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: customColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                    ],),
-
-                    SizedBox(height: 10.0,),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        'Determine Amount of the Payment',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                          color: customColor,
-                        ),
-                      ),
-                    ),
-                    
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            maxLength: 10,
-                            controller: paymentAmountController,
-                            keyboardType: TextInputType.numberWithOptions(decimal: true),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-                            ],
-                            decoration: InputDecoration(
-                              labelText: 'Amount',
-                              filled: true,
-                              fillColor: Color.fromARGB(100, 150, 150, 150),
-                              border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              borderSide: BorderSide.none,
+                          SizedBox(width: 10.0),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 25.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                WalletsTableManager.updateWalletDescription(context, wallet.walletId, descriptionController.text.trim());
+                                setState(() {
+                                  wallet.walletDescription = descriptionController.text.trim();
+                                });
+                              },
+                              child: Text(
+                                'Set',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                              contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: customColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
                             ),
-                            onChanged: (value) {
-                            },
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 10.0,),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          'Determine Amount of the Payment',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: customColor,
                           ),
                         ),
+                      ),
+                      
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              maxLength: 10,
+                              controller: paymentAmountController,
+                              keyboardType: TextInputType.numberWithOptions(decimal: true),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                              ],
+                              decoration: InputDecoration(
+                                labelText: 'Amount',
+                                filled: true,
+                                fillColor: Color.fromARGB(100, 150, 150, 150),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                              ),
+                              onChanged: (value) {
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 10.0),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 25.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                WalletsTableManager.updateWalletPaymentAmount(context, wallet.walletId, double.parse(paymentAmountController.text.trim()));
+                                setState(() {
+                                  wallet.walletPaymentAmount = double.parse(paymentAmountController.text.trim());
+                                });
+                              },
+                              child: Text(
+                                'Set',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: customColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
 
-                        SizedBox(width: 10.0),
-                        
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 25.0),
-                          child: ElevatedButton(
+                      SizedBox(height: 10.0),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton.icon(
                             onPressed: () {
-                              WalletsTableManager.updateWalletPaymentAmount(context, wallet.walletId, double.parse(paymentAmountController.text.trim()));
-                              setState(() {
-                                wallet.walletPaymentAmount = double.parse(paymentAmountController.text.trim());
-                              });
+                                showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                  title: Text('Delete Wallet'),
+                                  content: Text('Are you sure you want to delete this wallet?'),
+                                  actions: [
+                                    TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                    onPressed: () {
+                                      WalletsTableManager.deleteWallet(context, wallet.walletId);
+                                      Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => MainPage()),
+                                      );
+                                    },
+                                    child: Text('Delete'),
+                                    ),
+                                  ],
+                                  );
+                                },
+                                );
                             },
-                            child: Text(
-                              'Set',
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            label: Text(
+                              'Delete Wallet',
                               style: TextStyle(
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: customColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
+                                color: Colors.red,
                               ),
                             ),
                           ),
-                        ),
-
-                      ],
-                    ),
-
-                    SizedBox(height: 10.0),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton.icon(
-                          onPressed: () {
-                            WalletsTableManager.deleteWallet(context, wallet.walletId);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => MainPage()),
-                            );
-                          },
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          label: Text(
-                            'Delete Wallet',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

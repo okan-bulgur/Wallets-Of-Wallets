@@ -13,16 +13,47 @@ class CardsList extends StatelessWidget {
   final Color customColor = Color(0xFF0A5440);
   static bool isCardChanged = false;
 
+  String helperText = "* This page displays all the cards that you have added to your account.\n" +
+    "* You can also delete a card by clicking on the card and then clicking on the 'Remove Card' button.\n" +
+    "* To add a new card, click on the 'Add Card' button at the bottom of the screen.";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.help,
+            color: customColor,
+            size: 40,
+          ),
+          onPressed: () {
+            showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("Help"),
+                      content: Text(helperText),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Close"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+          },
+        ),
         title: Text(
           'Wallets of Wallets',
           style: TextStyle(
-              fontSize: 30.0,
-              fontWeight: FontWeight.bold,
-              color: customColor),
+            fontSize: 30.0,
+            fontWeight: FontWeight.bold,
+            color: customColor,
+          ),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -165,38 +196,8 @@ class CardsList extends StatelessWidget {
                     width: 250.0, // Adjust the width as needed
                     child: ElevatedButton(
                       onPressed: () async{
-                        CardsTableManager.deleteCard(card.cardID);
-
-                        //create pop up to show that the card is being removed and user cant close it
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Removing Card'),
-                              content: Text('Please wait while the card is being removed'),
-                            );
-                          },
-                        );
-
-                        while (!isCardChanged) {
-                          await Future.delayed(Duration(milliseconds: 500));
-                        }
-                        isCardChanged = false;
-
-                        //close the pop up
+                        await CardsTableManager.deleteCard(card.cardID);
                         Navigator.pop(context);
-                        Navigator.pop(context);
-
-                        //refresh the page and clear the previous page from the stack
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => CardsList()),
-                        );
-
-
-
-                        
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

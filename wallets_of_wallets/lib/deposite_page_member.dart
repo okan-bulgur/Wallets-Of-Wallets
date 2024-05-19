@@ -1,19 +1,19 @@
 import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/card_selection_page.dart';
 import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/member_list_page_member.dart';
 import 'package:firstly/wallet_page_member.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/main_page.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 
 class DepositPageMember extends StatelessWidget {
 
-  final Color customColor = Color(0xFF0A5440);
+  final Color customColor = const Color(0xFF0A5440);
   final Wallet wallet;
   final double amount;
 
-  DepositPageMember({required this.amount}) : 
-    wallet = WalletManager.selectedWallet!;
+  DepositPageMember({super.key, required this.amount}) : 
+    wallet = WalletsTableManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +96,42 @@ class DepositPageMember extends StatelessWidget {
               SizedBox(height: 125.0),
               ElevatedButton(
                 onPressed: () {
-                  TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CardSelectionPage(
+                        onCardSelected: (selectedCard) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Deposit From Card'),
+                                content: Text('Are you sure you want to deposit from ${selectedCard.cardCardName}?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => WalletPageMember()),
+                                      );
+                                    },
+                                    child: Text('Deposit'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,
@@ -114,7 +149,33 @@ class DepositPageMember extends StatelessWidget {
               SizedBox(height: 30.0),
               ElevatedButton(
                 onPressed: () {
-                  TransactionTableManager.depositFromUserBalance(context, wallet.walletId, amount);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Deposit From User Balance'),
+                        content: Text('Are you sure you want to deposit from your balance?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              TransactionTableManager.depositFromUserBalance(context, wallet.walletId, amount);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => WalletPageMember()),
+                              );
+                            },
+                            child: Text('Deposit'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: customColor,

@@ -1,4 +1,5 @@
 import 'package:firstly/Wallets/wallet.dart';
+import 'package:firstly/data_base_manager.dart';
 import 'package:firstly/deposite_page_admin.dart';
 import 'package:firstly/main_page.dart';
 import 'package:firstly/member_list_page.dart';
@@ -6,16 +7,15 @@ import 'package:firstly/wallet_page_admin.dart';
 import 'package:firstly/wallet_setting.dart';
 import 'package:firstly/withdraw_page_admin.dart';
 import 'package:flutter/material.dart';
-import 'package:firstly/Wallets/walletManager.dart';
 import 'package:flutter/services.dart';
 
 class TransactionPageAdmin extends StatelessWidget {
 
-  final Color customColor = Color(0xFF0A5440);
+  final Color customColor = const Color(0xFF0A5440);
   final TextEditingController amountController = TextEditingController();
   final Wallet wallet;
 
-  TransactionPageAdmin() : wallet = WalletManager.selectedWallet!;
+  TransactionPageAdmin() : wallet = WalletsTableManager.selectedWallet!;
 
   @override
   Widget build(BuildContext context) {

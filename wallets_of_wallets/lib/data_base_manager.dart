@@ -1,24 +1,24 @@
 import 'package:firstly/Transactions/transaction.dart';
 import 'package:firstly/Wallets/wallet.dart';
 import 'dart:io';
-import 'package:firstly/Wallets/walletManager.dart';
 import 'package:firstly/Cards/card.dart';
 import 'package:firstly/Cards/cardManager.dart';
 import 'package:firstly/cards_page.dart';
 import 'package:firstly/profile_settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firstly/login_page.dart';
-import 'Transactions/transactionManager.dart';
 import 'main_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 FirebaseApp app = Firebase.app();
 String? userEmail;
 String? userPhoto;
+
 
 class AuthenticationManager {
 
@@ -31,17 +31,8 @@ class AuthenticationManager {
 
         userEmail = FirebaseAuth.instance.currentUser!.email;
         
-        // If login successful, navigate to the main page
-        List<Wallet> wallets = await WalletsTableManager.getUserWallets(email);
-        WalletManager.setUsersWallets(wallets);
-        
         List<UserCard> cards = await CardsTableManager.getUserCards(email);
         CardManager.setUsersCards(cards);
-
-        for (var wallet in wallets) {
-          List<TransactionWallet> transactions = await TransactionTableManager.getWalletTransactions(wallet.walletId);
-          TransactionManager.setTransactions(transactions);
-        }
 
         UsersTableManager.setUserPhoto(email);
         
@@ -125,8 +116,6 @@ class UsersTableManager {
         'list_of_wallets': FieldValue.arrayUnion([walletID])
       });
 
-      List<Wallet> wallets = await WalletsTableManager.getUserWallets(userEmail!);
-      WalletManager.setUsersWallets(wallets);
     } catch (e) {
       print("Error adding wallet to user: $e");
     }  
@@ -288,6 +277,7 @@ class UsersTableManager {
 }
 
 class WalletsTableManager{
+  static Wallet? selectedWallet;
   
   static Future<void> addWallet(String walletID, String walletName, String walletDescription, Color walletColor, String email) async {
     try {
@@ -306,7 +296,6 @@ class WalletsTableManager{
         'list_of_wallets': FieldValue.arrayUnion([walletID])
       });
 
-      WalletManager.generateWallet(walletColor, walletName, walletDescription, walletID, 0, 0);
     } catch (e) {
       print("Error adding wallet: $e");
     }
@@ -352,6 +341,17 @@ class WalletsTableManager{
   static Future<void> deleteWallet(BuildContext context, String walletID) async {
     try {
 
+      // Get wallet balance
+      DocumentSnapshot wallet = await FirebaseFirestore.instance.collection('wallets').doc(walletID).get();
+      double balance = wallet['balance'];
+
+      // Add balance to admin balance
+      await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+        'balance': FieldValue.increment(balance),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('₺${balance} added your balance',textAlign: TextAlign.center,)));
+
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) async {
         List<String> admins = List<String>.from(value.data()!['list_of_admins']);
         List<String> members = List<String>.from(value.data()!['list_of_members']);
@@ -369,10 +369,14 @@ class WalletsTableManager{
         }
       });
 
-      await FirebaseFirestore.instance.collection('wallets').doc(walletID).delete();
+      // Delete all transactions associated with the wallet
+      await FirebaseFirestore.instance.collection('transactions').where('walletID', isEqualTo: walletID).get().then((snapshot) {
+        for (var doc in snapshot.docs) {
+          doc.reference.delete();
+        }
+      });
 
-      List<Wallet> wallets = await WalletsTableManager.getUserWallets(userEmail!);
-      WalletManager.setUsersWallets(wallets);
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).delete();
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Wallet successfully deleted',textAlign: TextAlign.center,)));
     } catch (e) {
@@ -385,7 +389,7 @@ class WalletsTableManager{
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
         'name': name,
       });
-      WalletManager.updateWalletName(name);
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name of wallet updated successfully',textAlign: TextAlign.center)));
     } catch (e) {
       print("Error updating wallet balance: $e");
@@ -397,7 +401,6 @@ class WalletsTableManager{
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
         'description': description,
       });
-      WalletManager.updateWalletDescription(description);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Description of wallet updated successfully',textAlign: TextAlign.center)));
     } catch (e) {
       print("Error updating wallet balance: $e");
@@ -411,7 +414,6 @@ class WalletsTableManager{
         await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
           'balance': FieldValue.increment(amount),
         });
-        WalletManager.updateWalletBalance(amount, isAdding);
         return true;
       }
       else{
@@ -423,7 +425,6 @@ class WalletsTableManager{
         await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
           'balance': FieldValue.increment(-amount),
         });
-        WalletManager.updateWalletBalance(amount, isAdding);
         return true;
       }
 
@@ -438,7 +439,6 @@ class WalletsTableManager{
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
         'payment_amount': payment_amount,
       });
-      WalletManager.updateWalletPaymentAmount(payment_amount);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Payment amount of wallet updated successfully',textAlign: TextAlign.center)));
     } catch (e) {
       print("Error updating wallet balance: $e");
@@ -450,35 +450,10 @@ class WalletsTableManager{
       await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
         'color': color.value.toString(),
       });
-      WalletManager.updateWalletColor(color);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Color of wallet updated successfully',textAlign: TextAlign.center)));
     } catch (e) {
       print("Error updating wallet balance: $e");
     }
-  }
-
-  static Future<List<Wallet>> getUserWallets(String email) async {
-    List<Wallet> wallets = [];
-    try {
-      await FirebaseFirestore.instance.collection('users').doc(email).get().then((value) async {
-        List<String> walletIDs = List<String>.from(value.data()!['list_of_wallets']);
-        for (var walletID in walletIDs) {
-          await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) {
-            wallets.add(Wallet(
-              color: Color(int.parse(value.data()!['color'])),
-              name: value.data()!['name'],
-              description: value.data()!['description'],
-              id: value.data()!['id'],
-              balance: value.data()!['balance'].toDouble(),
-              paymentAmount: value.data()!['payment_amount'].toDouble(),
-            ));
-          });
-        }
-      });
-    } catch (e) {
-      print("Error getting wallets: $e");
-    }
-    return wallets;
   }
 
   static Future<void> getWallet(String walletID) async {
@@ -577,11 +552,90 @@ class WalletsTableManager{
     }
   }
 
+  static Future<List<Wallet>> getWalletsOfUser(String email) async{
+    
+    List<Wallet> wallets = [];
+    try {
+      FirebaseFirestore.instance.collection('users').doc(email).get().then((value) async {
+        List<String> walletIDs = List<String>.from(value.data()!['list_of_wallets']);
+        for (var walletID in walletIDs) {
+          await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) {
+            wallets.add(Wallet(
+              color: Color(int.parse(value.data()!['color'])),
+              name: value.data()!['name'],
+              description: value.data()!['description'],
+              id: value.data()!['id'],
+              balance: value.data()!['balance'].toDouble(),
+              paymentAmount: value.data()!['payment_amount'].toDouble(),
+            ));
+          });
+        }
+      });
+    } catch (e) {
+      print("Error getting wallets: $e");
+    }
+    return wallets;
+  
+  }
+
+  static Stream<List<Wallet>> getWalletsOfUserStream() {
+    var email = FirebaseAuth.instance.currentUser!.email;
+    return FirebaseFirestore.instance.collection('users').doc(email).snapshots().asyncMap((snapshot) async {
+      List<String> walletIDs = List<String>.from(snapshot.data()!['list_of_wallets']);
+      List<Wallet> wallets = [];
+      for (var walletID in walletIDs) {
+        var walletSnapshot = await FirebaseFirestore.instance.collection('wallets').doc(walletID).get();
+        wallets.add(Wallet(
+          color: Color(int.parse(walletSnapshot.data()!['color'])),
+          name: walletSnapshot.data()!['name'],
+          description: walletSnapshot.data()!['description'],
+          id: walletSnapshot.data()!['id'],
+          balance: walletSnapshot.data()!['balance'].toDouble(),
+          paymentAmount: walletSnapshot.data()!['payment_amount'].toDouble(),
+        ));
+      }
+      return wallets;
+    });
+  } 
+
+  static Future<void> disjoinWallet(BuildContext context, String walletID) async {
+    try {
+      await FirebaseFirestore.instance.collection('wallets').doc(walletID).get().then((value) async {
+        List<String> admins = List<String>.from(value.data()!['list_of_admins']);
+        List<String> members = List<String>.from(value.data()!['list_of_members']);
+
+        if (admins.contains(userEmail)) {
+          if (admins.length == 1) {
+            await deleteWallet(context, walletID);
+          } 
+          else {
+            await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+              'list_of_admins': FieldValue.arrayRemove([userEmail])
+            });
+            await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+              'list_of_wallets': FieldValue.arrayRemove([walletID])
+            });
+          }
+        } 
+        else if (members.contains(userEmail)) {
+          await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
+            'list_of_members': FieldValue.arrayRemove([userEmail])
+          });
+          await FirebaseFirestore.instance.collection('users').doc(userEmail).update({
+            'list_of_wallets': FieldValue.arrayRemove([walletID])
+          });
+        }
+      });
+    } catch (e) {
+      print("Error disjoining wallet: $e");
+    }
+  }
 }
+
 
 class CardsTableManager{
 
-  static Future<void> addCard(String CVC, String cardName, String cardNumber, String expDate, String name,String email) async {
+  static Future<void> addCard(BuildContext context, String CVC, String cardName, String cardNumber, String expDate, String name,String email) async {
     try {
       // Create a new document in the 'cards' collection and get the reference
       DocumentReference cardRef = FirebaseFirestore.instance.collection('cards').doc();
@@ -606,12 +660,13 @@ class CardsTableManager{
 
       // Optionally generate a card using the data
       CardManager.generateCard(CVC, cardName, cardNumber, expDate, name,cardID);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Card was added successfully',textAlign: TextAlign.center,)));
     } catch (e) {
       print("Error adding card: $e");
     }
   }
 
-  static Future<void> deleteCard(String cardID) async {
+  static Future<void> deleteCard(BuildContext context, String cardID) async {
     try {
       await FirebaseFirestore.instance.collection('cards').doc(cardID).delete();
 
@@ -621,6 +676,7 @@ class CardsTableManager{
       });
 
       updateCardList();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Card was deleted successfully',textAlign: TextAlign.center,)));
     }
     catch (e) {
       print("Error deleting card: $e");
@@ -662,23 +718,29 @@ class CardsTableManager{
 
 class TransactionTableManager{
 
+  static String formatDateTime(String dateTimeString) {
+
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    DateFormat formatter = DateFormat('HH:mm dd-MM-yyyy');
+    
+    return formatter.format(dateTime.add(Duration(hours: 3)));
+  }
+
   static Future<void> addTransaction(BuildContext context, String walletID, String type, double amount, String userEmail) async{
     try {
 
-      String date = DateTime.now().toString();
-      TransactionWallet newTransaction = await TransactionManager.generateTransaction(walletID, type, amount, date, userEmail);
-      String transactionID = newTransaction.transactionID;
+      DocumentReference transactionRef = FirebaseFirestore.instance.collection('transactions').doc();
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(userEmail).get();
+      String date = formatDateTime(DateTime.now().toString());
 
-      TransactionManager.addTransaction(newTransaction);
-
-      await FirebaseFirestore.instance.collection('transactions').doc(transactionID).set({
-        'transactionID': newTransaction.transactionID,
-        'walletID': newTransaction.walletID,
-        'type': newTransaction.type,
-        'amount': newTransaction.amount,
-        'date': newTransaction.date,
-        'userEmail': newTransaction.userEmail,
-        'name': newTransaction.name,
+      await transactionRef.set({
+        'transactionID': transactionRef.id,
+        'walletID': walletID,
+        'type': type,
+        'amount': amount,
+        'date': date,
+        'userEmail': userEmail,
+        'name': userSnapshot['name'],
       });
 
     } catch (e) {
@@ -690,11 +752,10 @@ class TransactionTableManager{
     try {
       
       // Wallet + amount, Card - amount
-      print("Amount: {$amount}");
       String type = "Incoming";
 
-      addTransaction(context, walletID, type, amount, userEmail!);
       await WalletsTableManager.updateWalletBalance(context, walletID, amount, true);
+      addTransaction(context, walletID, type, amount, userEmail!);
 
       await ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was completed successfully',textAlign: TextAlign.center,)));
 
@@ -710,8 +771,11 @@ class TransactionTableManager{
 
       String type = "Incoming";
 
-      addTransaction(context, walletID, type, amount, userEmail!);
       bool isUpdated = await UsersTableManager.updateUserBalance(context, userEmail!, amount, false);
+
+      if(isUpdated == true){
+        addTransaction(context, walletID, type, amount, userEmail!);
+      }
 
       if (isUpdated == false) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was not completed',textAlign: TextAlign.center,)));
@@ -734,8 +798,8 @@ class TransactionTableManager{
 
       String type = "Outcoming";
 
-      addTransaction(context, walletID, type, amount, userEmail!);
       await WalletsTableManager.updateWalletBalance(context, walletID, amount, false);
+      addTransaction(context, walletID, type, amount, userEmail!);
 
       await ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was completed successfully',textAlign: TextAlign.center,)));
 
@@ -751,8 +815,11 @@ class TransactionTableManager{
 
       String type = "Outcoming";
 
-      addTransaction(context, walletID, type, amount, userEmail!);
       bool isUpdated = await WalletsTableManager.updateWalletBalance(context, walletID, amount, false);
+
+      if(isUpdated == true){
+        addTransaction(context, walletID, type, amount, userEmail!);
+      }
 
       if (isUpdated == false) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was not completed',textAlign: TextAlign.center,)));
@@ -787,6 +854,8 @@ class TransactionTableManager{
           );
         }
       }
+      // Sort transactions by date
+      transactions.sort((a, b) => b.date.compareTo(a.date));
     } catch (e) {
       print("Error getting transactions: $e");
     }
