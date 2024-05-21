@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firstly/Transactions/transaction.dart';
 import 'package:firstly/Wallets/wallet.dart';
 import 'dart:io';
@@ -112,7 +110,6 @@ class UsersTableManager {
 
   static Future<void> addUser(String name, String surname, String email) async {
     try {
-      print("Adding user: $name, $surname, $email");
       await FirebaseFirestore.instance.collection('users').doc(email).set({
         'name': name,
         'surname': surname,
@@ -291,6 +288,7 @@ class UsersTableManager {
       print("Error getting user photo: $e");
     }
   }
+
 }
 
 class WalletsTableManager{
@@ -662,7 +660,6 @@ class WalletsTableManager{
   }
 }
 
-
 class CardsTableManager{
 
   static Future<void> addCard(BuildContext context, String CVC, String cardName, String cardNumber, String expDate, String name,String email) async {
@@ -745,7 +742,6 @@ class CardsTableManager{
 
 }
 
-
 class TransactionTableManager{
 
   static String formatDateTime(String dateTimeString) {
@@ -753,7 +749,7 @@ class TransactionTableManager{
     DateTime dateTime = DateTime.parse(dateTimeString);
     DateFormat formatter = DateFormat('HH:mm dd-MM-yyyy');
     
-    return formatter.format(dateTime.add(Duration(hours: 3)));
+    return formatter.format(dateTime);
   }
 
   static Future<void> addTransaction(BuildContext context, String walletID, String type, double amount, String userEmail) async{
@@ -892,4 +888,18 @@ class TransactionTableManager{
     return transactions;
   }
 
+  static Future<void> updateTransactionName(BuildContext context, String userMail, String name) async {
+    try {
+      await FirebaseFirestore.instance.collection('transactions').where('userEmail', isEqualTo: userMail).get().then((value) {
+        for (var doc in value.docs) {
+          doc.reference.update({
+            'name': name,
+          });
+        }
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name of transaction updated successfully',textAlign: TextAlign.center)));
+    } catch (e) {
+      print("Error updating transaction name: $e");
+    }
+  }
 }

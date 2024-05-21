@@ -207,7 +207,13 @@ class _ProfilePageState extends State<ProfilePage> {
                             BorderSide.none, // Set the border color to gray
                       ),
                     ),
+                    hint: Text('Select card'),
                     items: [
+                      if (CardManager.cards.isEmpty)
+                        DropdownMenuItem<String>(
+                          value: 'No card found',
+                          child: Text('No card found'),
+                        ),
                       for (UserCard card in CardManager.cards)
                         DropdownMenuItem<String>(
                           value: card.cardCardName,
@@ -264,10 +270,33 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                       return;
                     }
-                    double withdrawalAmount = double.parse(amount.text);
-                    await UsersTableManager.updateUserBalance(
-                        context, userEmail!, withdrawalAmount, false);
-                    _fetchUserBalance();
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Withdraw Money'),
+                          content: Text('Are you sure you want to withdraw?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () async{
+                                double withdrawalAmount = double.parse(amount.text);
+                                await UsersTableManager.updateUserBalance(
+                                    context, userEmail!, withdrawalAmount, false);
+                                _fetchUserBalance();
+                              },
+                              child: Text('Withdraw'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: customColor, // Set the button color
@@ -291,6 +320,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: 300.0, // Adjust the width as needed
                 child: ElevatedButton(
                   onPressed: () async {
+                    
                     // Yavuz: async added because we are using await in the function
                     //check if card selected using textEditingController
                     if (card.text.isEmpty) {
@@ -302,10 +332,33 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                       return;
                     }
-                    double depositAmount = double.parse(amount.text);
-                    await UsersTableManager.updateUserBalance(
-                        context, userEmail!, depositAmount, true);
-                    _fetchUserBalance();
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Deposit Money'),
+                          content: Text('Are you sure you want to deposit?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () async{
+                                double depositAmount = double.parse(amount.text);
+                                await UsersTableManager.updateUserBalance(
+                                    context, userEmail!, depositAmount, true);
+                                _fetchUserBalance();
+                              },
+                              child: Text('Deposit'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: customColor, // Set the button color

@@ -122,6 +122,7 @@ class ProfileSettings extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         UsersTableManager.updateUserName(context,userEmail!, firstNameController.text.trim());
+                        TransactionTableManager.updateTransactionName(context, userEmail!, firstNameController.text.trim());
                       },
                       child: Text(
                         'Set',

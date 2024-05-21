@@ -51,9 +51,31 @@ class JoinWalletScreen extends StatelessWidget {
                 width: 120.0, // Adjust the width as needed
                 child: ElevatedButton(
                   onPressed: () {
-                    if (WalletsTableManager.joinWallet(context, walletIDController.text) == true) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully joined the wallet',textAlign: TextAlign.center)));
-                    }
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Join To Card'),
+                          content: Text('Are you sure you want to join to ${walletIDController.text}?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                if (WalletsTableManager.joinWallet(context, walletIDController.text) == true) {
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully joined the wallet',textAlign: TextAlign.center)));
+                                }
+                              },
+                              child: Text('Join'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: customColor, // Set the button color
