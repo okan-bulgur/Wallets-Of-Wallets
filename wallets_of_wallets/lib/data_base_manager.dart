@@ -826,8 +826,15 @@ class TransactionTableManager{
 
       String type = "Outcoming";
 
-      await WalletsTableManager.updateWalletBalance(context, walletID, amount, false);
-      await addTransaction(context, walletID, type, amount, userEmail!);
+      bool isUpdated = await WalletsTableManager.updateWalletBalance(context, walletID, amount, false);
+      if(isUpdated == true){
+        addTransaction(context, walletID, type, amount, userEmail!);
+      }
+
+      if (isUpdated == false) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was not completed',textAlign: TextAlign.center,)));
+        return;
+      }
 
       await ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was completed successfully',textAlign: TextAlign.center,)));
 
@@ -835,6 +842,7 @@ class TransactionTableManager{
       print("Error withdrawing to card: $e");
     }
   }
+
 
   static Future<void> withdrawToUserBalance(BuildContext context, String walletID, double amount) async {
     try {
