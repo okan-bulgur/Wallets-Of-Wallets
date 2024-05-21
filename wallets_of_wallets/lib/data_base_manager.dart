@@ -439,6 +439,7 @@ class WalletsTableManager{
         await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
           'balance': FieldValue.increment(amount),
         });
+        selectedWallet!.walletBalance += amount;
         return true;
       }
       else{
@@ -450,6 +451,7 @@ class WalletsTableManager{
         await FirebaseFirestore.instance.collection('wallets').doc(walletID).update({
           'balance': FieldValue.increment(-amount),
         });
+        selectedWallet!.walletBalance -= amount;
         return true;
       }
 
@@ -781,7 +783,7 @@ class TransactionTableManager{
       String type = "Incoming";
 
       await WalletsTableManager.updateWalletBalance(context, walletID, amount, true);
-      addTransaction(context, walletID, type, amount, userEmail!);
+      await addTransaction(context, walletID, type, amount, userEmail!);
 
       await ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was completed successfully',textAlign: TextAlign.center,)));
 
@@ -800,7 +802,7 @@ class TransactionTableManager{
       bool isUpdated = await UsersTableManager.updateUserBalance(context, userEmail!, amount, false);
 
       if(isUpdated == true){
-        addTransaction(context, walletID, type, amount, userEmail!);
+        await addTransaction(context, walletID, type, amount, userEmail!);
       }
 
       if (isUpdated == false) {
@@ -825,7 +827,7 @@ class TransactionTableManager{
       String type = "Outcoming";
 
       await WalletsTableManager.updateWalletBalance(context, walletID, amount, false);
-      addTransaction(context, walletID, type, amount, userEmail!);
+      await addTransaction(context, walletID, type, amount, userEmail!);
 
       await ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Transaction was completed successfully',textAlign: TextAlign.center,)));
 
@@ -844,7 +846,7 @@ class TransactionTableManager{
       bool isUpdated = await WalletsTableManager.updateWalletBalance(context, walletID, amount, false);
 
       if(isUpdated == true){
-        addTransaction(context, walletID, type, amount, userEmail!);
+        await addTransaction(context, walletID, type, amount, userEmail!);
       }
 
       if (isUpdated == false) {

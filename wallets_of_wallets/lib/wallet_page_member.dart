@@ -16,6 +16,7 @@ class WalletPageMember extends StatefulWidget {
 class _WalletPageMemberState extends State<WalletPageMember> {
   final Color customColor = Color(0xFF0A5440);
   Wallet? wallet;
+  double balance = 0.0;
   List<TransactionWallet>? listOfTransactions;
 
   String helperText = "* On this screen you can view all transactions in the wallet.\n" +
@@ -31,8 +32,7 @@ class _WalletPageMemberState extends State<WalletPageMember> {
 
   void initializeTransactions() async {
     wallet = WalletsTableManager.selectedWallet!;
-    List<TransactionWallet>? transaction =
-        await TransactionTableManager.getWalletTransactions(wallet!.walletId);
+    List<TransactionWallet>? transaction = await TransactionTableManager.getWalletTransactions(wallet!.walletId);
 
     setState(() {
       listOfTransactions = transaction;

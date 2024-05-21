@@ -116,8 +116,9 @@ class DepositPageAdmin extends StatelessWidget {
                                     child: Text('Cancel'),
                                   ),
                                   TextButton(
-                                    onPressed: () {
-                                      TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
+                                    onPressed: () async{
+                                      await TransactionTableManager.depositFromCard(context, wallet.walletId, amount);
+                                      await Future.delayed(Duration(milliseconds: 500));
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(builder: (context) => WalletPageAdmin()),
@@ -164,8 +165,9 @@ class DepositPageAdmin extends StatelessWidget {
                             child: Text('Cancel'),
                           ),
                           TextButton(
-                            onPressed: () {
-                              TransactionTableManager.depositFromUserBalance(context, wallet.walletId, amount);
+                            onPressed: () async{
+                              await TransactionTableManager.depositFromUserBalance(context, wallet.walletId, amount);
+                              await Future.delayed(Duration(milliseconds: 500));
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => WalletPageAdmin()),

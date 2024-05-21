@@ -287,9 +287,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             TextButton(
                               onPressed: () async{
                                 double withdrawalAmount = double.parse(amount.text);
-                                await UsersTableManager.updateUserBalance(
-                                    context, userEmail!, withdrawalAmount, false);
+                                await UsersTableManager.updateUserBalance(context, userEmail!, withdrawalAmount, false);
                                 _fetchUserBalance();
+                                Navigator.pop(context);
                               },
                               child: Text('Withdraw'),
                             ),
@@ -349,9 +349,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             TextButton(
                               onPressed: () async{
                                 double depositAmount = double.parse(amount.text);
-                                await UsersTableManager.updateUserBalance(
-                                    context, userEmail!, depositAmount, true);
+                                await UsersTableManager.updateUserBalance(context, userEmail!, depositAmount, true);
                                 _fetchUserBalance();
+                                Navigator.pop(context);
                               },
                               child: Text('Deposit'),
                             ),
